@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/sc2-pb-derive/sc2-pb-derive.iml" filepath="$PROJECT_DIR$/sc2-pb-derive/sc2-pb-derive.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sc2-protobuf/sc2-protobuf.iml" filepath="$PROJECT_DIR$/sc2-protobuf/sc2-protobuf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sc2-rust.iml" filepath="$PROJECT_DIR$/sc2-rust.iml" />
+    </modules>
+  </component>
+</project>

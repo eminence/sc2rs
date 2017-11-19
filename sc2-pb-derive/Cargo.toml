@@ -1,0 +1,13 @@
+[package]
+name = "sc2-pb-derive"
+version = "0.1.0"
+authors = ["Andrew Chin <achin@eminence32.net>"]
+
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = "*"
+synstructure = "*"
+quote = "0.3"
