@@ -172,7 +172,10 @@ impl Coordinator<GameState::Unlaunched> {
         let (sc2_sender, remote_sc2_receiver) = std::sync::mpsc::channel();
         let (remote_sc2_sender, sc2_receiver) = std::sync::mpsc::channel();
 
-        let builder = ws::Builder::new().build(WSHandlerFactory::new(remote_sc2_sender, remote_sc2_receiver)).unwrap();
+        let mut builder = ws::Builder::new().build(WSHandlerFactory::new(remote_sc2_sender, remote_sc2_receiver)).unwrap();
+        let url = Url::parse("ws://127.0.0.1:8167/sc2api").unwrap();
+        builder.connect(url.clone()).unwrap();
+        thread::spawn(move || { builder.run() });
 
         Ok(Coordinator {
             sc2_join_handle: Some(hand),
@@ -184,14 +187,19 @@ impl Coordinator<GameState::Unlaunched> {
 }
 
 impl Coordinator<GameState::Launched> {
-    pub fn create_game<T: Into<sc2_protobuf::protos::RequestCreateGame>>(self, req: T) -> Coordinator<GameState::InitGame> {
-        let reqgame = req.into();
+    pub fn create_game<>(self, req: types::RequestCreateGame) -> Coordinator<GameState::InitGame> {
+        let req = types::Request::CreateGame(req);
 
+        if let Some(ref sender) = self.sc2_sender {
+            sender.send(req);
+        }
 
-        let mut req = sc2_protobuf::protos::Request::new();
-        req.set_create_game(reqgame);
-
-        unimplemented!()
+        Coordinator {
+            sc2_join_handle: self.sc2_join_handle,
+            sc2_receiver: self.sc2_receiver,
+            sc2_sender: self.sc2_sender,
+            _state: std::marker::PhantomData
+        }
     }
     pub fn join_game(self) -> Coordinator<GameState::InGame> {
         unimplemented!()
@@ -227,7 +235,10 @@ impl ws::Handler for WSHandler {
                 let mut resp = sc2_protobuf::protos::Response::new();
                 if resp.merge_from_bytes(&bin_vec).is_ok() {
                     match types::Response::from_protobuf(resp) {
-                        Ok(r) => self.sender.send(r).expect("send"),
+                        Ok(r) => {
+                            println!("Received {:?}", r);
+                            self.sender.send(r).expect("send");
+                        }
                         Err(e) => {
                             println!("Failed to construct a Response: {}", e);
                         }
@@ -241,6 +252,8 @@ impl ws::Handler for WSHandler {
         Ok(())
     }
     fn on_timeout(&mut self, event: Token) -> ws::Result<()> {
+        if event != TIMEOUT_TOKEN { return Ok(()); }
+        println!("on_timeout");
         match self.receiver.recv_timeout(Duration::from_secs(1)) {
             Ok(req) => {
                 let pb = req.into_protobuf();
@@ -264,6 +277,7 @@ impl ws::Handler for WSHandler {
     }
     fn on_open(&mut self, shake: ws::Handshake) -> ws::Result<()> {
         self.ws_socket.timeout(10, TIMEOUT_TOKEN);
+        println!("Started timeout loop");
         // set a timeout to try to read a request from our channel
 
         Ok(())
@@ -309,6 +323,4 @@ mod tests {
     fn it_works() {
         assert_eq!(2 + 2, 4);
     }
-
-
 }

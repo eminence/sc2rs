@@ -3,12 +3,13 @@
 extern crate sc2;
 extern crate sc2_protobuf;
 extern crate protobuf;
+extern crate ws;
 
 use protobuf::Message;
 
-extern crate ws;
-
 use ws::CloseCode;
+
+use sc2::types;
 
 use std::thread::sleep;
 use std::time::Duration;
@@ -40,8 +41,18 @@ fn main() {
 
     let coord = sc2::Coordinator::new();
     let coord = coord.launch().expect("Failed to launch game");
+    println!("Game launched, now creating game...");
 
-    //let coord = coord.create_game();
+    let req = types::RequestCreateGame {
+        map: types::RequestMap::BattlenetMapName("TestMap".to_owned()),
+        player_setup: Vec::new(),
+        disable_fog: Some(true),
+        random_seed: None,
+        realtime: Some(false),
+    };
+
+    let coord = coord.create_game(req);
+    println!("Game created!");
 
 //    sc2::launch();
 //    sleep(Duration::from_secs(10));

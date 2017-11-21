@@ -43,7 +43,7 @@ impl<T, U> FromProtobuf<RepeatedField<T>> for Vec<U>
     }
 }
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 //#[ProtoType = "LocalMap"]
 pub struct LocalMap {
     pub MapPath: String,
@@ -59,7 +59,7 @@ pub struct LocalMap {
 //    }
 //}
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 pub struct PlayerSetup {
     #[Get]
     field_type: protos::PlayerType,
@@ -69,28 +69,28 @@ pub struct PlayerSetup {
     difficulty: protos::Difficulty,
 }
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 #[AttachedTo(RequestCreateGame)]
 pub enum RequestMap {
     LocalMap(LocalMap),
     BattlenetMapName(String)
 }
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 pub struct RequestCreateGame {
     #[OneOf]
-    map: RequestMap,
-    player_setup: Vec<PlayerSetup>,
+    pub map: RequestMap,
+    pub player_setup: Vec<PlayerSetup>,
     #[Get]
-    disable_fog: Option<bool>,
+    pub disable_fog: Option<bool>,
     #[Get]
-    random_seed: Option<u32>,
+    pub random_seed: Option<u32>,
     #[Get]
-    realtime: Option<bool>,
+    pub realtime: Option<bool>,
 }
 
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 #[AttachedTo(RequestJoinGame)]
 pub enum Participation {
     #[Get]
@@ -99,7 +99,7 @@ pub enum Participation {
     ObservedPlayerId(u32),
 }
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 pub struct InterfaceOptions {
     #[Get]
     raw: Option<bool>,
@@ -110,7 +110,7 @@ pub struct InterfaceOptions {
 }
 
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 pub struct RequestJoinGame {
     #[OneOf]
     participation: Participation,
@@ -121,14 +121,14 @@ pub struct RequestJoinGame {
 }
 
 
-#[derive(ToProtobuf,FromProtobuf)]
+#[derive(Debug,ToProtobuf,FromProtobuf)]
 pub enum Request {
     CreateGame(RequestCreateGame),
     JoinGame(RequestJoinGame),
 }
 
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 pub struct ResponseCreateGame {
     #[Get]
     error: Option<protos::ResponseCreateGame_Error>,
@@ -154,7 +154,7 @@ pub struct ResponseCreateGame {
 
 //impl Send for Response;
 
-#[derive(ToProtobuf, FromProtobuf)]
+#[derive(Debug,ToProtobuf, FromProtobuf)]
 pub enum Response {
     CreateGame(ResponseCreateGame),
 }

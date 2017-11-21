@@ -128,7 +128,7 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                             match self {
                                 #interior_tokens
                             }
-                            unimplemented!()
+                            pb
                         }
 
                 }
