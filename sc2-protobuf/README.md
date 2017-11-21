@@ -1,0 +1,1 @@
+This crate contains the generate protobuf code.
