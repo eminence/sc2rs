@@ -49,15 +49,6 @@ pub struct LocalMap {
     pub MapPath: String,
 }
 
-//impl FromProtobuf<protos::LocalMap> for LocalMap {
-//    fn from_protobuf(mut t: protos::LocalMap) -> Result<Self, failure::Error> {
-//        if t.has_map_path() {
-//            Ok(LocalMap { MapPath: t.take_map_path() })
-//        } else {
-//            Err(format_err!("No map path"))
-//        }
-//    }
-//}
 
 #[derive(Debug,ToProtobuf, FromProtobuf)]
 pub struct PlayerSetup {
@@ -135,37 +126,9 @@ pub struct ResponseCreateGame {
     error_details: Option<String>,
 }
 
-//impl FromProtobuf<protos::ResponseCreateGame> for ResponseCreateGame {
-//    fn from_protobuf(mut t: protos::ResponseCreateGame) -> Result<Self, failure::Error> {
-//        Ok(ResponseCreateGame {
-//            error: if t.has_error() {
-//                Some(t.get_error())
-//            } else {
-//                None
-//            },
-//            error_details: if t.has_error_details() {
-//                Some(t.take_error_details())
-//            } else {
-//                None
-//            },
-//        })
-//    }
-//}
-
-//impl Send for Response;
 
 #[derive(Debug,ToProtobuf, FromProtobuf)]
 pub enum Response {
     CreateGame(ResponseCreateGame),
 }
 
-//impl FromProtobuf<protos::Response> for Response {
-//    fn from_protobuf(mut t: protos::Response) -> Result<Response, failure::Error> {
-//        if t.has_create_game() {
-//            let x = t.take_create_game();
-//            Ok(Response::CreateGame(ResponseCreateGame::from_protobuf(x)?))
-//        } else {
-//            Err(format_err!("No known responses"))
-//        }
-//    }
-//}
