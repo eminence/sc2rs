@@ -4,17 +4,22 @@ use super::{syn, quote, utils};
 pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
     let debug_this = utils::get_attr(&ast.attrs, "DebugThis").is_some();
 
+    // Name of the struct or enum that we're generating code for
     let name = &ast.ident;
 
-    // get name of protobuf type, or if missing, try to guess it from this identifier
-
+    // Normally the struct/enum name is going to match the struct name in the generated protobuf
+    // code, but if not, the ProtoType attribute can be used to explicitly give the name of the
+    // protobuf struct.
     let proto_type = utils::get_attr(&ast.attrs, "ProtoType").unwrap_or_else(|| name.as_ref().to_owned());
 
+    // Full name of the protobuf type.  Note how the 'protos' module name is hard-coded
     let prototype = syn::Ident::from(format!("protos::{}", proto_type));
 
 
     let tokens = if let &syn::Body::Struct(syn::VariantData::Struct(ref data)) = &ast.body {
-        println!("=== Implementing ToProtobuf<{}> for {}", proto_type, name);
+        // we are doing codegen for a struct
+
+        //println!("=== Implementing ToProtobuf<{}> for {}", proto_type, name);
         let mut interior_tokens = quote::Tokens::new();
 
         if debug_this {
@@ -26,16 +31,23 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             );
             let field_ty_ident = utils::get_type_ident(&field.ty);
 
+            // name of the setter function in the protobuf struct.  Derived exclusively from the
+            // name of the field in our struct
             let setter_id = utils::construct_field_accessor(field_name, "set");
 
+            // If a field in our struct has the #[OneOf] annotation, then its type is an enum
             let is_one_of = utils::get_attr(&field.attrs, "OneOf").is_some();
 
             if is_one_of {
+                // Use the set_fields() helper code (also generated) to call the right setter
+                // methods in the protobuf object
                 interior_tokens.append(quote! {
                     self.#field_name.set_fields (&mut pb);
                 });
             } else {
                 if utils::is_option(&field.ty) {
+                    // if the field type in our struct looks like a raw protobuf type, then we
+                    // don't need to call "into_protobuf" on the value.  otherwise we do.
                     let b = if utils::is_protobuf_type(&field.ty) {
                         quote! {b}
                     } else {

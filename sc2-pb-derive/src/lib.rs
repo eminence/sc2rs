@@ -68,7 +68,7 @@ mod tests {
     #[test]
     fn get_ty() {
         let tokens = syn::parse_path("Option<bool>").unwrap();
-        println!("{:#?}", tokens);
+        //println!("{:#?}", tokens);
     }
 
     #[test]

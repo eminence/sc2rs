@@ -2,6 +2,9 @@
 use super::{syn, quote};
 
 /// convert a field name like `FooThing` into a name like `set_foo_thing`
+///
+/// This is used because the name of the field in our own structures is going to match the name of
+/// the field in the protobuf file.
 pub fn construct_field_accessor<T: AsRef<str>>(t: T, prefix: &str) -> quote::Ident {
     let s: &str = t.as_ref();
     let mut r = String::with_capacity(s.len());
@@ -85,6 +88,13 @@ pub fn is_equal(ty: &syn::Ty, s: &str) -> bool {
     ty == &syn::parse_type(s).unwrap()
 }
 
+/// Extract the value of a named attribute
+///
+/// Supports both the list syntax (like #[AttrName(Value)]) and the string syntax (like
+/// #[AttrName="value"]) but only extracts the first value from the list.
+///
+/// Also supports the no-value form (like #[AttrName]), and in this case the returned value will be
+/// Some("").  
 pub fn get_attr(attrs: &[syn::Attribute], name: &str) -> Option<String> {
     let x = attrs
         .iter()
