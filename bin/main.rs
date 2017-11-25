@@ -4,6 +4,9 @@ extern crate sc2;
 extern crate sc2_protobuf;
 extern crate protobuf;
 extern crate ws;
+extern crate url;
+
+use url::Url;
 
 use protobuf::Message;
 
@@ -39,20 +42,58 @@ fn main() {
 
    // let foo : String = "hello";
 
-    let coord = sc2::Coordinator::new();
-    let coord = coord.launch().expect("Failed to launch game");
-    println!("Game launched, now creating game...");
+    let coord = match sc2::Coordinator::connect(Url::parse("ws://localhost:12000/sc2api").unwrap()) {
+        Ok(c) => c,
+        Err(e) => {
+            println!("connection error: {:?}", e);
+            panic!();
+        }
+    };
+    //let coord = coord.launch().expect("Failed to launch game");
+    //println!("Game launched, now creating game...");
 
-    let req = types::RequestCreateGame {
-        map: types::RequestMap::BattlenetMapName("TestMap".to_owned()),
-        player_setup: Vec::new(),
-        disable_fog: Some(true),
-        random_seed: None,
-        realtime: Some(false),
+
+    // create a 1 player game
+    let player = types::PlayerSetup {
+        field_type: types::PlayerType::Participant,
+        race: types::Race::Terran,
+        difficulty:  types::Difficulty::Easy
     };
 
-    let coord = coord.create_game(req);
+    let req = types::RequestCreateGame {
+        map: types::RequestMap::LocalMap(types::LocalMap{MapPath: "/home/sc2/StarCraftII/Maps/Melee/Simple128.SC2Map".to_owned()}),
+        player_setup: vec![player],
+        disable_fog: false,
+        random_seed: None,
+        realtime: false,
+    };
+
+    let maps = coord.list_available_maps().unwrap();
+    println!("Available maps: {:?}", maps);
+    let coord = coord.create_game(req).unwrap();
     println!("Game created!");
+
+    let req = types::RequestJoinGame {
+        participation: types::Participation::Race(types::Race::Terran),
+        options: types::InterfaceOptions {
+            raw: true,
+            score: false,
+            feature_layer: None
+        }
+    };
+
+    let coord = coord.join_game(req).unwrap();
+    println!("In game!");
+
+
+    let data = coord.game_data(types::RequestData{ability_id: true, unit_type_id: true, upgrade_id: true, buff_id: true, effect_id: true}).unwrap();
+    println!("Data: {:#?}", data);
+
+    //let info = coord.game_info().unwrap();
+    //println!("game info: {:#?}", info);
+   
+    //let ob = coord.observation(types::RequestObservation{disable_fog: false}).unwrap();
+    //println!("observations: {:#?}", ob);
 
 //    sc2::launch();
 //    sleep(Duration::from_secs(10));
@@ -132,5 +173,5 @@ fn main() {
 //        }
 //    }).unwrap();
 
-    sleep(Duration::from_secs(30));
+    sleep(Duration::from_secs(3));
 }
