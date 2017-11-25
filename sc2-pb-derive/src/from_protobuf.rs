@@ -13,7 +13,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
 
 
     let tokens = if let &syn::Body::Struct(syn::VariantData::Struct(ref data)) = &ast.body {
-        println!("=== Implementing FromProtobuf<{}> for {}", proto_type, name);
+        //println!("=== Implementing FromProtobuf<{}> for {}", proto_type, name);
         let mut interior_tokens = quote::Tokens::new();
 
         if debug_this {
@@ -24,7 +24,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                 || panic!("Can't extract ident"),
             );
             let field_ty_ident = utils::get_type_ident(&field.ty);
-            println!("{:?}", field.ty);
+            //println!("{:?}", field.ty);
 
             let has_func = utils::construct_field_accessor(field_name, "has");
 
@@ -86,6 +86,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
         quote! {
             impl FromProtobuf< #prototype > for #name {
 
+                    #[allow(unused_mut)]
                     fn from_protobuf(mut pb: #prototype) -> Result<Self, failure::Error> {
                             #interior_tokens
 
@@ -127,6 +128,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             }
             quote! {
                 impl #name {
+                    #[allow(unused_mut)]
                     fn get_fields(pb: &mut protos :: #attached_to) -> #name {
 
                         #interior_tokens
@@ -169,6 +171,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             quote! {
              impl FromProtobuf< #prototype > for #name {
 
+                    #[allow(unused_mut)]
                     fn from_protobuf(mut pb: #prototype) -> Result<Self, failure::Error> {
                             #interior_tokens
 
@@ -184,6 +187,6 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
     };
 
 
-    println!("=== {}", tokens);
+    //println!("=== {}", tokens);
     tokens
 }

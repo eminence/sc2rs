@@ -1,3 +1,4 @@
+#![allow(unused_mut)]
 
 use super::{syn, quote, utils};
 
@@ -75,6 +76,7 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
         quote! {
             impl ToProtobuf< #prototype > for #name {
 
+                    #[allow(unused_mut)]
                     fn into_protobuf(self) -> #prototype {
                         let mut pb = #prototype::new();
                         #interior_tokens
@@ -90,7 +92,7 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
         // * If an enum doesn't have an AttachedTo attribute, then it represents a real
         //   protobuf structure that consists solely of a oneof enum
 
-        println!("=== Implementing helper functions for {}", name);
+        //println!("=== Implementing helper functions for {}", name);
 
         let mut interior_tokens = quote::Tokens::new();
 
@@ -113,6 +115,7 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
 
             quote! {
                 impl #name {
+                    #[allow(unused_mut)]
                     fn set_fields(self, pb: &mut protos :: #attached_to) {
 
                         match self {
@@ -135,6 +138,7 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             quote! {
                 impl ToProtobuf< #prototype > for #name {
 
+                        #[allow(unused_mut)]
                         fn into_protobuf(self) -> #prototype {
                             let mut pb = #prototype::new();
                             match self {
@@ -151,6 +155,6 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
     };
 
 
-    println!("=== {}", tokens);
+    //println!("=== {}", tokens);
     tokens
 }
