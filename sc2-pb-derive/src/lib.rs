@@ -43,7 +43,55 @@ pub fn derive_from_protobuf(input: TokenStream) -> TokenStream {
     gen.parse().unwrap()
 }
 
+#[proc_macro_derive(FromU32)]
+pub fn derive_enum_from_u32(input: TokenStream) -> TokenStream {
+    // Construct a string representation of the type definition
+    let s = input.to_string();
 
+    // Parse the string representation
+    let ast = syn::parse_derive_input(&s).unwrap();
+
+    // Build the impl
+    let gen = derive_from_u32_impl(&ast);
+
+    // Return the generated impl
+    gen.parse().unwrap()
+}
+
+fn derive_from_u32_impl(ast: &syn::DeriveInput) -> quote::Tokens {
+    let ident = &ast.ident;
+
+    let mut interior_tokens = quote!{};
+
+    // make sure we are attached to an enum
+    if let &syn::Body::Enum(ref variants) = &ast.body {
+        for var in variants {
+            let var_ident = &var.ident;
+            if let &Some(syn::ConstExpr::Lit(syn::Lit::Int(val, _))) = &var.discriminant {
+                let val = val as u32;
+                interior_tokens.append(quote!{
+                    #val => Some ( #ident :: #var_ident) ,
+                });
+            } else {
+                panic!("Enum must have a litteral integer descriminat");
+            }
+
+        }
+    } else {
+        panic!("Unable to apply the FromU32 autoderive to something that's not an enum")
+    }
+
+    quote! {
+        impl #ident {
+            pub fn from_u32(val: u32) -> Option<Self> {
+                match val {
+                    #interior_tokens
+                    _ => None
+                }
+            }
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {
