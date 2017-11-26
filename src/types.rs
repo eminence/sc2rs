@@ -6,8 +6,8 @@ use super::protobuf::repeated::RepeatedField;
 use super::sc2_protobuf::protos;
 
 pub trait RequestMessage<T, U>: ToProtobuf<T>
-where
-    Self::Reply: FromProtobuf<U>,
+    where
+        Self::Reply: FromProtobuf<U>,
 {
     type Reply;
 }
@@ -37,8 +37,8 @@ pub trait ToProtobuf<T> {
 }
 
 impl<T, U> ToProtobuf<RepeatedField<T>> for Vec<U>
-where
-    U: ToProtobuf<T>,
+    where
+        U: ToProtobuf<T>,
 {
     fn into_protobuf(self) -> RepeatedField<T> {
         let newv = self.into_iter().map(|e| e.into_protobuf()).collect();
@@ -47,8 +47,8 @@ where
 }
 
 impl<T, U> FromProtobuf<Vec<T>> for Vec<U>
-where
-    U: FromProtobuf<T>,
+    where
+        U: FromProtobuf<T>,
 {
     fn from_protobuf(t: Vec<T>) -> Result<Self, failure::Error> {
         Ok(
@@ -60,8 +60,8 @@ where
 }
 
 impl<T, U> FromProtobuf<RepeatedField<T>> for Vec<U>
-where
-    U: FromProtobuf<T>,
+    where
+        U: FromProtobuf<T>,
 {
     fn from_protobuf(t: RepeatedField<T>) -> Result<Self, failure::Error> {
         Ok(
@@ -89,6 +89,7 @@ pub struct PlayerSetup {
     #[Get]
     pub difficulty: protos::Difficulty,
 }
+
 pub use self::protos::{PlayerType, Race, Difficulty};
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -136,7 +137,8 @@ pub struct InterfaceOptions {
     /// Enable the Feature Layer interface?
     ///
     /// Set to `None` to disable.
-    pub feature_layer: Option<SpatialCameraSetup>, // TODO render
+    pub feature_layer: Option<SpatialCameraSetup>,
+    // TODO render
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -164,9 +166,9 @@ pub struct RequestAvailableMaps {}
 #[derive(FromProtobuf)]
 pub struct ImageData {
     #[Get]
-    bits_per_pixel: i32,
-    size: Size2DI,
-    data: Vec<u8>,
+    pub bits_per_pixel: i32,
+    pub size: Size2DI,
+    pub data: Vec<u8>,
 }
 // custom derive for Debug, so we don't have to show all the data
 impl ::std::fmt::Debug for ImageData {
@@ -178,17 +180,17 @@ impl ::std::fmt::Debug for ImageData {
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct Size2DI {
     #[Get]
-    x: i32,
+    pub x: i32,
     #[Get]
-    y: i32,
+    pub y: i32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct PointI {
     #[Get]
-    x: i32,
+    pub x: i32,
     #[Get]
-    y: i32,
+    pub y: i32,
 }
 
 #[derive(Debug, FromProtobuf)]
@@ -197,25 +199,25 @@ pub struct PointI {
 /// Note: bottom left of the screen is 0,0
 pub struct Point2D {
     #[Get]
-    x: f32,
+    pub x: f32,
     #[Get]
-    y: f32,
+    pub y: f32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct Point {
     #[Get]
-    x: f32,
+    pub x: f32,
     #[Get]
-    y: f32,
+    pub y: f32,
     #[Get]
-    z: f32,
+    pub z: f32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct RectangleI {
-    p0: PointI,
-    p1: PointI,
+    pub p0: PointI,
+    pub p1: PointI,
 }
 
 #[derive(Debug, FromProtobuf)]
@@ -280,162 +282,162 @@ pub struct RequestData {
 
 #[derive(Debug, FromProtobuf)]
 pub struct ResponseData {
-    abilities: Vec<AbilityData>,
-    units: Vec<UnitTypeData>,
-    upgrades: Vec<UpgradeData>,
-    buffs: Vec<BuffData>,
-    effects: Vec<EffectData>,
+    pub abilities: Vec<AbilityData>,
+    pub units: Vec<UnitTypeData>,
+    pub upgrades: Vec<UpgradeData>,
+    pub buffs: Vec<BuffData>,
+    pub effects: Vec<EffectData>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct AbilityData {
     /// Stable ID
     #[Get]
-    ability_id: u32,
+    pub ability_id: u32,
 
     /// Catalog name of the ability
-    link_name: String,
+    pub link_name: String,
 
     /// Catalog index of the ability
     #[Get]
-    link_index: u32,
+    pub link_index: u32,
 
     /// Name used for the command card
-    button_name: String,
+    pub button_name: String,
 
     /// A human friendly name when the button name or link name isn't descriptive
-    friendly_name: Option<String>,
+    pub friendly_name: Option<String>,
 
     /// Hotkey
-    hotkey: Option<String>,
+    pub hotkey: Option<String>,
 
     /// The ability id may be represented by the given more generic id
     #[Get]
-    remaps_to_ability_id: u32,
+    pub remaps_to_ability_id: u32,
 
     #[Get]
-    target: protos::AbilityData_Target,
+    pub target: protos::AbilityData_Target,
 
     /// If true, the ability may be used on this set of mods/map
     #[Get]
-    available: bool,
+    pub available: bool,
 
     #[Get]
-    allow_minimap: bool,
+    pub allow_minimap: bool,
     #[Get]
-    allow_autocast: bool,
+    pub allow_autocast: bool,
     #[Get]
-    is_building: bool,
+    pub is_building: bool,
     #[Get]
-    footprint_radius: f32,
+    pub footprint_radius: f32,
     #[Get]
-    is_instant_placement: bool,
+    pub is_instant_placement: bool,
     #[Get]
-    cast_range: f32,
+    pub cast_range: f32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct UnitTypeData {
     #[Get]
-    unit_id: u32,
-    name: String,
+    pub unit_id: u32,
+    pub name: String,
     #[Get]
-    available: bool,
+    pub available: bool,
     #[Get]
-    cargo_size: u32,
+    pub cargo_size: u32,
     #[Get]
-    mineral_cost: u32,
+    pub mineral_cost: u32,
     #[Get]
-    vespene_cost: u32,
+    pub vespene_cost: u32,
     #[Get]
-    food_required: f32,
+    pub food_required: f32,
     #[Get]
-    food_provided: f32,
+    pub food_provided: f32,
     /// The ability that builds this unit
     #[Get]
-    ability_id: u32,
+    pub ability_id: u32,
     #[Get]
-    race: protos::Race,
+    pub race: protos::Race,
     #[Get]
-    build_time: f32,
+    pub build_time: f32,
     #[Get]
-    has_vespene: bool,
+    pub has_vespene: bool,
     #[Get]
-    has_minerals: bool,
+    pub has_minerals: bool,
     /// Other units that satisfy the same tech requirement
-    tech_alias: Vec<u32>,
+    pub tech_alias: Vec<u32>,
     /// The morphed variant of this unit
     #[Get]
-    unit_alias: u32,
+    pub unit_alias: u32,
     #[Get]
-    tech_requirement: u32,
+    pub tech_requirement: u32,
     #[Get]
-    require_attached: bool,
+    pub require_attached: bool,
 
-    attributes: Vec<protos::Attribute>,
+    pub attributes: Vec<protos::Attribute>,
     #[Get]
-    movement_speed: f32,
+    pub movement_speed: f32,
     #[Get]
-    armor: f32,
-    weapons: Vec<Weapon>,
+    pub armor: f32,
+    pub weapons: Vec<Weapon>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct Weapon {
     #[Get]
-    field_type: protos::Weapon_TargetType,
+    pub field_type: protos::Weapon_TargetType,
     #[Get]
-    damage: f32,
-    damage_bonus: Vec<DamageBonus>,
+    pub damage: f32,
+    pub damage_bonus: Vec<DamageBonus>,
     /// Number of hits per attack
     ///
     /// e.g. Colossus has 2 beams
     #[Get]
-    attacks: u32,
+    pub attacks: u32,
     #[Get]
-    range: f32,
+    pub range: f32,
     #[Get]
-    speed: f32,
+    pub speed: f32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct DamageBonus {
     #[Get]
-    attribute: protos::Attribute,
+    pub attribute: protos::Attribute,
     #[Get]
-    bonus: f32,
+    pub bonus: f32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct UpgradeData {
     #[Get]
-    upgrade_id: u32,
-    name: String,
+    pub upgrade_id: u32,
+    pub name: String,
     #[Get]
-    mineral_cost: u32,
+    pub mineral_cost: u32,
     #[Get]
-    vespene_cost: u32,
+    pub vespene_cost: u32,
     #[Get]
-    research_time: f32,
+    pub research_time: f32,
     #[Get]
-    ability_id: u32,
+    pub ability_id: u32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct BuffData {
     #[Get]
-    buff_id: u32,
-    name: String,
+    pub buff_id: u32,
+    pub name: String,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct EffectData {
     #[Get]
-    effect_id: u32,
-    name: String,
-    friendly_name: String,
+    pub effect_id: u32,
+    pub name: String,
+    pub friendly_name: String,
     #[Get]
-    radius: f32,
+    pub radius: f32,
 }
 
 #[derive(Debug, FromProtobuf)]
@@ -501,8 +503,8 @@ pub struct Action {
 #[derive(Debug, FromProtobuf)]
 pub struct ActionChat {
     #[Get]
-    channel: protos::ActionChat_Channel,
-    message: String,
+    pub channel: protos::ActionChat_Channel,
+    pub message: String,
 }
 
 #[derive(Debug, FromProtobuf)]
@@ -523,221 +525,221 @@ pub enum ActionRawUnitCommandTargetEnum {
 #[derive(Debug, FromProtobuf)]
 pub struct ActionRawUnitCommand {
     #[Get]
-    ability_id: i32,
+    pub ability_id: i32,
     #[OneOf]
-    target: ActionRawUnitCommandTargetEnum,
-    unit_tags: Vec<u64>,
+    pub target: ActionRawUnitCommandTargetEnum,
+    pub unit_tags: Vec<u64>,
     #[Get]
-    queue_command: bool,
+    pub queue_command: bool,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct ActionRawToggleAutocast {
     #[Get]
-    ability_id: i32,
-    unit_tags: Vec<u64>,
+    pub ability_id: i32,
+    pub unit_tags: Vec<u64>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct ActionRawCameraMove {
-    center_world_space: Point,
+    pub center_world_space: Point,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct ActionError {
     /// Only populated when using raw interface
     #[Get]
-    unit_tag: Option<u64>,
+    pub unit_tag: Option<u64>,
     #[Get]
-    ability_id: u64,
+    pub ability_id: u64,
     #[Get]
-    result: protos::ActionResult,
+    pub result: protos::ActionResult,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct PlayerCommon {
     #[Get]
-    player_id: u32,
+    pub player_id: u32,
     #[Get]
-    minerals: u32,
+    pub minerals: u32,
     #[Get]
-    vespene: u32,
+    pub vespene: u32,
     #[Get]
-    food_cap: u32,
+    pub food_cap: u32,
     #[Get]
-    food_used: u32,
+    pub food_used: u32,
     #[Get]
-    food_army: u32,
+    pub food_army: u32,
     #[Get]
-    food_workers: u32,
+    pub food_workers: u32,
     #[Get]
-    idle_worker_count: u32,
+    pub idle_worker_count: u32,
     #[Get]
-    army_count: u32,
+    pub army_count: u32,
     #[Get]
-    warp_gate_count: u32,
+    pub warp_gate_count: u32,
     #[Get]
-    larva_count: u32,
+    pub larva_count: u32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct AvailableAbility {
     #[Get]
-    ability_id: i32,
+    pub ability_id: i32,
     #[Get]
-    requires_point: bool,
+    pub requires_point: bool,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct ObservationRaw {
-    player: PlayerRaw,
-    units: Vec<Unit>,
+    pub player: PlayerRaw,
+    pub units: Vec<Unit>,
     /// Fog of war, creep and so on. Board stuff that changes per frame
-    map_state: MapState,
-    event: Event,
-    effects: Vec<Effect>,
+    pub map_state: MapState,
+    pub event: Event,
+    pub effects: Vec<Effect>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct Event {
-    dead_units: Vec<u64>,
+    pub dead_units: Vec<u64>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct MapState {
     /// 1 byte visibility layer
-    visibility: ImageData,
+    pub visibility: ImageData,
     /// 1 byte creep layer
-    creep: ImageData,
+    pub creep: ImageData,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct Effect {
     #[Get]
-    effect_id: u32,
+    pub effect_id: u32,
     /// Effect may impact multiple locations.
     ///
     /// For example: Lurker attack
-    pos: Vec<Point2D>,
+    pub pos: Vec<Point2D>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct PlayerRaw {
-    power_sources: Vec<PowerSource>,
-    camera: Point,
-    upgrade_ids: Vec<u32>,
+    pub power_sources: Vec<PowerSource>,
+    pub camera: Point,
+    pub upgrade_ids: Vec<u32>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct PowerSource {
-    pos: Point,
+    pub pos: Point,
     #[Get]
-    radius: f32,
+    pub radius: f32,
     #[Get]
-    tag: u64,
+    pub tag: u64,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct Unit {
     #[Get]
-    display_type: protos::DisplayType,
+    pub display_type: protos::DisplayType,
     #[Get]
-    alliance: protos::Alliance,
+    pub alliance: protos::Alliance,
     /// Unique identifier for a unix
     #[Get]
-    tag: u64,
+    pub tag: u64,
     #[Get]
-    unit_type: u32,
+    pub unit_type: u32,
     #[Get]
-    owner: i32,
+    pub owner: i32,
 
-    pos: Point,
+    pub pos: Point,
     #[Get]
-    facing: f32,
+    pub facing: f32,
     #[Get]
-    radius: f32,
+    pub radius: f32,
     /// Range 0.0 to 1.0
     #[Get]
-    build_progress: f32,
+    pub build_progress: f32,
     #[Get]
-    cloak: protos::CloakState,
+    pub cloak: protos::CloakState,
 
     #[Get]
-    detect_range: f32,
+    pub detect_range: f32,
     #[Get]
-    radar_range: f32,
+    pub radar_range: f32,
 
     #[Get]
-    is_selected: bool,
+    pub is_selected: bool,
     /// Visible and within the camera frustrum
     #[Get]
-    is_on_screen: bool,
+    pub is_on_screen: bool,
     /// Detected by sensor tower
     #[Get]
-    is_blip: bool,
+    pub is_blip: bool,
     #[Get]
-    is_powered: bool,
+    pub is_powered: bool,
 
     // Not populated for snapshots:
     #[Get]
-    health: Option<f32>,
+    pub health: Option<f32>,
     #[Get]
-    health_max: Option<f32>,
+    pub health_max: Option<f32>,
     #[Get]
-    shield: Option<f32>,
+    pub shield: Option<f32>,
     #[Get]
-    shield_max: Option<f32>,
+    pub shield_max: Option<f32>,
     #[Get]
-    energy: Option<f32>,
+    pub energy: Option<f32>,
     #[Get]
-    energy_max: Option<f32>,
+    pub energy_max: Option<f32>,
     #[Get]
-    mineral_contents: Option<i32>,
+    pub mineral_contents: Option<i32>,
     #[Get]
-    vespene_contents: Option<i32>,
+    pub vespene_contents: Option<i32>,
     #[Get]
-    is_flying: Option<bool>,
+    pub is_flying: Option<bool>,
     #[Get]
-    is_burrowed: Option<bool>,
+    pub is_burrowed: Option<bool>,
 
     // Not populated for enemies:
-    orders: Vec<UnitOrder>,
+    pub orders: Vec<UnitOrder>,
     #[Get]
-    add_on_tag: Option<u64>,
-    passengers: Vec<PassengerUnit>,
+    pub add_on_tag: Option<u64>,
+    pub passengers: Vec<PassengerUnit>,
     #[Get]
-    cargo_space_taken: Option<i32>,
+    pub cargo_space_taken: Option<i32>,
     #[Get]
-    cargo_space_max: Option<i32>,
-    buff_ids: Vec<u32>,
+    pub cargo_space_max: Option<i32>,
+    pub buff_ids: Vec<u32>,
     #[Get]
-    assigned_harvesters: Option<i32>,
+    pub assigned_harvesters: Option<i32>,
     #[Get]
-    ideal_harvesters: Option<i32>,
+    pub ideal_harvesters: Option<i32>,
     #[Get]
-    weapon_cooldown: Option<f32>,
+    pub weapon_cooldown: Option<f32>,
     #[Get]
-    engaged_target_tag: Option<u64>,
+    pub engaged_target_tag: Option<u64>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct PassengerUnit {
     #[Get]
-    tag: u64,
+    pub tag: u64,
     #[Get]
-    health: f32,
+    pub health: f32,
     #[Get]
-    health_max: f32,
+    pub health_max: f32,
     #[Get]
-    shield: f32,
+    pub shield: f32,
     #[Get]
-    shield_max: f32,
+    pub shield_max: f32,
     #[Get]
-    energy: f32,
+    pub energy: f32,
     #[Get]
-    energy_max: f32,
+    pub energy_max: f32,
     #[Get]
-    unit_type: u32,
+    pub unit_type: u32,
 }
 
 #[derive(Debug, FromProtobuf)]
@@ -751,26 +753,27 @@ pub enum UnitOrderTarget {
 #[derive(Debug, FromProtobuf)]
 pub struct UnitOrder {
     #[Get]
-    ability_id: u32,
+    pub ability_id: u32,
     #[OneOf]
-    target: UnitOrderTarget,
+    pub target: UnitOrderTarget,
     /// Progress of train abilities.  Range 0.0 to 1.0
     #[Get]
-    progress: f32,
+    pub progress: f32,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct Observation {
     #[Get]
-    game_loop: u32,
-    player_common: PlayerCommon,
-    alerts: Vec<protos::Alert>,
+    pub game_loop: u32,
+    pub player_common: PlayerCommon,
+    pub alerts: Vec<protos::Alert>,
     /// Abilities available in the selection. Enabled if in this list, disabled otherwise
-    abilities: Vec<AvailableAbility>,
+    pub abilities: Vec<AvailableAbility>,
     //TODO score: Score,
-    raw_data: Option<ObservationRaw>, //TODO feature_layer_data
-                                      //TODO render_data
-                                      //TODO ui_data
+    pub raw_data: Option<ObservationRaw>,
+    //TODO feature_layer_data
+    //TODO render_data
+    //TODO ui_data
 }
 
 #[derive(Debug, FromProtobuf)]
@@ -780,6 +783,7 @@ pub struct PlayerResult {
     #[Get]
     pub result: protos::Result,
 }
+
 use self::protos::Result as ProtoResult;
 
 
@@ -797,6 +801,12 @@ pub struct ResponseObservation {
     pub observation: Observation,
     pub player_result: Vec<PlayerResult>,
     pub chat: Vec<ChatReceived>,
+}
+
+impl ObservationRaw {
+    pub fn get_my_units<'a>(&'a self) -> Vec<&'a Unit> {
+        self.units.iter().filter(|u| u.alliance == protos::Alliance::Selff).collect()
+    }
 }
 
 #[derive(Debug, Eq, PartialEq)]
