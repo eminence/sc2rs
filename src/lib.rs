@@ -263,18 +263,20 @@ impl Coordinator<GameState::Launched> {
                 if resp.error.len() > 0 { 
                     return Err(format_err!("Reply had errors: {:?}", resp.error))
                 }
-                // check to see where in the right state:
-                if let Some(status) = resp.status {
-                    if status != types::Status::InitGame {
-                        return Err(format_err!("Not in the right state: {:?}", status))
-                    }
-                }
+
 
                 if let types::ResponseEnum::CreateGame(ref data) = resp.response {
                     // the ResponseCreateGame struct might also have errors itself, so check for
                     // those as well
                     if let Some(ref err) = data.error {
                         return Err(format_err!("Unexpected error: {:?}: {:?}", err, data.error_details));
+                    }
+
+                    // if still no error, check to see if we're in the right state
+                    if let Some(status) = resp.status {
+                        if status != types::Status::InitGame {
+                            return Err(format_err!("Not in the right state: {:?}", status))
+                        }
                     }
 
                     // ok!  no error
@@ -323,18 +325,20 @@ impl Coordinator<GameState::InitGame> {
                 if resp.error.len() > 0 { 
                     return Err(format_err!("Reply had errors: {:?}", resp.error))
                 }
-                // check to see where in the right state:
-                if let Some(status) = resp.status {
-                    if status != types::Status::InGame {
-                        return Err(format_err!("Not in the right state: {:?}", status))
-                    }
-                }
+
 
                 if let types::ResponseEnum::JoinGame(ref data) = resp.response {
                     // the ResponseJoinGame struct might also have errors itself, so check for
                     // those as well
                     if let Some(ref err) = data.error {
                         return Err(format_err!("Unexpected error: {:?}: {:?}", err, data.error_details));
+                    }
+
+                    // check to see where in the right state:
+                    if let Some(status) = resp.status {
+                        if status != types::Status::InGame {
+                            return Err(format_err!("Not in the right state: {:?}", status))
+                        }
                     }
 
                     // ok!  no error
