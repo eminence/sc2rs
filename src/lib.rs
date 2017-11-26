@@ -62,7 +62,7 @@ pub struct Coordinator<State> {
     sc2_join_handle: Option<thread::JoinHandle<process::ExitStatus>>,
     sc2_receiver: Option<Receiver<types::Response>>,
     sc2_sender: Option<Sender<types::Request>>,
-    _state: std::marker::PhantomData<State>
+    _state: std::marker::PhantomData<State>,
 }
 
 impl Coordinator<GameState::Unlaunched> {
@@ -71,7 +71,7 @@ impl Coordinator<GameState::Unlaunched> {
             sc2_join_handle: None,
             sc2_receiver: None,
             sc2_sender: None,
-            _state: std::marker::PhantomData
+            _state: std::marker::PhantomData,
         }
     }
 }
@@ -82,7 +82,7 @@ struct ConnectOnlyWSFactory {}
 
 
 struct ConnectOnlyHandler {
-    ws_sender: ws::Sender
+    ws_sender: ws::Sender,
 }
 
 impl ws::Handler for ConnectOnlyHandler {
@@ -103,12 +103,15 @@ impl ws::Factory for ConnectOnlyWSFactory {
 
 struct WSHandlerFactory {
     sender: Sender<types::Response>,
-    receiver: Option<Receiver<types::Request>>
+    receiver: Option<Receiver<types::Request>>,
 }
 
 impl WSHandlerFactory {
     fn new(s: Sender<types::Response>, r: Receiver<types::Request>) -> WSHandlerFactory {
-        WSHandlerFactory { sender: s, receiver: Some(r) }
+        WSHandlerFactory {
+            sender: s,
+            receiver: Some(r),
+        }
     }
 }
 
@@ -117,7 +120,11 @@ impl ws::Factory for WSHandlerFactory {
 
     fn connection_made(&mut self, ws_socket: ws::Sender) -> Self::Handler {
         if let Some(r) = self.receiver.take() {
-            WSHandler { ws_socket, sender: self.sender.clone(), receiver: r }
+            WSHandler {
+                ws_socket,
+                sender: self.sender.clone(),
+                receiver: r,
+            }
         } else {
             panic!("Unable to handle simultaneous connections")
         }
@@ -128,30 +135,43 @@ impl ws::Factory for WSHandlerFactory {
 }
 
 impl<S> Coordinator<S> {
-    pub fn send_custom<T, U, V>(t: T) where T: types::RequestMessage<U, V> {
+    pub fn send_custom<T, U, V>(t: T)
+    where
+        T: types::RequestMessage<U, V>,
+    {
     }
 }
 
 impl Coordinator<GameState::Unlaunched> {
     pub fn launch(self) -> Result<Coordinator<GameState::Launched>, Error> {
-        let scpath = Path::new(r#"Z:\Program Files (x86)\StarCraft II\Versions\Base59587\SC2_x64.exe"#);
+        let scpath = Path::new(
+            r#"Z:\Program Files (x86)\StarCraft II\Versions\Base59587\SC2_x64.exe"#,
+        );
 
         let mut cmd = process::Command::new(&scpath)
             .current_dir(r#"z:\Program Files (x86)\StarCraft II\Support64"#)
-            .args(&["-listen", "127.0.0.1",
-                "-port", "8167",
-                "-displayMode", "0",
-                "-windowwidth", "1024",
-                "-windowheight", "768",
-                "-windowx", "100",
-                "-windowxy", "100"
-            ])
+            .args(
+                &[
+                    "-listen",
+                    "127.0.0.1",
+                    "-port",
+                    "8167",
+                    "-displayMode",
+                    "0",
+                    "-windowwidth",
+                    "1024",
+                    "-windowheight",
+                    "768",
+                    "-windowx",
+                    "100",
+                    "-windowxy",
+                    "100",
+                ],
+            )
             .spawn()?;
 
         // spawn a new thread to manage this child process
-        let hand = thread::spawn(move || {
-            cmd.wait().expect("Failed to spawn SC2_x64.exe")
-        });
+        let hand = thread::spawn(move || cmd.wait().expect("Failed to spawn SC2_x64.exe"));
 
 
         // ws::connect will create a new event loop and run it to completion, so this needs to be in a new thread
@@ -177,23 +197,28 @@ impl Coordinator<GameState::Unlaunched> {
         let (sc2_sender, remote_sc2_receiver) = std::sync::mpsc::channel();
         let (remote_sc2_sender, sc2_receiver) = std::sync::mpsc::channel();
 
-        let mut builder = ws::Builder::new().build(WSHandlerFactory::new(remote_sc2_sender, remote_sc2_receiver)).unwrap();
+        let mut builder = ws::Builder::new()
+            .build(WSHandlerFactory::new(
+                remote_sc2_sender,
+                remote_sc2_receiver,
+            ))
+            .unwrap();
         let url = Url::parse("ws://127.0.0.1:8167/sc2api").unwrap();
         builder.connect(url.clone()).unwrap();
-        thread::spawn(move || { builder.run() });
+        thread::spawn(move || builder.run());
 
         Ok(Coordinator {
             sc2_join_handle: Some(hand),
             sc2_receiver: Some(sc2_receiver),
             sc2_sender: Some(sc2_sender),
-            _state: std::marker::PhantomData
+            _state: std::marker::PhantomData,
         })
     }
 }
 
-pub enum TransitionStatus<O,E> {
+pub enum TransitionStatus<O, E> {
     Ok(Coordinator<O>),
-    Err(Error, Coordinator<E>)
+    Err(Error, Coordinator<E>),
 }
 
 impl Coordinator<GameState::Launched> {
@@ -203,20 +228,23 @@ impl Coordinator<GameState::Launched> {
         let (sc2_sender, remote_sc2_receiver) = std::sync::mpsc::channel();
         let (remote_sc2_sender, sc2_receiver) = std::sync::mpsc::channel();
 
-        let mut builder = ws::Builder::new().build(WSHandlerFactory::new(remote_sc2_sender, remote_sc2_receiver))?;
+        let mut builder = ws::Builder::new().build(WSHandlerFactory::new(
+            remote_sc2_sender,
+            remote_sc2_receiver,
+        ))?;
         builder.connect(url)?; // note: the connection won't actually be made until the ws eventloop is run
-        thread::spawn(move || { builder.run() });
-        
+        thread::spawn(move || builder.run());
+
         Ok(Coordinator {
             sc2_join_handle: None,
             sc2_receiver: Some(sc2_receiver),
             sc2_sender: Some(sc2_sender),
-            _state: std::marker::PhantomData
+            _state: std::marker::PhantomData,
         })
     }
 
     pub fn list_available_maps(&self) -> Result<types::ResponseAvailableMaps, Error> {
-        let req = types::Request::AvailableMaps(types::RequestAvailableMaps{});
+        let req = types::Request::AvailableMaps(types::RequestAvailableMaps {});
 
         if let Some(ref sender) = self.sc2_sender {
             sender.send(req);
@@ -228,10 +256,14 @@ impl Coordinator<GameState::Launched> {
         if let Some(ref receiver) = self.sc2_receiver {
             if let Ok(resp) = receiver.recv() {
                 // check for errors
-                if resp.error.len() > 0 { return Err(format_err!("Reply had errors: {:?}", resp.error)) }
+                if resp.error.len() > 0 {
+                    return Err(format_err!("Reply had errors: {:?}", resp.error));
+                }
                 // check to see where in the right state:
                 if let Some(status) = resp.status {
-                    if status != types::Status::Launched { return Err(format_err!("Not in the right state: {:?}", status)) ; }
+                    if status != types::Status::Launched {
+                        return Err(format_err!("Not in the right state: {:?}", status));
+                    }
                 }
                 if let types::ResponseEnum::AvailableMaps(data) = resp.response {
                     return Ok(data);
@@ -244,7 +276,10 @@ impl Coordinator<GameState::Launched> {
         Err(format_err!("Unable to extract reply"))
     }
 
-    pub fn create_game<>(self, req: types::RequestCreateGame) -> Result<Coordinator<GameState::InitGame>, Error> {
+    pub fn create_game(
+        self,
+        req: types::RequestCreateGame,
+    ) -> Result<Coordinator<GameState::InitGame>, Error> {
         let req = types::Request::CreateGame(req);
 
         if let Some(ref sender) = self.sc2_sender {
@@ -255,13 +290,13 @@ impl Coordinator<GameState::Launched> {
 
         // TODO return the current state if this create_game fails.  this will be easier to do with
         // NLL
-        
+
         // wait for reply
         if let Some(receiver) = self.sc2_receiver {
             if let Ok(resp) = receiver.recv() {
                 // check for errors
-                if resp.error.len() > 0 { 
-                    return Err(format_err!("Reply had errors: {:?}", resp.error))
+                if resp.error.len() > 0 {
+                    return Err(format_err!("Reply had errors: {:?}", resp.error));
                 }
 
 
@@ -269,13 +304,17 @@ impl Coordinator<GameState::Launched> {
                     // the ResponseCreateGame struct might also have errors itself, so check for
                     // those as well
                     if let Some(ref err) = data.error {
-                        return Err(format_err!("Unexpected error: {:?}: {:?}", err, data.error_details));
+                        return Err(format_err!(
+                            "Unexpected error: {:?}: {:?}",
+                            err,
+                            data.error_details
+                        ));
                     }
 
                     // if still no error, check to see if we're in the right state
                     if let Some(status) = resp.status {
                         if status != types::Status::InitGame {
-                            return Err(format_err!("Not in the right state: {:?}", status))
+                            return Err(format_err!("Not in the right state: {:?}", status));
                         }
                     }
 
@@ -284,8 +323,8 @@ impl Coordinator<GameState::Launched> {
                         sc2_join_handle: self.sc2_join_handle,
                         sc2_receiver: Some(receiver),
                         sc2_sender: self.sc2_sender,
-                        _state: std::marker::PhantomData
-                    })
+                        _state: std::marker::PhantomData,
+                    });
 
 
                 } else {
@@ -297,16 +336,25 @@ impl Coordinator<GameState::Launched> {
         return Err(format_err!("Unable to extract reply"));
 
     }
-    pub fn join_game(self, req: types::RequestJoinGame) -> Result<Coordinator<GameState::InGame>, Error> {
+    pub fn join_game(
+        self,
+        req: types::RequestJoinGame,
+    ) -> Result<Coordinator<GameState::InGame>, Error> {
         unimplemented!()
     }
-    pub fn start_replay(self, req: types::RequestJoinGame) -> Result<Coordinator<GameState::InReplay>, Error> {
+    pub fn start_replay(
+        self,
+        req: types::RequestJoinGame,
+    ) -> Result<Coordinator<GameState::InReplay>, Error> {
         unimplemented!()
     }
 }
 
 impl Coordinator<GameState::InitGame> {
-    pub fn join_game(self, req: types::RequestJoinGame) -> Result<Coordinator<GameState::InGame>, Error> {
+    pub fn join_game(
+        self,
+        req: types::RequestJoinGame,
+    ) -> Result<Coordinator<GameState::InGame>, Error> {
         let req = types::Request::JoinGame(req);
 
         if let Some(ref sender) = self.sc2_sender {
@@ -317,13 +365,13 @@ impl Coordinator<GameState::InitGame> {
 
         // TODO return the current state if this create_game fails.  this will be easier to do with
         // NLL
-        
+
         // wait for reply
         if let Some(receiver) = self.sc2_receiver {
             if let Ok(resp) = receiver.recv() {
                 // check for errors
-                if resp.error.len() > 0 { 
-                    return Err(format_err!("Reply had errors: {:?}", resp.error))
+                if resp.error.len() > 0 {
+                    return Err(format_err!("Reply had errors: {:?}", resp.error));
                 }
 
 
@@ -331,13 +379,17 @@ impl Coordinator<GameState::InitGame> {
                     // the ResponseJoinGame struct might also have errors itself, so check for
                     // those as well
                     if let Some(ref err) = data.error {
-                        return Err(format_err!("Unexpected error: {:?}: {:?}", err, data.error_details));
+                        return Err(format_err!(
+                            "Unexpected error: {:?}: {:?}",
+                            err,
+                            data.error_details
+                        ));
                     }
 
                     // check to see where in the right state:
                     if let Some(status) = resp.status {
                         if status != types::Status::InGame {
-                            return Err(format_err!("Not in the right state: {:?}", status))
+                            return Err(format_err!("Not in the right state: {:?}", status));
                         }
                     }
 
@@ -346,8 +398,8 @@ impl Coordinator<GameState::InitGame> {
                         sc2_join_handle: self.sc2_join_handle,
                         sc2_receiver: Some(receiver),
                         sc2_sender: self.sc2_sender,
-                        _state: std::marker::PhantomData
-                    })
+                        _state: std::marker::PhantomData,
+                    });
 
 
                 } else {
@@ -413,11 +465,15 @@ macro_rules! ImplInner {
 }
 
 impl Coordinator<GameState::InGame> {
-
     ImplSimpleReq!(game_info, ResponseGameInfo, RequestGameInfo, GameInfo);
-    ImplReq!(observation, ResponseObservation, RequestObservation, Observation);
+    ImplReq!(
+        observation,
+        ResponseObservation,
+        RequestObservation,
+        Observation
+    );
     ImplReq!(game_data, ResponseData, RequestData, Data);
-
+    ImplReq!(step, ResponseStep, RequestStep, Step);
 }
 
 
@@ -427,7 +483,7 @@ pub struct WSHandler {
 
     /// After decoding the protobuf message, it's sent down this channel
     sender: Sender<types::Response>,
-    receiver: Receiver<types::Request>
+    receiver: Receiver<types::Request>,
 }
 
 
@@ -458,7 +514,9 @@ impl ws::Handler for WSHandler {
         Ok(())
     }
     fn on_timeout(&mut self, event: Token) -> ws::Result<()> {
-        if event != TIMEOUT_TOKEN { return Ok(()); }
+        if event != TIMEOUT_TOKEN {
+            return Ok(());
+        }
         println!("on_timeout");
         match self.receiver.recv_timeout(Duration::from_secs(1)) {
             Ok(req) => {
