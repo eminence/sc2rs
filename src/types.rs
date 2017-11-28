@@ -4,6 +4,7 @@ use super::failure;
 use super::protobuf::repeated::RepeatedField;
 
 use super::sc2_protobuf::protos;
+use super::UnitIDs;
 
 pub trait RequestMessage<T, U>: ToProtobuf<T>
     where
@@ -90,7 +91,7 @@ pub enum PlayerType {
     Observer = 3,
 }
 
-#[derive(Clone,PartialEq,Eq,Debug,Hash,ToProtobuf,FromProtobuf)]
+#[derive(Clone,PartialEq,Eq,Debug,Hash,ToProtobuf,FromProtobuf, Serialize, Deserialize)]
 pub enum Race {
     NoRace = 0,
     Terran = 1,
@@ -321,7 +322,8 @@ pub struct ResponseData {
     pub effects: Vec<EffectData>,
 }
 
-#[derive(Clone,PartialEq,Eq,Debug,Hash,FromProtobuf)]
+#[derive(Clone,PartialEq,Eq,Debug,Hash,FromProtobuf,Serialize, Deserialize)]
+#[allow(non_camel_case_types)]
 pub enum AbilityData_Target {
     None = 1,
     Point = 2,
@@ -330,7 +332,7 @@ pub enum AbilityData_Target {
     PointOrNone = 5,
 }
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, Clone, FromProtobuf, Serialize, Deserialize)]
 pub struct AbilityData {
     /// Stable ID
     #[Get]
@@ -377,7 +379,7 @@ pub struct AbilityData {
     pub cast_range: f32,
 }
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, Clone, FromProtobuf, Serialize, Deserialize)]
 pub struct UnitTypeData {
     /// Stable ID
     #[Get]
@@ -425,7 +427,7 @@ pub struct UnitTypeData {
     pub weapons: Vec<Weapon>,
 }
 
-#[derive(Clone,PartialEq,Eq,Debug,Hash,FromProtobuf)]
+#[derive(Clone,PartialEq,Eq,Debug,Hash,FromProtobuf, Serialize, Deserialize)]
 #[allow(non_camel_case_types)]
 pub enum Weapon_TargetType {
     Ground = 1,
@@ -433,7 +435,7 @@ pub enum Weapon_TargetType {
     Any = 3,
 }
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, Clone, FromProtobuf, Serialize, Deserialize)]
 pub struct Weapon {
     #[Get]
     pub field_type: Weapon_TargetType,
@@ -451,7 +453,7 @@ pub struct Weapon {
     pub speed: f32,
 }
 
-#[derive(Clone,PartialEq,Eq,Debug,Hash, FromProtobuf)]
+#[derive(Clone,PartialEq,Eq,Debug,Hash, FromProtobuf, Serialize, Deserialize)]
 pub enum Attribute {
     Light = 1,
     Armored = 2,
@@ -466,7 +468,7 @@ pub enum Attribute {
     Summoned = 11,
 }
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, Clone, FromProtobuf, Serialize, Deserialize)]
 pub struct DamageBonus {
     #[Get]
     pub attribute: Attribute,
@@ -528,6 +530,7 @@ pub enum Request {
 
 
 #[derive(Clone,PartialEq,Eq,Debug,Hash,ToProtobuf,FromProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum ResponseCreateGame_Error {
     MissingMap = 1,
     InvalidMapPath = 2,
@@ -598,6 +601,7 @@ pub struct Action {
 }
 
 #[derive(Clone,PartialEq,Eq,Debug,Hash,FromProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum ActionChat_Channel {
     Broadcast = 1,
     Team = 2,
@@ -1072,6 +1076,12 @@ pub struct Unit {
     pub weapon_cooldown: Option<f32>,
     #[Get]
     pub engaged_target_tag: Option<u64>,
+}
+
+impl Unit {
+    pub fn is_worker(&self) -> bool {
+        super::utils::is_worker(UnitIDs::from_u32(self.unit_type).unwrap())
+    }
 }
 
 #[derive(Debug, FromProtobuf)]

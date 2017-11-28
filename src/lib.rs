@@ -2,6 +2,15 @@
 #![feature(use_extern_macros)]
 #![allow(dead_code, unused_imports, unused_variables, unused_must_use)]
 
+// used in gen/*.rs
+#[macro_use]
+extern crate lazy_static;
+
+
+extern crate serde;
+extern crate serde_json;
+#[macro_use]
+extern crate serde_derive;
 
 #[macro_use]
 extern crate sc2_pb_derive;
@@ -34,6 +43,12 @@ use std::sync::atomic::AtomicBool;
 use std::time::Duration;
 
 pub mod types;
+mod gen;
+
+pub use gen::*;
+
+pub mod utils;
+
 
 use types::ToProtobuf;
 
@@ -136,10 +151,9 @@ impl ws::Factory for WSHandlerFactory {
 
 impl<S> Coordinator<S> {
     pub fn send_custom<T, U, V>(t: T)
-    where
-        T: types::RequestMessage<U, V>,
-    {
-    }
+        where
+            T: types::RequestMessage<U, V>,
+    {}
 }
 
 impl Coordinator<GameState::Unlaunched> {
@@ -325,8 +339,6 @@ impl Coordinator<GameState::Launched> {
                         sc2_sender: self.sc2_sender,
                         _state: std::marker::PhantomData,
                     });
-
-
                 } else {
                     return Err(format_err!("Unexpected response: {:?}", resp.response));
                 }
@@ -334,7 +346,6 @@ impl Coordinator<GameState::Launched> {
         }
 
         return Err(format_err!("Unable to extract reply"));
-
     }
     pub fn join_game(
         self,
@@ -400,8 +411,6 @@ impl Coordinator<GameState::InitGame> {
                         sc2_sender: self.sc2_sender,
                         _state: std::marker::PhantomData,
                     });
-
-
                 } else {
                     return Err(format_err!("Unexpected response: {:?}", resp.response));
                 }
@@ -409,7 +418,6 @@ impl Coordinator<GameState::InitGame> {
         }
 
         return Err(format_err!("Unable to extract reply"));
-
     }
 }
 
