@@ -12,6 +12,10 @@ pub trait RequestMessage<T, U>: ToProtobuf<T>
     type Reply;
 }
 
+pub trait FromU32 : Sized {
+    fn from_u32(val: u32) -> Option<Self>;
+}
+
 pub trait FromProtobuf<T>: Sized {
     fn from_protobuf(t: T) -> Result<Self, failure::Error>;
 }

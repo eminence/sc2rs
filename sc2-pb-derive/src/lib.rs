@@ -82,8 +82,8 @@ fn derive_from_u32_impl(ast: &syn::DeriveInput) -> quote::Tokens {
     }
 
     quote! {
-        impl #ident {
-            pub fn from_u32(val: u32) -> Option<Self> {
+        impl FromU32 for #ident {
+            fn from_u32(val: u32) -> Option<Self> {
                 match val {
                     #interior_tokens
                     _ => None
