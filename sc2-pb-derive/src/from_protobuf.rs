@@ -7,9 +7,9 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
 
     // get name of protobuf type, or if missing, try to guess it from this identifier
 
-    let proto_type = utils::get_attr(&ast.attrs, "ProtoType").unwrap_or_else(|| name.as_ref().to_owned());
+    let _proto_type = utils::get_attr(&ast.attrs, "ProtoType").unwrap_or_else(|| name.as_ref().to_owned());
 
-    let prototype = syn::Ident::from(format!("protos::{}", proto_type));
+    let prototype = syn::Ident::from(format!("protos::{}", _proto_type));
 
 
     let tokens = if let &syn::Body::Struct(syn::VariantData::Struct(ref data)) = &ast.body {
@@ -140,6 +140,11 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             }
         } else {
             // a normal enum, where we can inspect the fields in `pb`
+            // NB if the variant has a discriminant, this is aslkdfkla
+
+            #[derive(Eq, PartialEq)]
+            enum EnumType { Unknown, HasDiscrim, HasFields }
+            let mut enum_type = EnumType::Unknown;
 
             for variant in variants {
                 let var_ident = &variant.ident;
@@ -151,24 +156,35 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                     utils::construct_field_accessor(&variant.ident, "take")
                 };
 
-                if utils::is_protobuf_type(&variant.data.fields()[0].ty) {
+                if let &Some(ref discrim) = &variant.discriminant {
+                    if enum_type == EnumType::HasFields { panic!("Unable to support an enum that has both discriminants and fields") }
+                    enum_type = EnumType::HasDiscrim;
+                    let pb_name = quote::Ident::new(utils::get_attr(&variant.attrs, "name").unwrap_or(variant.ident.as_ref().to_owned()));
                     interior_tokens.append(quote! {
+                        #prototype :: #pb_name => #name :: #var_ident,
+                    });
+                } else {
+                    if enum_type == EnumType::HasDiscrim { panic!("Unable to support an enum that has both discriminants and fields") }
+                    enum_type = EnumType::HasFields;
+
+                    if utils::is_protobuf_type(&variant.data.fields()[0].ty) {
+                        interior_tokens.append(quote! {
                         if pb . #has_func() {
                             return Ok(#name :: #var_ident ( pb . #take_func() ))
                         }
                     });
-                } else {
-                    interior_tokens.append(quote! {
+                    } else {
+                        interior_tokens.append(quote! {
                     if pb . #has_func() {
                         return Ok(#name :: #var_ident ( FromProtobuf::from_protobuf(pb . #take_func())? ))
                     }
                     });
+                    }
                 }
-
             }
 
-
-            quote! {
+            if enum_type == EnumType::HasFields {
+                quote! {
              impl FromProtobuf< #prototype > for #name {
 
                     #[allow(unused_mut)]
@@ -180,7 +196,23 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
 
             }
 
+                }
+            } else {
+                quote! {
+             impl FromProtobuf< #prototype > for #name {
+
+                    #[allow(unused_mut)]
+                    fn from_protobuf(pb: #prototype) -> Result<Self, failure::Error> {
+                            Ok(match pb {
+                                #interior_tokens
+                            })
+                    }
+
+            }
+
         }
+
+            }
         }
     } else {
         panic!("Can only apply derive(ToProtobuf) to enums and structs");

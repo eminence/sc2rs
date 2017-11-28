@@ -86,9 +86,10 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             }
         }
     } else if let &syn::Body::Enum(ref variants) = &ast.body {
-        // When doing codegen for an Enum, there are two different modes:
+        // When doing codegen for an Enum, there are three different modes:
         // * If an enum has an #[AttachedTo(MyStruct)] attribute, then it doesn't actually
         //   implment ToProtobuf, but instead generates helper code for MyStruct to call
+        // * If every
         // * If an enum doesn't have an AttachedTo attribute, then it represents a real
         //   protobuf structure that consists solely of a oneof enum
 
@@ -126,16 +127,38 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             }
         } else {
             // generate a conventional ToProtobuf implementation
+            #[derive(Eq, PartialEq)]
+            enum EnumType { Unknown, HasDiscrim, HasFields }
+            let mut enum_type = EnumType::Unknown;
+
+
 
             for variant in variants {
                 let var_ident = &variant.ident;
                 let field_setter = utils::construct_field_accessor(&variant.ident, "set");
-                interior_tokens.append(quote! {
-                    #name :: #var_ident (v) => { pb . #field_setter ( v .into_protobuf()) ; }
-                });
-            }
 
-            quote! {
+                if let &Some(ref discrim) = &variant.discriminant {
+                    if enum_type == EnumType::HasFields { panic!("Unable to support an enum that has both discriminants and fields") }
+                    enum_type = EnumType::HasDiscrim;
+
+                    let pb_name = quote::Ident::new(utils::get_attr(&variant.attrs, "name").unwrap_or(variant.ident.as_ref().to_owned()));
+
+                    interior_tokens.append(quote! {
+                        #name :: #var_ident  =>  #prototype :: #pb_name ,
+                    });
+
+                } else {
+                    if enum_type == EnumType::HasDiscrim { panic!("Unable to support an enum that has both discriminants and fields") }
+                    enum_type = EnumType::HasFields;
+
+                    interior_tokens.append(quote! {
+                        #name :: #var_ident (v) => { pb . #field_setter ( v .into_protobuf()) ; }
+                    });
+                }
+
+
+            }
+            if enum_type == EnumType::HasFields {            quote! {
                 impl ToProtobuf< #prototype > for #name {
 
                         #[allow(unused_mut)]
@@ -148,6 +171,20 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                         }
 
                 }
+            }
+            } else {            quote! {
+                impl ToProtobuf< #prototype > for #name {
+
+                        #[allow(unused_mut)]
+                        fn into_protobuf(self) -> #prototype {
+                            match self {
+                                #interior_tokens
+                            }
+
+                        }
+
+                }
+            }
             }
         }
     } else {

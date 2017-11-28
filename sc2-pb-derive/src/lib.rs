@@ -28,7 +28,7 @@ pub fn derive_to_protobuf(input: TokenStream) -> TokenStream {
 }
 
 
-#[proc_macro_derive(FromProtobuf, attributes(ProtoType, field, OneOf, AttachedTo, DebugThis, Get))]
+#[proc_macro_derive(FromProtobuf, attributes(ProtoType, field, OneOf, AttachedTo, DebugThis, Get, name))]
 pub fn derive_from_protobuf(input: TokenStream) -> TokenStream {
     // Construct a string representation of the type definition
     let s = input.to_string();
