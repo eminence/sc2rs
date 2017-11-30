@@ -73,44 +73,44 @@ fn main() {
 
     {
         let mut units_file = File::create("src/gen/units.rs").unwrap();
-        writeln!(units_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Copy,Clone,Debug,Eq,PartialEq,Hash,FromU32)]\npub enum UnitIDs {{");
+        writeln!(units_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Copy,Clone,Debug,Eq,PartialEq,Hash,FromU32)]\npub enum UnitIDs {{").unwrap();
 
         let mut units = Vec::new();
 
         for unit in data.units {
             if unit.name.len() > 0 {
-                writeln!(units_file, "{} = {},", unit.name, unit.unit_id);
+                writeln!(units_file, "{} = {},", unit.name, unit.unit_id).unwrap();
             } else {
-                writeln!(units_file, "{} = {},", format!("UnitID{}", unit.unit_id), unit.unit_id);
+                writeln!(units_file, "{} = {},", format!("UnitID{}", unit.unit_id), unit.unit_id).unwrap();
             }
             units.push(unit.clone());
         }
-        writeln!(units_file, "}}");
+        writeln!(units_file, "}}").unwrap();
 
-        let mut units_json = File::create("src/gen/units.json").unwrap();
+        let units_json = File::create("src/gen/units.json").unwrap();
         serde_json::to_writer_pretty(units_json, &units).unwrap();
     }
     {
         let mut rs_file = File::create("src/gen/abilities.rs").unwrap();
-        writeln!(rs_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Copy,Clone,Debug,Eq,PartialEq,Hash,FromU32)]\npub enum AbilityIDs {{");
+        writeln!(rs_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Copy,Clone,Debug,Eq,PartialEq,Hash,FromU32)]\npub enum AbilityIDs {{").unwrap();
 
         let mut datas = Vec::new();
 
         for abils in data.abilities {
             if abils.link_name.len() > 0 {
                 if abils.link_name.chars().next().unwrap().is_numeric() {
-                    writeln!(rs_file, "{} = {},", format!("A{}{}", abils.link_name.replace(' ', "_"), abils.ability_id), abils.ability_id);
+                    writeln!(rs_file, "{} = {},", format!("A{}{}", abils.link_name.replace(' ', "_"), abils.ability_id), abils.ability_id).unwrap();
                 } else {
-                    writeln!(rs_file, "{} = {},", format!("{}{}", abils.link_name.replace(' ', "_"), abils.ability_id), abils.ability_id);
+                    writeln!(rs_file, "{} = {},", format!("{}{}", abils.link_name.replace(' ', "_"), abils.ability_id), abils.ability_id).unwrap();
                 }
             } else {
-                writeln!(rs_file, "{} = {},", format!("AbilityID{}", abils.ability_id), abils.ability_id);
+                writeln!(rs_file, "{} = {},", format!("AbilityID{}", abils.ability_id), abils.ability_id).unwrap();
             }
             datas.push(abils.clone());
         }
-        writeln!(rs_file, "}}");
+        writeln!(rs_file, "}}").unwrap();
 
-        let mut json_file = File::create("src/gen/abilities.json").unwrap();
+        let json_file = File::create("src/gen/abilities.json").unwrap();
         serde_json::to_writer_pretty(json_file, &datas).unwrap();
     }
 }
