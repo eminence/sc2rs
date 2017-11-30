@@ -1,5 +1,4 @@
 #![feature(const_atomic_bool_new)]
-#![feature(use_extern_macros)]
 #![allow(dead_code, unused_imports, unused_variables, unused_must_use)]
 
 // used in gen/*.rs
