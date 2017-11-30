@@ -29,7 +29,7 @@ impl ::std::fmt::Debug for ImageData {
         write!(f, "<ImageData {:?} {} bpp>", self.size, self.bits_per_pixel)
     }
 }
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct PointI {
     #[Get]
     pub x: i32,
@@ -37,13 +37,13 @@ pub struct PointI {
     pub y: i32,
 }
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct RectangleI {
     pub p0: PointI,
     pub p1: PointI,
 }
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 /// Point on the game board, 0..222
 ///
 /// Note: bottom left of the screen is 0,0
@@ -56,7 +56,7 @@ pub struct Point2D {
 
 
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct Point {
     #[Get]
     pub x: f32,

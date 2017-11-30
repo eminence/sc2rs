@@ -21,6 +21,9 @@ pub use self::error::*;
 mod ui;
 pub use self::ui::*;
 
+mod spatial;
+pub use self::spatial::*;
+
 pub trait RequestMessage<T, U>: ToProtobuf<T>
 where
     Self::Reply: FromProtobuf<U>,
@@ -35,10 +38,12 @@ pub trait FromU32: Sized {
 pub trait FromProtobuf<T>: Sized {
     fn from_protobuf(t: T) -> Result<Self, failure::Error>;
 }
+trait ToProtoSimple{} // marker trait
 
 macro_rules! ProtoSelf {
     ($t:ty) => {
         impl ToProtobuf < $t > for $t { fn into_protobuf(self) -> $t { self }}
+        impl ToProtoSimple for $t {}
         impl FromProtobuf < $t > for $t {
             fn from_protobuf(t:$t) -> Result<Self, failure::Error> { Ok(t) }
         }
@@ -287,6 +292,11 @@ pub struct RequestStep {
 }
 
 #[derive(Debug, ToProtobuf)]
+pub struct RequestAction {
+    pub actions: Vec<Action>
+}
+
+#[derive(Debug, ToProtobuf)]
 pub enum Request {
     CreateGame(RequestCreateGame),
     JoinGame(RequestJoinGame),
@@ -295,6 +305,7 @@ pub enum Request {
     Observation(RequestObservation),
     Data(RequestData),
     Step(RequestStep),
+    Action(RequestAction)
 }
 
 
@@ -355,28 +366,28 @@ pub struct ResponseAvailableMaps {
     pub battlenet_map_names: Vec<String>,
 }
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct Action {
     /// Populated if Raw interface is enabled
     pub action_raw: Option<ActionRaw>,
-    // /// Populated if Feature Layer interface is enabled
-    // pub action_feature_layer: Option<ActionSpatial>,
-    // /// Not implemented. Populated if Render interface is enabled
-    // pub action_render: Option<ActionSpatial>,
-    // /// Populated if Feature Layer or Render interface is enabled
-    // pub action_ui: Option<ActionUI>,
+     /// Populated if Feature Layer interface is enabled
+     pub action_feature_layer: Option<ActionSpatial>,
+     /// Not implemented. Populated if Render interface is enabled
+     pub action_render: Option<ActionSpatial>,
+     /// Populated if Feature Layer or Render interface is enabled
+     pub action_ui: Option<ActionUI>,
     /// Chat messages as a player typing into the chat channel
     pub chat: Vec<ActionChat>,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug, Hash, FromProtobuf)]
+#[derive(Clone, PartialEq, Eq, Debug, Hash, ToProtobuf, FromProtobuf)]
 #[allow(non_camel_case_types)]
 pub enum ActionChat_Channel {
     Broadcast = 1,
     Team = 2,
 }
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionChat {
     #[Get]
     pub channel: ActionChat_Channel,

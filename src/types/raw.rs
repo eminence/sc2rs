@@ -233,7 +233,7 @@ pub struct Effect {
 
 
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub enum ActionRaw {
     UnitCommand(ActionRawUnitCommand),
     CameraMove(ActionRawCameraMove),
@@ -242,7 +242,7 @@ pub enum ActionRaw {
 
 
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 #[AttachedTo(ActionRawUnitCommand)]
 pub enum ActionRawUnitCommandTargetEnum {
     TargetWorldSpacePos(Point2D),
@@ -251,27 +251,27 @@ pub enum ActionRawUnitCommandTargetEnum {
 }
 
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionRawUnitCommand {
     #[Get]
     pub ability_id: i32,
     #[OneOf]
-    pub target: ActionRawUnitCommandTargetEnum,
-    pub unit_tags: Vec<u64>,
+    pub target: Option<ActionRawUnitCommandTargetEnum>,
+    #[Set] pub unit_tags: Vec<u64>,
     #[Get]
     pub queue_command: bool,
 }
 
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionRawCameraMove {
     pub center_world_space: Point,
 }
 
 
-#[derive(Debug, FromProtobuf)]
+#[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionRawToggleAutocast {
     #[Get]
     pub ability_id: i32,
-    pub unit_tags: Vec<u64>,
+    #[Set] pub unit_tags: Vec<u64>,
 }
