@@ -99,18 +99,18 @@ mod tests {
 
     #[test]
     fn setter_name() {
-        assert_eq!(construct_field_setter_name("FooBar"), "set_foo_bar");
-        assert_eq!(construct_field_setter_name("Bar"), "set_bar");
-        assert_eq!(construct_field_setter_name("foo"), "set_foo");
+        assert_eq!(utils::construct_field_accessor("FooBar", "set"), "set_foo_bar");
+        assert_eq!(utils::construct_field_accessor("Bar", "get"), "get_bar");
+        assert_eq!(utils::construct_field_accessor("foo", "take"), "take_foo");
     }
 
     #[test]
     fn test_is_option() {
         let t = syn::parse_type("Option<bool>").unwrap();
-        assert!(is_option(&t));
+        assert!(utils::is_option(&t));
 
         let t = syn::parse_type("String").unwrap();
-        assert!(!is_option(&t));
+        assert!(!utils::is_option(&t));
     }
 
     #[test]
@@ -121,17 +121,26 @@ mod tests {
 
     #[test]
     fn is_protobuf() {
-        assert!(is_protobuf_type(&syn::parse_type("Option<protos::ResponseCreateGame_Error>").unwrap()));
-        assert!(is_protobuf_type(&syn::parse_type("Vec<protos::ResponseCreateGame_Error>").unwrap()));
-        assert!(is_protobuf_type(&syn::parse_type("protos::ResponseCreateGame_Error").unwrap()));
+        assert!(utils::is_protobuf_type(&syn::parse_type("Option<protos::ResponseCreateGame_Error>").unwrap()));
+        assert!(utils::is_protobuf_type(&syn::parse_type("Vec<protos::ResponseCreateGame_Error>").unwrap()));
+        assert!(utils::is_protobuf_type(&syn::parse_type("protos::ResponseCreateGame_Error").unwrap()));
 
-        assert!(is_protobuf_type(&syn::parse_type("Option<sc2::protos::ResponseCreateGame_Error>").unwrap()));
-        assert!(is_protobuf_type(&syn::parse_type("Vec<sc2::protos::ResponseCreateGame_Error>").unwrap()));
-        assert!(is_protobuf_type(&syn::parse_type("sc2::protos::ResponseCreateGame_Error").unwrap()));
+        assert!(utils::is_protobuf_type(&syn::parse_type("Option<sc2::protos::ResponseCreateGame_Error>").unwrap()));
+        assert!(utils::is_protobuf_type(&syn::parse_type("Vec<sc2::protos::ResponseCreateGame_Error>").unwrap()));
+        assert!(utils::is_protobuf_type(&syn::parse_type("sc2::protos::ResponseCreateGame_Error").unwrap()));
 
 
-        assert!(!is_protobuf_type(&syn::parse_type("Option<String>").unwrap()));
-        assert!(!is_protobuf_type(&syn::parse_type("Vec<String>").unwrap()));
-        assert!(!is_protobuf_type(&syn::parse_type("String").unwrap()));
+        assert!(!utils::is_protobuf_type(&syn::parse_type("Option<String>").unwrap()));
+        assert!(!utils::is_protobuf_type(&syn::parse_type("Vec<String>").unwrap()));
+        assert!(!utils::is_protobuf_type(&syn::parse_type("String").unwrap()));
+    }
+
+    #[test]
+    fn test_get_type_ident() {
+        let ty = utils::get_type_ident(&syn::parse_type("u8").unwrap());
+        assert_eq!(ty.as_ref(), "u8");
+
+        let ty = utils::get_type_ident(&syn::parse_type("Option<u8>").unwrap());
+        assert_eq!(ty.as_ref(), "u8");
     }
 }

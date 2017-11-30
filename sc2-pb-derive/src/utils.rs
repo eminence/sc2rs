@@ -25,6 +25,10 @@ pub fn construct_field_accessor<T: AsRef<str>>(t: T, prefix: &str) -> quote::Ide
     quote::Ident::from(r)
 }
 
+// Two notes about this function:
+//
+// * It'll only look at the first path
+// * It'll remove any outer Option types is present to return the innter rtype
 pub fn get_type_ident(ty: &syn::Ty) -> quote::Ident {
     if let &syn::Ty::Path(_,
                           syn::Path {
@@ -33,7 +37,15 @@ pub fn get_type_ident(ty: &syn::Ty) -> quote::Ident {
                           }) = ty
         {
             if segments.len() > 0 {
-                return quote::Ident::from(segments[0].ident.as_ref());
+                let id =  quote::Ident::from(segments[0].ident.as_ref());
+                if id.as_ref() == "Option" {
+                    if let syn::PathParameters::AngleBracketed(ref data) = segments[0].parameters {
+                        return get_type_ident(&data.types[0]);
+                    }
+                    panic!("Can't extract inner ident from ty");
+                } else {
+                    return id;
+                }
             }
         }
     panic!("Can't extract ident from ty")
