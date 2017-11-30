@@ -73,7 +73,7 @@ fn main() {
 
     {
         let mut units_file = File::create("src/gen/units.rs").unwrap();
-        writeln!(units_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Debug,Eq,PartialEq,Hash,FromU32)]\npub enum UnitIDs {{");
+        writeln!(units_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Copy,Clone,Debug,Eq,PartialEq,Hash,FromU32)]\npub enum UnitIDs {{");
 
         let mut units = Vec::new();
 
@@ -92,7 +92,7 @@ fn main() {
     }
     {
         let mut rs_file = File::create("src/gen/abilities.rs").unwrap();
-        writeln!(rs_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Debug,Eq,PartialEq,Hash,FromU32)]\npub enum AbilityIDs {{");
+        writeln!(rs_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Copy,Clone,Debug,Eq,PartialEq,Hash,FromU32)]\npub enum AbilityIDs {{");
 
         let mut datas = Vec::new();
 

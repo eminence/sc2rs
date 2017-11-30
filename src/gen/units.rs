@@ -1,7 +1,7 @@
 // generated version controlled file //
 use super::types::FromU32;
 #[allow(non_camel_case_types)]
-#[derive(Debug, Eq, PartialEq, Hash, FromU32)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Hash, FromU32)]
 pub enum UnitIDs {
     UnitID0 = 0,
     System_Snapshot_Dummy = 1,
