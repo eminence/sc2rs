@@ -60,7 +60,7 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                     }
                 });
                 } else {
-                    if utils::is_protobuf_type(&field.ty) {
+                    if utils::is_protobuf_type(&field.ty) || utils::get_attr(&field.attrs, "Set").is_some() {
                         interior_tokens.append(quote! {
                              pb. #setter_id ( self . #field_name );
                         });

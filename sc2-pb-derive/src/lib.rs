@@ -12,7 +12,7 @@ mod utils;
 mod to_protobuf;
 mod from_protobuf;
 
-#[proc_macro_derive(ToProtobuf, attributes(ProtoType, field, OneOf, AttachedTo, DebugThis))]
+#[proc_macro_derive(ToProtobuf, attributes(ProtoType, field, OneOf, AttachedTo, DebugThis, Set))]
 pub fn derive_to_protobuf(input: TokenStream) -> TokenStream {
     // Construct a string representation of the type definition
     let s = input.to_string();
