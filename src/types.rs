@@ -1117,7 +1117,7 @@ pub struct UnitOrder {
     #[Get]
     pub ability_id: u32,
     #[OneOf]
-    pub target: UnitOrderTarget,
+    pub target: Option<UnitOrderTarget>,
     /// Progress of train abilities.  Range 0.0 to 1.0
     #[Get]
     pub progress: f32,
@@ -1173,6 +1173,17 @@ pub struct ResponseObservation {
 impl ObservationRaw {
     pub fn get_my_units<'a>(&'a self) -> Vec<&'a Unit> {
         self.units.iter().filter(|u| u.alliance == Alliance::Selff).collect()
+    }
+    pub fn get_idle_units<'a>(&'a self) -> Vec<&'a Unit> {
+        self.units.iter().filter(|u| u.alliance == Alliance::Selff && u.orders.len() == 0).collect()
+    }
+
+    pub fn find_by_tag<'a>(&'a self, tag: u64) -> Option<&'a Unit> {
+        self.units.iter().find(|u| u.tag == tag)
+    }
+
+    pub fn find_by_type<'a>(&'a self, ty: UnitIDs) -> Vec<&'a Unit> {
+        self.units.iter().filter(|u| u.unit_type == ty as u32).collect()
     }
 }
 
