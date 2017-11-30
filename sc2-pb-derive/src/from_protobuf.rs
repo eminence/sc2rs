@@ -4,6 +4,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
     let debug_this = utils::get_attr(&ast.attrs, "DebugThis").is_some();
 
     let name = &ast.ident;
+    let name_str = ast.ident.as_ref();
 
     // get name of protobuf type, or if missing, try to guess it from this identifier
 
@@ -46,9 +47,16 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             };
 
             if is_one_of {
-                interior_tokens.append(quote! {
+                if is_option {
+                    interior_tokens.append(quote! {
                     let #field_name = #field_ty_ident :: get_fields(&mut pb);
                 });
+                } else {
+                    interior_tokens.append(quote! {
+                    let #field_name = #field_ty_ident :: get_fields(&mut pb).unwrap();
+                });
+                }
+
             } else if is_option {
                 // check to see if the message has the field before setting it
 
@@ -114,13 +122,13 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                     // the inner type of this variant doesn't need any conversions
                     interior_tokens.append(quote! {
                         if pb . #has_func () {
-                            return #name :: #var_ident ( pb . #take_func() )
+                            return Some ( #name :: #var_ident ( pb . #take_func() ) )
                         }
                     });
                 } else {
                     interior_tokens.append(quote! {
                         if pb . #has_func () {
-                            return #name :: #var_ident ( FromProtobuf::from_protobuf( pb . #take_func() ).unwrap()
+                            return Some ( #name :: #var_ident ( FromProtobuf::from_protobuf( pb . #take_func() ).unwrap() )
                              )
                         }
                     });
@@ -129,11 +137,12 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             quote! {
                 impl #name {
                     #[allow(unused_mut)]
-                    fn get_fields(pb: &mut protos :: #attached_to) -> #name {
+                    fn get_fields(pb: &mut protos :: #attached_to) -> Option<#name> {
 
                         #interior_tokens
 
-                        panic!("Unable to construct")
+                        //panic!("Unable to construct {}", #name_str)
+                        None
 
                     }
                 }
@@ -191,7 +200,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                     fn from_protobuf(mut pb: #prototype) -> Result<Self, failure::Error> {
                             #interior_tokens
 
-                            panic!("Unable to construct")
+                            panic!("Unable to construct {}" , #name_str)
                     }
 
             }
