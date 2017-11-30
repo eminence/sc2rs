@@ -18,6 +18,9 @@ pub use self::data::*;
 mod error;
 pub use self::error::*;
 
+mod ui;
+pub use self::ui::*;
+
 pub trait RequestMessage<T, U>: ToProtobuf<T>
 where
     Self::Reply: FromProtobuf<U>,
