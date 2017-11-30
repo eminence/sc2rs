@@ -38,13 +38,21 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
 
             // If a field in our struct has the #[OneOf] annotation, then its type is an enum
             let is_one_of = utils::get_attr(&field.attrs, "OneOf").is_some();
+            let is_option = utils::is_option(&field.ty);
 
             if is_one_of {
                 // Use the set_fields() helper code (also generated) to call the right setter
                 // methods in the protobuf object
-                interior_tokens.append(quote! {
-                    self.#field_name.set_fields (&mut pb);
-                });
+                if is_option {
+                    interior_tokens.append(quote! {
+                        if let Some(me) = self.#field_name { me.set_fields(&mut pb)}
+                    });
+                } else {
+                    interior_tokens.append(quote! {
+                        self.#field_name.set_fields (&mut pb);
+                    });
+                }
+
             } else {
                 if utils::is_option(&field.ty) {
                     // if the field type in our struct looks like a raw protobuf type, then we
