@@ -24,6 +24,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             let field_name = field.ident.as_ref().unwrap_or_else(
                 || panic!("Can't extract ident"),
             );
+            let field_name_str = field_name.as_ref();
             let field_ty_ident = utils::get_type_ident(&field.ty);
             //println!("{:?}", field.ty);
 
@@ -53,7 +54,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                 });
                 } else {
                     interior_tokens.append(quote! {
-                    let #field_name = #field_ty_ident :: get_fields(&mut pb).unwrap();
+                    let #field_name = #field_ty_ident :: get_fields(&mut pb).unwrap_or_else(|| panic!("None of the oneof fields of {} were set", #field_name_str));
                 });
                 }
 
