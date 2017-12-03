@@ -80,7 +80,7 @@ impl<State> Coordinator<State> {
         if let Some(ref mut sock) = self.ws_socket {
             let pb = req.into_protobuf();
             let bytes = pb.write_to_bytes()?;
-            println!("Sending {} bytes...", bytes.len());
+            //println!("Sending {} bytes...", bytes.len());
             sock.send(bytes)?;
 
             match sock.read()? {
@@ -303,6 +303,7 @@ impl Coordinator<GameState::InGame> {
         );
         ImplReq!(game_data, ResponseData, RequestData, Data);
         ImplReq!(step, ResponseStep, RequestStep, Step);
+        ImplReq!(debug, ResponseDebug, RequestDebug, Debug);
 }
 
 

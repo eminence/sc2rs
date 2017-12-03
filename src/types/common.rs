@@ -56,7 +56,7 @@ pub struct Point2D {
 
 
 
-#[derive(Debug, ToProtobuf, FromProtobuf)]
+#[derive(Debug, Clone, ToProtobuf, FromProtobuf)]
 pub struct Point {
     #[Get]
     pub x: f32,

@@ -24,6 +24,9 @@ pub use self::ui::*;
 mod spatial;
 pub use self::spatial::*;
 
+mod debug;
+pub use self::debug::*;
+
 pub trait RequestMessage<T, U>: ToProtobuf<T>
 where
     Self::Reply: FromProtobuf<U>,
@@ -297,6 +300,11 @@ pub struct RequestAction {
 }
 
 #[derive(Debug, ToProtobuf)]
+pub struct RequestDebug {
+    pub debug: Vec<DebugCommand>
+}
+
+#[derive(Debug, ToProtobuf)]
 pub enum Request {
     CreateGame(RequestCreateGame),
     JoinGame(RequestJoinGame),
@@ -305,7 +313,8 @@ pub enum Request {
     Observation(RequestObservation),
     Data(RequestData),
     Step(RequestStep),
-    Action(RequestAction)
+    Action(RequestAction),
+    Debug(RequestDebug)
 }
 
 
@@ -549,6 +558,8 @@ pub enum Status {
 }
 
 
+#[derive(Debug, FromProtobuf)]
+pub struct ResponseDebug {}
 
 #[derive(Debug, FromProtobuf)]
 #[AttachedTo(Response)]
@@ -560,6 +571,7 @@ pub enum ResponseEnum {
     Observation(ResponseObservation),
     Data(ResponseData),
     Step(ResponseStep),
+    Debug(ResponseDebug)
 }
 
 #[derive(Debug, FromProtobuf)]
