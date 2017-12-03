@@ -7,10 +7,9 @@ authors = ["Andrew Chin <achin@eminence32.net>"]
 protobuf = "*"
 sc2_protobuf = {path = "sc2-protobuf"}
 sc2-pb-derive = {path = "sc2-pb-derive"}
-ws = "0.7.3"
+ws-sync = {path = "z:\\devel\\ws-sync"}
 url = "*"
-failure = {git="https://github.com/withoutboats/failure"}
-failure_derive = {git="https://github.com/withoutboats/failure_derive"}
+failure = "0.1.1"
 lazy_static = "*"
 serde_json = "1.0"
 serde = "1.0"

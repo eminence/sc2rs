@@ -59,7 +59,7 @@ fn main() {
         },
     };
 
-    let coord = coord.join_game(req).unwrap();
+    let mut coord = coord.join_game(req).unwrap();
 
 
     let data: types::ResponseData = coord.game_data(types::RequestData {
