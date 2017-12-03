@@ -1,4 +1,4 @@
-#![feature(const_atomic_bool_new)]
+#![feature(conservative_impl_trait)]
 #![allow(dead_code, unused_imports, unused_variables, unused_must_use)]
 
 // used in gen/*.rs
@@ -51,21 +51,48 @@ use types::ToProtobuf;
 
 #[allow(non_snake_case)]
 pub mod GameState {
+
+    /// For states that allow us to send Requests via websockets
+    #[doc(hidden)]
+    pub trait StateConnected {}
+    pub trait AllowsGameInfo : StateConnected {}
+    pub trait AllowsObservation : StateConnected {}
+    pub trait AllowsStep : StateConnected {}
+    pub trait AllowsGameData : StateConnected {}
+
     /// The starting state
     pub struct Unlaunched;
 
     pub struct Launched;
+    impl StateConnected for Launched {}
 
     pub struct Connected;
+    impl StateConnected for Connected {}
 
     pub struct InitGame;
+    impl StateConnected for InitGame {}
 
     pub struct InGame;
+    impl StateConnected for InGame {}
+    impl AllowsGameInfo for InGame {}
+    impl AllowsObservation for InGame {}
+    impl AllowsStep for InGame {}
+    impl AllowsGameData for InGame {}
 
     pub struct Ended;
+    impl StateConnected for Ended {}
+    impl AllowsGameInfo for Ended {}
+    impl AllowsObservation for Ended {}
+    impl AllowsGameData for Ended {}
 
     pub struct InReplay;
+    impl StateConnected for InReplay {}
+    impl AllowsGameInfo for InReplay {}
+    impl AllowsObservation for InReplay {}
+    impl AllowsGameData for InReplay {}
+
 }
+
 
 
 pub struct Coordinator<State> {
@@ -73,7 +100,7 @@ pub struct Coordinator<State> {
     _state: std::marker::PhantomData<State>,
 }
 
-impl<State> Coordinator<State> {
+impl<State> Coordinator<State> where State: GameState::StateConnected {
     fn get_request(&mut self, req: types::Request) -> Result<types::Response, Error> {
         use types::FromProtobuf;
 
@@ -101,6 +128,18 @@ impl<State> Coordinator<State> {
             panic!("Tried to send request, but Coordinator isn't connected!");
         }
     }
+
+    pub fn list_available_maps(&mut self) -> Result<types::ResponseAvailableMaps, Error> {
+        let req = types::Request::AvailableMaps(types::RequestAvailableMaps {});
+        let resp = self.get_request(req)?;
+
+        if let types::ResponseEnum::AvailableMaps(r) = resp.response {
+            return Ok(r);
+        } else {
+            return Err(format_err!("Unexpected response!"));
+        }
+    }
+
 }
 
 impl Coordinator<GameState::Unlaunched> {
@@ -168,16 +207,7 @@ impl Coordinator<GameState::Launched> {
         unimplemented!()
     }
 
-    pub fn list_available_maps(&mut self) -> Result<types::ResponseAvailableMaps, Error> {
-        let req = types::Request::AvailableMaps(types::RequestAvailableMaps {});
-        let resp = self.get_request(req)?;
 
-        if let types::ResponseEnum::AvailableMaps(r) = resp.response {
-            return Ok(r);
-        } else {
-            return Err(format_err!("Unexpected response!"));
-        }
-    }
 
     pub fn create_game(
         mut self,
@@ -275,7 +305,7 @@ macro_rules! ImplReq {
 
 macro_rules! ImplInner {
     ($resp_ty:ident, $req_ty:ident, $ty:ident) => {
-        fn _inner<T>(this: &mut Coordinator<T>, req: types:: $req_ty) -> Result< types:: $resp_ty, Error> {
+        fn _inner<T: GameState::StateConnected>(this: &mut Coordinator<T>, req: types:: $req_ty) -> Result< types:: $resp_ty, Error> {
             let req = types::Request::$ty(req);
 
             let resp = this.get_request(req)?;
@@ -293,17 +323,34 @@ macro_rules! ImplInner {
     };
 }
 
-impl Coordinator<GameState::InGame> {
-        ImplSimpleReq!(game_info, ResponseGameInfo, RequestGameInfo, GameInfo);
-        ImplReq!(
+impl<State> Coordinator<State> where State: GameState::AllowsGameInfo  {
+    ImplSimpleReq!(game_info, ResponseGameInfo, RequestGameInfo, GameInfo);
+}
+
+impl<State> Coordinator<State> where State: GameState::AllowsObservation {
+    ImplReq!(
             observation,
             ResponseObservation,
             RequestObservation,
             Observation
         );
-        ImplReq!(game_data, ResponseData, RequestData, Data);
-        ImplReq!(step, ResponseStep, RequestStep, Step);
-        ImplReq!(debug, ResponseDebug, RequestDebug, Debug);
+}
+
+impl<State> Coordinator<State> where State: GameState::AllowsStep  {
+    ImplReq!(step, ResponseStep, RequestStep, Step);
+}
+
+impl<State> Coordinator<State> where State: GameState::AllowsGameData {
+    ImplReq!(game_data, ResponseData, RequestData, Data);
+}
+
+impl Coordinator<GameState::InGame> {
+    ImplReq!(debug, ResponseDebug, RequestDebug, Debug);
+    ImplReq!(action, ResponseAction, RequestAction, Action);
+    //TODO leave_game
+    //TODO quick_save
+    //TODO quick_lock
+
 }
 
 

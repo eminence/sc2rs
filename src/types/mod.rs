@@ -41,7 +41,8 @@ pub trait FromU32: Sized {
 pub trait FromProtobuf<T>: Sized {
     fn from_protobuf(t: T) -> Result<Self, failure::Error>;
 }
-trait ToProtoSimple{} // marker trait
+
+trait ToProtoSimple {} // marker trait
 
 macro_rules! ProtoSelf {
     ($t:ty) => {
@@ -103,11 +104,18 @@ where
     }
 }
 
-//impl Unit {
-//    pub fn is_worker(&self) -> bool {
-//        super::utils::is_worker(UnitIDs::from_u32(self.unit_type).unwrap())
-//    }
-//}
+impl Unit {
+    pub fn is_worker(&self) -> bool {
+        super::utils::is_worker(UnitIDs::from_u32(self.unit_type).unwrap())
+    }
+    pub fn is_idle(&self) -> bool {
+        self.orders.len() == 0
+    }
+
+    pub fn unit_type(&self) -> UnitIDs {
+        UnitIDs::from_u32(self.unit_type).expect("Unknown unit type id")
+    }
+}
 
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -122,7 +130,6 @@ pub enum PlayerType {
     Computer = 2,
     Observer = 3,
 }
-
 
 
 #[derive(Clone, PartialEq, Eq, Debug, Hash, ToProtobuf, FromProtobuf)]
@@ -222,7 +229,6 @@ pub struct RequestJoinGame {
 pub struct RequestAvailableMaps {}
 
 
-
 #[derive(Debug, FromProtobuf)]
 pub struct PlayerInfo {
     #[Get]
@@ -281,8 +287,6 @@ pub struct ResponseData {
     pub buffs: Vec<BuffData>,
     pub effects: Vec<EffectData>,
 }
-
-
 
 
 #[derive(Debug, FromProtobuf)]
@@ -379,12 +383,12 @@ pub struct ResponseAvailableMaps {
 pub struct Action {
     /// Populated if Raw interface is enabled
     pub action_raw: Option<ActionRaw>,
-     /// Populated if Feature Layer interface is enabled
-     pub action_feature_layer: Option<ActionSpatial>,
-     /// Not implemented. Populated if Render interface is enabled
-     pub action_render: Option<ActionSpatial>,
-     /// Populated if Feature Layer or Render interface is enabled
-     pub action_ui: Option<ActionUI>,
+    /// Populated if Feature Layer interface is enabled
+    pub action_feature_layer: Option<ActionSpatial>,
+    /// Not implemented. Populated if Render interface is enabled
+    pub action_render: Option<ActionSpatial>,
+    /// Populated if Feature Layer or Render interface is enabled
+    pub action_ui: Option<ActionUI>,
     /// Chat messages as a player typing into the chat channel
     pub chat: Vec<ActionChat>,
 }
@@ -402,9 +406,6 @@ pub struct ActionChat {
     pub channel: ActionChat_Channel,
     pub message: String,
 }
-
-
-
 
 
 #[derive(Clone, PartialEq, Eq, Debug, Hash, FromProtobuf)]
@@ -455,10 +456,6 @@ pub struct PlayerCommon {
 }
 
 
-
-
-
-
 #[derive(Clone, PartialEq, Eq, Debug, Hash, FromProtobuf)]
 pub enum Alert {
     NuclearLaunchDetected = 1,
@@ -489,7 +486,6 @@ pub struct PlayerResult {
 }
 
 
-
 #[derive(Debug, FromProtobuf)]
 pub struct ChatReceived {
     #[Get]
@@ -507,28 +503,23 @@ pub struct ResponseObservation {
 }
 
 impl ObservationRaw {
-    pub fn get_my_units<'a>(&'a self) -> Vec<&'a Unit> {
+    pub fn get_my_units<'a>(&'a self) -> impl Iterator<Item=&'a Unit> {
         self.units
             .iter()
             .filter(|u| u.alliance == Alliance::Selff)
-            .collect()
     }
-    pub fn get_idle_units<'a>(&'a self) -> Vec<&'a Unit> {
-        self.units
-            .iter()
-            .filter(|u| u.alliance == Alliance::Selff && u.orders.len() == 0)
-            .collect()
+    pub fn get_my_idle_units<'a>(&'a self) -> impl Iterator<Item=&'a Unit> {
+        self.get_my_units().filter(|u| u.is_idle())
     }
 
     pub fn find_by_tag<'a>(&'a self, tag: u64) -> Option<&'a Unit> {
         self.units.iter().find(|u| u.tag == tag)
     }
 
-    pub fn find_by_type<'a>(&'a self, ty: UnitIDs) -> Vec<&'a Unit> {
+    pub fn find_by_type<'a>(&'a self, ty: UnitIDs) -> impl Iterator<Item=&'a Unit> {
         self.units
             .iter()
-            .filter(|u| u.unit_type == ty as u32)
-            .collect()
+            .filter(move |u| u.unit_type == ty as u32)
     }
 }
 
@@ -562,6 +553,11 @@ pub enum Status {
 pub struct ResponseDebug {}
 
 #[derive(Debug, FromProtobuf)]
+pub struct ResponseAction {
+    pub result: Vec<ActionResult>
+}
+
+#[derive(Debug, FromProtobuf)]
 #[AttachedTo(Response)]
 pub enum ResponseEnum {
     CreateGame(ResponseCreateGame),
@@ -571,7 +567,8 @@ pub enum ResponseEnum {
     Observation(ResponseObservation),
     Data(ResponseData),
     Step(ResponseStep),
-    Debug(ResponseDebug)
+    Debug(ResponseDebug),
+    Action(ResponseAction)
 }
 
 #[derive(Debug, FromProtobuf)]
