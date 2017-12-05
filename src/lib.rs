@@ -55,10 +55,10 @@ pub mod GameState {
     /// For states that allow us to send Requests via websockets
     #[doc(hidden)]
     pub trait StateConnected {}
-    pub trait AllowsGameInfo : StateConnected {}
-    pub trait AllowsObservation : StateConnected {}
-    pub trait AllowsStep : StateConnected {}
-    pub trait AllowsGameData : StateConnected {}
+    pub trait AllowsGameInfo: StateConnected {}
+    pub trait AllowsObservation: StateConnected {}
+    pub trait AllowsStep: StateConnected {}
+    pub trait AllowsGameData: StateConnected {}
 
     /// The starting state
     pub struct Unlaunched;
@@ -100,7 +100,10 @@ pub struct Coordinator<State> {
     _state: std::marker::PhantomData<State>,
 }
 
-impl<State> Coordinator<State> where State: GameState::StateConnected {
+impl<State> Coordinator<State>
+where
+    State: GameState::StateConnected,
+{
     fn get_request(&mut self, req: types::Request) -> Result<types::Response, Error> {
         use types::FromProtobuf;
 
@@ -111,7 +114,7 @@ impl<State> Coordinator<State> where State: GameState::StateConnected {
             sock.send(bytes)?;
 
             match sock.read()? {
-                ws_sync::Message::Text(s) => { panic!("Unexpected string message {}", s) }
+                ws_sync::Message::Text(s) => panic!("Unexpected string message {}", s),
                 ws_sync::Message::Binary(data) => {
                     let mut resp = sc2_protobuf::protos::Response::new();
                     resp.merge_from_bytes(&data)?;
@@ -139,7 +142,6 @@ impl<State> Coordinator<State> where State: GameState::StateConnected {
             return Err(format_err!("Unexpected response!"));
         }
     }
-
 }
 
 impl Coordinator<GameState::Unlaunched> {
@@ -217,20 +219,21 @@ impl Coordinator<GameState::Launched> {
         let resp = self.get_request(types::Request::CreateGame(req))?;
 
         if resp.status != Some(types::Status::InitGame) {
-            return Err(format_err!("Game state is not correct: {:?}", resp.status))
+            return Err(format_err!("Game state is not correct: {:?}", resp.status));
         }
 
         if let types::ResponseEnum::CreateGame(r) = resp.response {
             if let Some(game_error) = r.error {
-                return Err(format_err!("Game error: {:?} {:?}", game_error, r.error_details))
+                return Err(format_err!(
+                    "Game error: {:?} {:?}",
+                    game_error,
+                    r.error_details
+                ));
             }
-            return Ok(
-                Coordinator {
-                    ws_socket: self.ws_socket,
-                    _state: std::marker::PhantomData
-
-                }
-            )
+            return Ok(Coordinator {
+                ws_socket: self.ws_socket,
+                _state: std::marker::PhantomData,
+            });
 
         } else {
             return Err(format_err!("Unexpected response type"));
@@ -262,12 +265,16 @@ impl Coordinator<GameState::InitGame> {
         let resp = self.get_request(types::Request::JoinGame(req))?;
 
         if resp.status != Some(types::Status::InGame) {
-            return Err(format_err!("Game state is not correct: {:?}", resp.status))
+            return Err(format_err!("Game state is not correct: {:?}", resp.status));
         }
 
         if let types::ResponseEnum::JoinGame(r) = resp.response {
             if let Some(game_error) = r.error {
-                return Err(format_err!("Game error: {:?} {:?}", game_error, r.error_details))
+                return Err(format_err!(
+                    "Game error: {:?} {:?}",
+                    game_error,
+                    r.error_details
+                ));
             }
             return Ok(
                 Coordinator {
@@ -323,24 +330,36 @@ macro_rules! ImplInner {
     };
 }
 
-impl<State> Coordinator<State> where State: GameState::AllowsGameInfo  {
+impl<State> Coordinator<State>
+where
+    State: GameState::AllowsGameInfo,
+{
     ImplSimpleReq!(game_info, ResponseGameInfo, RequestGameInfo, GameInfo);
 }
 
-impl<State> Coordinator<State> where State: GameState::AllowsObservation {
+impl<State> Coordinator<State>
+where
+    State: GameState::AllowsObservation,
+{
     ImplReq!(
-            observation,
-            ResponseObservation,
-            RequestObservation,
-            Observation
-        );
+        observation,
+        ResponseObservation,
+        RequestObservation,
+        Observation
+    );
 }
 
-impl<State> Coordinator<State> where State: GameState::AllowsStep  {
+impl<State> Coordinator<State>
+where
+    State: GameState::AllowsStep,
+{
     ImplReq!(step, ResponseStep, RequestStep, Step);
 }
 
-impl<State> Coordinator<State> where State: GameState::AllowsGameData {
+impl<State> Coordinator<State>
+where
+    State: GameState::AllowsGameData,
+{
     ImplReq!(game_data, ResponseData, RequestData, Data);
 }
 
@@ -350,7 +369,6 @@ impl Coordinator<GameState::InGame> {
     //TODO leave_game
     //TODO quick_save
     //TODO quick_lock
-
 }
 
 

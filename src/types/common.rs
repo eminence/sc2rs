@@ -1,10 +1,6 @@
-
-
 use sc2_protobuf::protos;
 use failure;
 use super::{ToProtobuf, FromProtobuf};
-
-
 
 
 #[derive(Debug, FromProtobuf)]
@@ -29,12 +25,22 @@ impl ::std::fmt::Debug for ImageData {
         write!(f, "<ImageData {:?} {} bpp>", self.size, self.bits_per_pixel)
     }
 }
+
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct PointI {
     #[Get]
     pub x: i32,
     #[Get]
     pub y: i32,
+}
+
+impl PointI {
+    pub fn distance_between(&self, other: &PointI) -> f32 {
+        // sqrt of the sums of the differences squared
+        let dx = ((self.x - other.x) as f32).powi(2);
+        let dy = ((self.y - other.y) as f32).powi(2);
+        f32::sqrt(dx + dy)
+    }
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -54,7 +60,14 @@ pub struct Point2D {
     pub y: f32,
 }
 
-
+impl Point2D {
+    pub fn distance_between(&self, other: &Point2D) -> f32 {
+        // sqrt of the sums of the differences squared
+        let dx = (self.x - other.x).powi(2);
+        let dy = (self.y - other.y).powi(2);
+        f32::sqrt(dx + dy)
+    }
+}
 
 #[derive(Debug, Clone, ToProtobuf, FromProtobuf)]
 pub struct Point {
@@ -66,6 +79,15 @@ pub struct Point {
     pub z: f32,
 }
 
+impl Point {
+    pub fn distance_between(&self, other: &Point) -> f32 {
+        // sqrt of the sums of the differences squared
+        let dx = (self.x - other.x).powi(2);
+        let dy = (self.y - other.y).powi(2);
+        let dz = (self.z - other.z).powi(2);
+        f32::sqrt(dx + dy + dz)
+    }
+}
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct Size2DI {

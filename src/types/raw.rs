@@ -257,7 +257,8 @@ pub struct ActionRawUnitCommand {
     pub ability_id: i32,
     #[OneOf]
     pub target: Option<ActionRawUnitCommandTargetEnum>,
-    #[Set] pub unit_tags: Vec<u64>,
+    #[Set]
+    pub unit_tags: Vec<u64>,
     #[Get]
     pub queue_command: bool,
 }
@@ -273,5 +274,6 @@ pub struct ActionRawCameraMove {
 pub struct ActionRawToggleAutocast {
     #[Get]
     pub ability_id: i32,
-    #[Set] pub unit_tags: Vec<u64>,
+    #[Set]
+    pub unit_tags: Vec<u64>,
 }

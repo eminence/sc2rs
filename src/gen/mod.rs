@@ -23,7 +23,7 @@ where
     T: FromU32 + Hash + Eq,
     P: AsRef<Path>,
     V: serde::de::DeserializeOwned,
-    F: Fn(&V) -> u32 + Sized
+    F: Fn(&V) -> u32 + Sized,
 {
     let file = File::open(p).unwrap();
     let data: Vec<V> = serde_json::from_reader(file).unwrap();

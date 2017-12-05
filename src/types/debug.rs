@@ -23,13 +23,12 @@ pub struct DebugDraw {
     pub lines: Vec<DebugLine>,
     pub boxes: Vec<DebugBox>,
     pub spheres: Vec<DebugSphere>,
-
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct Line {
     pub p0: Point,
-    pub p1: Point
+    pub p1: Point,
 }
 
 /// An RGB color, each field in the range [0, 255]
@@ -37,7 +36,7 @@ pub struct Line {
 pub struct Color {
     pub r: u32,
     pub g: u32,
-    pub b: u32
+    pub b: u32,
 }
 
 #[derive(Debug, ToProtobuf)]
@@ -45,27 +44,27 @@ pub struct DebugText {
     pub color: Color,
     pub text: String,
     pub virtual_pos: Point,
-    pub world_pos: Point
+    pub world_pos: Point,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugLine {
     pub color: Color,
-    pub line: Line
+    pub line: Line,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugBox {
     pub color: Color,
     pub min: Point,
-    pub max: Point
+    pub max: Point,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugSphere {
     pub color: Color,
     pub p: Point,
-    pub r: f32
+    pub r: f32,
 }
 
 #[derive(Debug, ToProtobuf)]
@@ -89,58 +88,59 @@ pub struct DebugCreateUnit {
     pub unit_type: u32,
     pub owner: i32,
     pub pos: Point2D,
-    pub quantity: u32
+    pub quantity: u32,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugKillUnit {
-    #[Set] pub tag: Vec<u64>
+    #[Set]
+    pub tag: Vec<u64>,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub enum DebugTestProcess_Test {
     hang = 1,
     crash = 2,
-    exit = 3
+    exit = 3,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugTestProcess {
     pub test: DebugTestProcess_Test,
-    pub delay_ms: i32
+    pub delay_ms: i32,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugSetScore {
-    pub score: f32
+    pub score: f32,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub enum DebugEndGame_EndResult {
     Surrender = 1,
-    DeclareVictory = 2
+    DeclareVictory = 2,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugEndGame {
-    pub end_result: DebugEndGame_EndResult
+    pub end_result: DebugEndGame_EndResult,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub enum DebugSetUnitValue_UnitValue {
     Energy = 1,
     Life = 2,
-    Shields = 3
+    Shields = 3,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugSetUnitValue {
     pub unit_value: DebugSetUnitValue_UnitValue,
     pub value: f32,
-    pub unit_tag: u64
+    pub unit_tag: u64,
 }
 
 #[derive(Debug, ToProtobuf)]
 pub struct DebugChat {
-    pub message: String
+    pub message: String,
 }

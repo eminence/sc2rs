@@ -12,7 +12,7 @@ pub enum ActionUI {
     MultiPanel(ActionMultiPanel),
     CargoPanel(ActionCargoPanelUnload),
     ProductionPanel(ActionProductionPanelRemoveFromQueue),
-    ToggleAutocast(ActionToggleAutocast)
+    ToggleAutocast(ActionToggleAutocast),
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -28,23 +28,26 @@ pub enum ActionControlGroup_ControlGroupAction {
     SetAndSteal = 4,
     /// Equivalent to Shift + Alt + number hotkey. Adds current selection into control group. Units are removed from other control groups.
     AppendAndSteal = 5,
-
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionControlGroup {
-    #[Get] action: ActionControlGroup_ControlGroupAction,
-    #[Get] control_group_index: u32
+    #[Get]
+    action: ActionControlGroup_ControlGroupAction,
+    #[Get]
+    control_group_index: u32,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionSelectArmy {
-    #[Get] selection_add: bool
+    #[Get]
+    selection_add: bool,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionSelectWarpGates {
-    #[Get] selection_add: bool
+    #[Get]
+    selection_add: bool,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -60,12 +63,12 @@ pub enum ActionSelectIdleWorker_Type {
     All = 3,
     /// Equivalent to shift+control+click. Adds all idle workers to current selection.
     AddAll = 4,
-
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionSelectIdleWorker {
-    #[Get] field_type: ActionSelectIdleWorker_Type
+    #[Get]
+    field_type: ActionSelectIdleWorker_Type,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -78,26 +81,30 @@ enum ActionMultiPanel_Type {
     SelectAllOfType = 3,
     /// Control+Shift Click on icon.
     DeselectAllOfType = 4,
-
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionMultiPanel {
-    #[Get] field_type: ActionMultiPanel_Type,
-    #[Get] unit_index: i32
+    #[Get]
+    field_type: ActionMultiPanel_Type,
+    #[Get]
+    unit_index: i32,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionCargoPanelUnload {
-    #[Get] unit_index: i32
+    #[Get]
+    unit_index: i32,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionProductionPanelRemoveFromQueue {
-    #[Get] unit_index: i32
+    #[Get]
+    unit_index: i32,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionToggleAutocast {
-    #[Get] ability_id: i32
+    #[Get]
+    ability_id: i32,
 }

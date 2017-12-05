@@ -115,6 +115,9 @@ impl Unit {
     pub fn unit_type(&self) -> UnitIDs {
         UnitIDs::from_u32(self.unit_type).expect("Unknown unit type id")
     }
+    pub fn is_visible(&self) -> bool {
+        self.display_type == DisplayType::Visible
+    }
 }
 
 
@@ -318,7 +321,7 @@ pub enum Request {
     Data(RequestData),
     Step(RequestStep),
     Action(RequestAction),
-    Debug(RequestDebug)
+    Debug(RequestDebug),
 }
 
 
@@ -503,12 +506,10 @@ pub struct ResponseObservation {
 }
 
 impl ObservationRaw {
-    pub fn get_my_units<'a>(&'a self) -> impl Iterator<Item=&'a Unit> {
-        self.units
-            .iter()
-            .filter(|u| u.alliance == Alliance::Selff)
+    pub fn get_my_units<'a>(&'a self) -> impl Iterator<Item = &'a Unit> {
+        self.units.iter().filter(|u| u.alliance == Alliance::Selff)
     }
-    pub fn get_my_idle_units<'a>(&'a self) -> impl Iterator<Item=&'a Unit> {
+    pub fn get_my_idle_units<'a>(&'a self) -> impl Iterator<Item = &'a Unit> {
         self.get_my_units().filter(|u| u.is_idle())
     }
 
@@ -516,10 +517,8 @@ impl ObservationRaw {
         self.units.iter().find(|u| u.tag == tag)
     }
 
-    pub fn find_by_type<'a>(&'a self, ty: UnitIDs) -> impl Iterator<Item=&'a Unit> {
-        self.units
-            .iter()
-            .filter(move |u| u.unit_type == ty as u32)
+    pub fn find_by_type<'a>(&'a self, ty: UnitIDs) -> impl Iterator<Item = &'a Unit> {
+        self.units.iter().filter(move |u| u.unit_type == ty as u32)
     }
 }
 
@@ -554,7 +553,7 @@ pub struct ResponseDebug {}
 
 #[derive(Debug, FromProtobuf)]
 pub struct ResponseAction {
-    pub result: Vec<ActionResult>
+    pub result: Vec<ActionResult>,
 }
 
 #[derive(Debug, FromProtobuf)]
@@ -568,7 +567,7 @@ pub enum ResponseEnum {
     Data(ResponseData),
     Step(ResponseStep),
     Debug(ResponseDebug),
-    Action(ResponseAction)
+    Action(ResponseAction),
 }
 
 #[derive(Debug, FromProtobuf)]

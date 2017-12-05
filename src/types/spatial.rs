@@ -8,7 +8,7 @@ use super::common::*;
 #[derive(Debug, FromProtobuf)]
 pub struct ObservationFeatureLayer {
     renders: Option<FeatureLayers>,
-    minimap_renders: Option<FeatureLayersMinimap>
+    minimap_renders: Option<FeatureLayersMinimap>,
 }
 #[derive(Debug, FromProtobuf)]
 pub struct FeatureLayers {
@@ -28,7 +28,7 @@ pub struct FeatureLayers {
     player_relative: ImageData,
     unit_density_aa: ImageData,
     unit_density: ImageData,
-    effects: ImageData
+    effects: ImageData,
 }
 
 
@@ -41,13 +41,13 @@ pub struct FeatureLayersMinimap {
     player_id: ImageData,
     player_relative: ImageData,
     selected: ImageData,
-    unit_type: Option<ImageData>
+    unit_type: Option<ImageData>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct ObservationRender {
     map: ImageData,
-    minimap: ImageData
+    minimap: ImageData,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -55,26 +55,29 @@ pub enum ActionSpatial {
     UnitCommand(ActionSpatialUnitCommand),
     CameraMove(ActionSpatialCameraMove),
     UnitSelectionPoint(ActionSpatialUnitSelectionPoint),
-    UnitSelectionRect(ActionSpatialUnitSelectionRect)
+    UnitSelectionRect(ActionSpatialUnitSelectionRect),
 }
 
 #[derive(Debug, FromProtobuf, ToProtobuf)]
 #[AttachedTo(ActionSpatialUnitCommand)]
 pub enum ActionSpatialUnitCommandEnum {
     TargetScreenCoord(PointI),
-    TargetMinimapCoord(PointI)
+    TargetMinimapCoord(PointI),
 }
 
 #[derive(Debug, FromProtobuf, ToProtobuf)]
 pub struct ActionSpatialUnitCommand {
-    #[Get] ability_id: i32,
-    #[OneOf] target: ActionSpatialUnitCommandEnum,
-    #[Get] queue_command: bool
+    #[Get]
+    ability_id: i32,
+    #[OneOf]
+    target: ActionSpatialUnitCommandEnum,
+    #[Get]
+    queue_command: bool,
 }
 
 #[derive(Debug, FromProtobuf, ToProtobuf)]
 pub struct ActionSpatialCameraMove {
-    center_minimap: PointI
+    center_minimap: PointI,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -82,18 +85,19 @@ pub enum ActionSpatialUnitSelectionPoint_Type {
     Select = 1,
     Toggle = 2,
     AllType = 3,
-    AddAllType = 4
+    AddAllType = 4,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionSpatialUnitSelectionPoint {
     selection_screen_coord: PointI,
-    #[Get] field_type: ActionSpatialUnitSelectionPoint_Type,
-
+    #[Get]
+    field_type: ActionSpatialUnitSelectionPoint_Type,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionSpatialUnitSelectionRect {
     selection_screen_coord: Vec<RectangleI>,
-    #[Get] selection_add: bool
+    #[Get]
+    selection_add: bool,
 }
