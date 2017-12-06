@@ -59,6 +59,7 @@ pub mod GameState {
     pub trait AllowsObservation: StateConnected {}
     pub trait AllowsStep: StateConnected {}
     pub trait AllowsGameData: StateConnected {}
+    pub trait AllowsQuery: StateConnected {}
 
     /// The starting state
     pub struct Unlaunched;
@@ -78,18 +79,21 @@ pub mod GameState {
     impl AllowsObservation for InGame {}
     impl AllowsStep for InGame {}
     impl AllowsGameData for InGame {}
+    impl AllowsQuery for InGame {}
 
     pub struct Ended;
     impl StateConnected for Ended {}
     impl AllowsGameInfo for Ended {}
     impl AllowsObservation for Ended {}
     impl AllowsGameData for Ended {}
+    impl AllowsQuery for Ended {}
 
     pub struct InReplay;
     impl StateConnected for InReplay {}
     impl AllowsGameInfo for InReplay {}
     impl AllowsObservation for InReplay {}
     impl AllowsGameData for InReplay {}
+    impl AllowsQuery for InReplay {}
 
 }
 
@@ -361,6 +365,13 @@ where
     State: GameState::AllowsGameData,
 {
     ImplReq!(game_data, ResponseData, RequestData, Data);
+}
+
+impl<State> Coordinator<State>
+    where
+        State: GameState::AllowsQuery,
+{
+    ImplReq!(query, ResponseQuery, RequestQuery, Query);
 }
 
 impl Coordinator<GameState::InGame> {

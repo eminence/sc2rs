@@ -27,6 +27,9 @@ pub use self::spatial::*;
 mod debug;
 pub use self::debug::*;
 
+mod query;
+pub use self::query::*;
+
 pub trait RequestMessage<T, U>: ToProtobuf<T>
 where
     Self::Reply: FromProtobuf<U>,
@@ -320,6 +323,7 @@ pub enum Request {
     Step(RequestStep),
     Action(RequestAction),
     Debug(RequestDebug),
+    Query(RequestQuery)
 }
 
 
@@ -566,6 +570,7 @@ pub enum ResponseEnum {
     Step(ResponseStep),
     Debug(ResponseDebug),
     Action(ResponseAction),
+    Query(ResponseQuery)
 }
 
 #[derive(Debug, FromProtobuf)]
