@@ -30,6 +30,9 @@ pub use self::debug::*;
 mod query;
 pub use self::query::*;
 
+mod score;
+pub use self::score::*;
+
 pub trait RequestMessage<T, U>: ToProtobuf<T>
 where
     Self::Reply: FromProtobuf<U>,
@@ -475,7 +478,7 @@ pub struct Observation {
     pub alerts: Vec<Alert>,
     /// Abilities available in the selection. Enabled if in this list, disabled otherwise
     pub abilities: Vec<AvailableAbility>,
-    //TODO score: Score,
+    pub score: Option<Score>,
     pub raw_data: Option<ObservationRaw>,
     //TODO feature_layer_data
     //TODO render_data
