@@ -26,7 +26,7 @@ impl ::std::fmt::Debug for ImageData {
     }
 }
 
-#[derive(Debug, ToProtobuf, FromProtobuf)]
+#[derive(Debug, Copy, Clone, ToProtobuf, FromProtobuf)]
 pub struct PointI {
     #[Get]
     pub x: i32,
@@ -43,13 +43,13 @@ impl PointI {
     }
 }
 
-#[derive(Debug, ToProtobuf, FromProtobuf)]
+#[derive(Debug, Copy, Clone, ToProtobuf, FromProtobuf)]
 pub struct RectangleI {
     pub p0: PointI,
     pub p1: PointI,
 }
 
-#[derive(Debug, ToProtobuf, FromProtobuf)]
+#[derive(Debug, Copy, Clone, ToProtobuf, FromProtobuf)]
 /// Point on the game board, 0..222
 ///
 /// Note: bottom left of the screen is 0,0
@@ -69,7 +69,7 @@ impl Point2D {
     }
 }
 
-#[derive(Debug, Clone, ToProtobuf, FromProtobuf)]
+#[derive(Debug, Copy, Clone, ToProtobuf, FromProtobuf)]
 pub struct Point {
     #[Get]
     pub x: f32,
@@ -89,7 +89,7 @@ impl Point {
     }
 }
 
-#[derive(Debug, ToProtobuf, FromProtobuf)]
+#[derive(Debug, Copy, Clone, ToProtobuf, FromProtobuf)]
 pub struct Size2DI {
     #[Get]
     pub x: i32,
