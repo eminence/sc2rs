@@ -159,7 +159,7 @@ impl Coordinator<GameState::Unlaunched> {
         use std::str::FromStr;
 
         let scpath = Path::new(
-            r#"Z:\Program Files (x86)\StarCraft II\Versions\Base59587\SC2_x64.exe"#,
+            r#"Z:\Program Files (x86)\StarCraft II\Versions\Base60196\SC2_x64.exe"#,
         );
 
         let mut cmd = process::Command::new(&scpath)
