@@ -43,7 +43,6 @@ pub enum DebugCommand_oneof_command {
     score(DebugSetScore),
     end_game(DebugEndGame),
     unit_value(DebugSetUnitValue),
-    chat(DebugChat),
 }
 
 impl DebugCommand {
@@ -428,55 +427,6 @@ impl DebugCommand {
             _ => DebugSetUnitValue::default_instance(),
         }
     }
-
-    // optional .SC2APIProtocol.DebugChat chat = 9;
-
-    pub fn clear_chat(&mut self) {
-        self.command = ::std::option::Option::None;
-    }
-
-    pub fn has_chat(&self) -> bool {
-        match self.command {
-            ::std::option::Option::Some(DebugCommand_oneof_command::chat(..)) => true,
-            _ => false,
-        }
-    }
-
-    // Param is passed by value, moved
-    pub fn set_chat(&mut self, v: DebugChat) {
-        self.command = ::std::option::Option::Some(DebugCommand_oneof_command::chat(v))
-    }
-
-    // Mutable pointer to the field.
-    pub fn mut_chat(&mut self) -> &mut DebugChat {
-        if let ::std::option::Option::Some(DebugCommand_oneof_command::chat(_)) = self.command {
-        } else {
-            self.command = ::std::option::Option::Some(DebugCommand_oneof_command::chat(DebugChat::new()));
-        }
-        match self.command {
-            ::std::option::Option::Some(DebugCommand_oneof_command::chat(ref mut v)) => v,
-            _ => panic!(),
-        }
-    }
-
-    // Take field
-    pub fn take_chat(&mut self) -> DebugChat {
-        if self.has_chat() {
-            match self.command.take() {
-                ::std::option::Option::Some(DebugCommand_oneof_command::chat(v)) => v,
-                _ => panic!(),
-            }
-        } else {
-            DebugChat::new()
-        }
-    }
-
-    pub fn get_chat(&self) -> &DebugChat {
-        match self.command {
-            ::std::option::Option::Some(DebugCommand_oneof_command::chat(ref v)) => v,
-            _ => DebugChat::default_instance(),
-        }
-    }
 }
 
 impl ::protobuf::Message for DebugCommand {
@@ -512,11 +462,6 @@ impl ::protobuf::Message for DebugCommand {
             }
         }
         if let Some(DebugCommand_oneof_command::unit_value(ref v)) = self.command {
-            if !v.is_initialized() {
-                return false;
-            }
-        }
-        if let Some(DebugCommand_oneof_command::chat(ref v)) = self.command {
             if !v.is_initialized() {
                 return false;
             }
@@ -576,12 +521,6 @@ impl ::protobuf::Message for DebugCommand {
                     }
                     self.command = ::std::option::Option::Some(DebugCommand_oneof_command::unit_value(is.read_message()?));
                 },
-                9 => {
-                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
-                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
-                    }
-                    self.command = ::std::option::Option::Some(DebugCommand_oneof_command::chat(is.read_message()?));
-                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -624,10 +563,6 @@ impl ::protobuf::Message for DebugCommand {
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
                 &DebugCommand_oneof_command::unit_value(ref v) => {
-                    let len = v.compute_size();
-                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-                },
-                &DebugCommand_oneof_command::chat(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
@@ -676,11 +611,6 @@ impl ::protobuf::Message for DebugCommand {
                 },
                 &DebugCommand_oneof_command::unit_value(ref v) => {
                     os.write_tag(8, ::protobuf::wire_format::WireTypeLengthDelimited)?;
-                    os.write_raw_varint32(v.get_cached_size())?;
-                    v.write_to_with_cached_sizes(os)?;
-                },
-                &DebugCommand_oneof_command::chat(ref v) => {
-                    os.write_tag(9, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -770,11 +700,6 @@ impl ::protobuf::MessageStatic for DebugCommand {
                     DebugCommand::has_unit_value,
                     DebugCommand::get_unit_value,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, DebugChat>(
-                    "chat",
-                    DebugCommand::has_chat,
-                    DebugCommand::get_chat,
-                ));
                 ::protobuf::reflect::MessageDescriptor::new::<DebugCommand>(
                     "DebugCommand",
                     fields,
@@ -795,7 +720,6 @@ impl ::protobuf::Clear for DebugCommand {
         self.clear_score();
         self.clear_end_game();
         self.clear_unit_value();
-        self.clear_chat();
         self.unknown_fields.clear();
     }
 }
@@ -1696,6 +1620,7 @@ pub struct DebugText {
     text: ::protobuf::SingularField<::std::string::String>,
     virtual_pos: ::protobuf::SingularPtrField<super::common::Point>,
     world_pos: ::protobuf::SingularPtrField<super::common::Point>,
+    size: ::std::option::Option<u32>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
@@ -1885,6 +1810,33 @@ impl DebugText {
     fn mut_world_pos_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<super::common::Point> {
         &mut self.world_pos
     }
+
+    // optional uint32 size = 5;
+
+    pub fn clear_size(&mut self) {
+        self.size = ::std::option::Option::None;
+    }
+
+    pub fn has_size(&self) -> bool {
+        self.size.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_size(&mut self, v: u32) {
+        self.size = ::std::option::Option::Some(v);
+    }
+
+    pub fn get_size(&self) -> u32 {
+        self.size.unwrap_or(0)
+    }
+
+    fn get_size_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.size
+    }
+
+    fn mut_size_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.size
+    }
 }
 
 impl ::protobuf::Message for DebugText {
@@ -1923,6 +1875,13 @@ impl ::protobuf::Message for DebugText {
                 4 => {
                     ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.world_pos)?;
                 },
+                5 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint32()?;
+                    self.size = ::std::option::Option::Some(tmp);
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -1950,6 +1909,9 @@ impl ::protobuf::Message for DebugText {
             let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         }
+        if let Some(v) = self.size {
+            my_size += ::protobuf::rt::value_size(5, v, ::protobuf::wire_format::WireTypeVarint);
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -1973,6 +1935,9 @@ impl ::protobuf::Message for DebugText {
             os.write_tag(4, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             os.write_raw_varint32(v.get_cached_size())?;
             v.write_to_with_cached_sizes(os)?;
+        }
+        if let Some(v) = self.size {
+            os.write_uint32(5, v)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -2038,6 +2003,11 @@ impl ::protobuf::MessageStatic for DebugText {
                     DebugText::get_world_pos_for_reflect,
                     DebugText::mut_world_pos_for_reflect,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
+                    "size",
+                    DebugText::get_size_for_reflect,
+                    DebugText::mut_size_for_reflect,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<DebugText>(
                     "DebugText",
                     fields,
@@ -2054,6 +2024,7 @@ impl ::protobuf::Clear for DebugText {
         self.clear_text();
         self.clear_virtual_pos();
         self.clear_world_pos();
+        self.clear_size();
         self.unknown_fields.clear();
     }
 }
@@ -4443,192 +4414,6 @@ impl ::protobuf::reflect::ProtobufValue for DebugSetUnitValue_UnitValue {
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
-pub struct DebugChat {
-    // message fields
-    message: ::protobuf::SingularField<::std::string::String>,
-    // special fields
-    unknown_fields: ::protobuf::UnknownFields,
-    cached_size: ::protobuf::CachedSize,
-}
-
-// see codegen.rs for the explanation why impl Sync explicitly
-unsafe impl ::std::marker::Sync for DebugChat {}
-
-impl DebugChat {
-    pub fn new() -> DebugChat {
-        ::std::default::Default::default()
-    }
-
-    pub fn default_instance() -> &'static DebugChat {
-        static mut instance: ::protobuf::lazy::Lazy<DebugChat> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const DebugChat,
-        };
-        unsafe {
-            instance.get(DebugChat::new)
-        }
-    }
-
-    // optional string message = 1;
-
-    pub fn clear_message(&mut self) {
-        self.message.clear();
-    }
-
-    pub fn has_message(&self) -> bool {
-        self.message.is_some()
-    }
-
-    // Param is passed by value, moved
-    pub fn set_message(&mut self, v: ::std::string::String) {
-        self.message = ::protobuf::SingularField::some(v);
-    }
-
-    // Mutable pointer to the field.
-    // If field is not initialized, it is initialized with default value first.
-    pub fn mut_message(&mut self) -> &mut ::std::string::String {
-        if self.message.is_none() {
-            self.message.set_default();
-        }
-        self.message.as_mut().unwrap()
-    }
-
-    // Take field
-    pub fn take_message(&mut self) -> ::std::string::String {
-        self.message.take().unwrap_or_else(|| ::std::string::String::new())
-    }
-
-    pub fn get_message(&self) -> &str {
-        match self.message.as_ref() {
-            Some(v) => &v,
-            None => "",
-        }
-    }
-
-    fn get_message_for_reflect(&self) -> &::protobuf::SingularField<::std::string::String> {
-        &self.message
-    }
-
-    fn mut_message_for_reflect(&mut self) -> &mut ::protobuf::SingularField<::std::string::String> {
-        &mut self.message
-    }
-}
-
-impl ::protobuf::Message for DebugChat {
-    fn is_initialized(&self) -> bool {
-        true
-    }
-
-    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !is.eof()? {
-            let (field_number, wire_type) = is.read_tag_unpack()?;
-            match field_number {
-                1 => {
-                    ::protobuf::rt::read_singular_string_into(wire_type, is, &mut self.message)?;
-                },
-                _ => {
-                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
-            };
-        }
-        ::std::result::Result::Ok(())
-    }
-
-    // Compute sizes of nested messages
-    #[allow(unused_variables)]
-    fn compute_size(&self) -> u32 {
-        let mut my_size = 0;
-        if let Some(ref v) = self.message.as_ref() {
-            my_size += ::protobuf::rt::string_size(1, &v);
-        }
-        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
-        self.cached_size.set(my_size);
-        my_size
-    }
-
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
-        if let Some(ref v) = self.message.as_ref() {
-            os.write_string(1, &v)?;
-        }
-        os.write_unknown_fields(self.get_unknown_fields())?;
-        ::std::result::Result::Ok(())
-    }
-
-    fn get_cached_size(&self) -> u32 {
-        self.cached_size.get()
-    }
-
-    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
-        &self.unknown_fields
-    }
-
-    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
-        &mut self.unknown_fields
-    }
-
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
-    }
-    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
-        self as &mut ::std::any::Any
-    }
-    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
-        self
-    }
-
-    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
-        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
-    }
-}
-
-impl ::protobuf::MessageStatic for DebugChat {
-    fn new() -> DebugChat {
-        DebugChat::new()
-    }
-
-    fn descriptor_static(_: ::std::option::Option<DebugChat>) -> &'static ::protobuf::reflect::MessageDescriptor {
-        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
-            lock: ::protobuf::lazy::ONCE_INIT,
-            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
-        };
-        unsafe {
-            descriptor.get(|| {
-                let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_singular_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
-                    "message",
-                    DebugChat::get_message_for_reflect,
-                    DebugChat::mut_message_for_reflect,
-                ));
-                ::protobuf::reflect::MessageDescriptor::new::<DebugChat>(
-                    "DebugChat",
-                    fields,
-                    file_descriptor_proto()
-                )
-            })
-        }
-    }
-}
-
-impl ::protobuf::Clear for DebugChat {
-    fn clear(&mut self) {
-        self.clear_message();
-        self.unknown_fields.clear();
-    }
-}
-
-impl ::std::fmt::Debug for DebugChat {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        ::protobuf::text_format::fmt(self, f)
-    }
-}
-
-impl ::protobuf::reflect::ProtobufValue for DebugChat {
-    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
-        ::protobuf::reflect::ProtobufValueRef::Message(self)
-    }
-}
-
 #[derive(Clone,PartialEq,Eq,Debug,Hash)]
 pub enum DebugGameState {
     show_map = 1,
@@ -4710,7 +4495,7 @@ impl ::protobuf::reflect::ProtobufValue for DebugGameState {
 
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x1cs2clientprotocol/debug.proto\x12\x0eSC2APIProtocol\x1a\x1ds2client\
-    protocol/common.proto\"\xbb\x04\n\x0cDebugCommand\x12/\n\x04draw\x18\x01\
+    protocol/common.proto\"\x8a\x04\n\x0cDebugCommand\x12/\n\x04draw\x18\x01\
     \x20\x01(\x0b2\x19.SC2APIProtocol.DebugDrawH\0R\x04draw\x12?\n\ngame_sta\
     te\x18\x02\x20\x01(\x0e2\x1e.SC2APIProtocol.DebugGameStateH\0R\tgameStat\
     e\x12B\n\x0bcreate_unit\x18\x03\x20\x01(\x0b2\x1f.SC2APIProtocol.DebugCr\
@@ -4720,52 +4505,51 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x125\n\x05score\x18\x06\x20\x01(\x0b2\x1d.SC2APIProtocol.DebugSetScoreH\
     \0R\x05score\x129\n\x08end_game\x18\x07\x20\x01(\x0b2\x1c.SC2APIProtocol\
     .DebugEndGameH\0R\x07endGame\x12B\n\nunit_value\x18\x08\x20\x01(\x0b2!.S\
-    C2APIProtocol.DebugSetUnitValueH\0R\tunitValue\x12/\n\x04chat\x18\t\x20\
-    \x01(\x0b2\x19.SC2APIProtocol.DebugChatH\0R\x04chatB\t\n\x07command\"\
-    \xd2\x01\n\tDebugDraw\x12-\n\x04text\x18\x01\x20\x03(\x0b2\x19.SC2APIPro\
-    tocol.DebugTextR\x04text\x12/\n\x05lines\x18\x02\x20\x03(\x0b2\x19.SC2AP\
-    IProtocol.DebugLineR\x05lines\x12.\n\x05boxes\x18\x03\x20\x03(\x0b2\x18.\
-    SC2APIProtocol.DebugBoxR\x05boxes\x125\n\x07spheres\x18\x04\x20\x03(\x0b\
-    2\x1b.SC2APIProtocol.DebugSphereR\x07spheres\"T\n\x04Line\x12%\n\x02p0\
-    \x18\x01\x20\x01(\x0b2\x15.SC2APIProtocol.PointR\x02p0\x12%\n\x02p1\x18\
-    \x02\x20\x01(\x0b2\x15.SC2APIProtocol.PointR\x02p1\"1\n\x05Color\x12\x0c\
-    \n\x01r\x18\x01\x20\x01(\rR\x01r\x12\x0c\n\x01g\x18\x02\x20\x01(\rR\x01g\
-    \x12\x0c\n\x01b\x18\x03\x20\x01(\rR\x01b\"\xb8\x01\n\tDebugText\x12+\n\
-    \x05color\x18\x01\x20\x01(\x0b2\x15.SC2APIProtocol.ColorR\x05color\x12\
-    \x12\n\x04text\x18\x02\x20\x01(\tR\x04text\x126\n\x0bvirtual_pos\x18\x03\
-    \x20\x01(\x0b2\x15.SC2APIProtocol.PointR\nvirtualPos\x122\n\tworld_pos\
-    \x18\x04\x20\x01(\x0b2\x15.SC2APIProtocol.PointR\x08worldPos\"b\n\tDebug\
-    Line\x12+\n\x05color\x18\x01\x20\x01(\x0b2\x15.SC2APIProtocol.ColorR\x05\
-    color\x12(\n\x04line\x18\x02\x20\x01(\x0b2\x14.SC2APIProtocol.LineR\x04l\
-    ine\"\x89\x01\n\x08DebugBox\x12+\n\x05color\x18\x01\x20\x01(\x0b2\x15.SC\
-    2APIProtocol.ColorR\x05color\x12'\n\x03min\x18\x02\x20\x01(\x0b2\x15.SC2\
-    APIProtocol.PointR\x03min\x12'\n\x03max\x18\x03\x20\x01(\x0b2\x15.SC2API\
-    Protocol.PointR\x03max\"m\n\x0bDebugSphere\x12+\n\x05color\x18\x01\x20\
-    \x01(\x0b2\x15.SC2APIProtocol.ColorR\x05color\x12#\n\x01p\x18\x02\x20\
-    \x01(\x0b2\x15.SC2APIProtocol.PointR\x01p\x12\x0c\n\x01r\x18\x03\x20\x01\
-    (\x02R\x01r\"\x8b\x01\n\x0fDebugCreateUnit\x12\x1b\n\tunit_type\x18\x01\
-    \x20\x01(\rR\x08unitType\x12\x14\n\x05owner\x18\x02\x20\x01(\x05R\x05own\
-    er\x12)\n\x03pos\x18\x03\x20\x01(\x0b2\x17.SC2APIProtocol.Point2DR\x03po\
-    s\x12\x1a\n\x08quantity\x18\x04\x20\x01(\rR\x08quantity\"!\n\rDebugKillU\
-    nit\x12\x10\n\x03tag\x18\x01\x20\x03(\x04R\x03tag\"\x8f\x01\n\x10DebugTe\
-    stProcess\x129\n\x04test\x18\x01\x20\x01(\x0e2%.SC2APIProtocol.DebugTest\
-    Process.TestR\x04test\x12\x19\n\x08delay_ms\x18\x02\x20\x01(\x05R\x07del\
-    ayMs\"%\n\x04Test\x12\x08\n\x04hang\x10\x01\x12\t\n\x05crash\x10\x02\x12\
-    \x08\n\x04exit\x10\x03\"%\n\rDebugSetScore\x12\x14\n\x05score\x18\x01\
-    \x20\x01(\x02R\x05score\"\x85\x01\n\x0cDebugEndGame\x12E\n\nend_result\
-    \x18\x01\x20\x01(\x0e2&.SC2APIProtocol.DebugEndGame.EndResultR\tendResul\
-    t\".\n\tEndResult\x12\r\n\tSurrender\x10\x01\x12\x12\n\x0eDeclareVictory\
-    \x10\x02\"\xc0\x01\n\x11DebugSetUnitValue\x12J\n\nunit_value\x18\x01\x20\
-    \x01(\x0e2+.SC2APIProtocol.DebugSetUnitValue.UnitValueR\tunitValue\x12\
-    \x14\n\x05value\x18\x02\x20\x01(\x02R\x05value\x12\x19\n\x08unit_tag\x18\
-    \x03\x20\x01(\x04R\x07unitTag\".\n\tUnitValue\x12\n\n\x06Energy\x10\x01\
-    \x12\x08\n\x04Life\x10\x02\x12\x0b\n\x07Shields\x10\x03\"%\n\tDebugChat\
-    \x12\x18\n\x07message\x18\x01\x20\x01(\tR\x07message*\xb2\x01\n\x0eDebug\
-    GameState\x12\x0c\n\x08show_map\x10\x01\x12\x11\n\rcontrol_enemy\x10\x02\
-    \x12\x08\n\x04food\x10\x03\x12\x08\n\x04free\x10\x04\x12\x11\n\rall_reso\
-    urces\x10\x05\x12\x07\n\x03god\x10\x06\x12\x0c\n\x08minerals\x10\x07\x12\
-    \x07\n\x03gas\x10\x08\x12\x0c\n\x08cooldown\x10\t\x12\r\n\ttech_tree\x10\
-    \n\x12\x0b\n\x07upgrade\x10\x0b\x12\x0e\n\nfast_build\x10\x0c\
+    C2APIProtocol.DebugSetUnitValueH\0R\tunitValueB\t\n\x07command\"\xd2\x01\
+    \n\tDebugDraw\x12-\n\x04text\x18\x01\x20\x03(\x0b2\x19.SC2APIProtocol.De\
+    bugTextR\x04text\x12/\n\x05lines\x18\x02\x20\x03(\x0b2\x19.SC2APIProtoco\
+    l.DebugLineR\x05lines\x12.\n\x05boxes\x18\x03\x20\x03(\x0b2\x18.SC2APIPr\
+    otocol.DebugBoxR\x05boxes\x125\n\x07spheres\x18\x04\x20\x03(\x0b2\x1b.SC\
+    2APIProtocol.DebugSphereR\x07spheres\"T\n\x04Line\x12%\n\x02p0\x18\x01\
+    \x20\x01(\x0b2\x15.SC2APIProtocol.PointR\x02p0\x12%\n\x02p1\x18\x02\x20\
+    \x01(\x0b2\x15.SC2APIProtocol.PointR\x02p1\"1\n\x05Color\x12\x0c\n\x01r\
+    \x18\x01\x20\x01(\rR\x01r\x12\x0c\n\x01g\x18\x02\x20\x01(\rR\x01g\x12\
+    \x0c\n\x01b\x18\x03\x20\x01(\rR\x01b\"\xcc\x01\n\tDebugText\x12+\n\x05co\
+    lor\x18\x01\x20\x01(\x0b2\x15.SC2APIProtocol.ColorR\x05color\x12\x12\n\
+    \x04text\x18\x02\x20\x01(\tR\x04text\x126\n\x0bvirtual_pos\x18\x03\x20\
+    \x01(\x0b2\x15.SC2APIProtocol.PointR\nvirtualPos\x122\n\tworld_pos\x18\
+    \x04\x20\x01(\x0b2\x15.SC2APIProtocol.PointR\x08worldPos\x12\x12\n\x04si\
+    ze\x18\x05\x20\x01(\rR\x04size\"b\n\tDebugLine\x12+\n\x05color\x18\x01\
+    \x20\x01(\x0b2\x15.SC2APIProtocol.ColorR\x05color\x12(\n\x04line\x18\x02\
+    \x20\x01(\x0b2\x14.SC2APIProtocol.LineR\x04line\"\x89\x01\n\x08DebugBox\
+    \x12+\n\x05color\x18\x01\x20\x01(\x0b2\x15.SC2APIProtocol.ColorR\x05colo\
+    r\x12'\n\x03min\x18\x02\x20\x01(\x0b2\x15.SC2APIProtocol.PointR\x03min\
+    \x12'\n\x03max\x18\x03\x20\x01(\x0b2\x15.SC2APIProtocol.PointR\x03max\"m\
+    \n\x0bDebugSphere\x12+\n\x05color\x18\x01\x20\x01(\x0b2\x15.SC2APIProtoc\
+    ol.ColorR\x05color\x12#\n\x01p\x18\x02\x20\x01(\x0b2\x15.SC2APIProtocol.\
+    PointR\x01p\x12\x0c\n\x01r\x18\x03\x20\x01(\x02R\x01r\"\x8b\x01\n\x0fDeb\
+    ugCreateUnit\x12\x1b\n\tunit_type\x18\x01\x20\x01(\rR\x08unitType\x12\
+    \x14\n\x05owner\x18\x02\x20\x01(\x05R\x05owner\x12)\n\x03pos\x18\x03\x20\
+    \x01(\x0b2\x17.SC2APIProtocol.Point2DR\x03pos\x12\x1a\n\x08quantity\x18\
+    \x04\x20\x01(\rR\x08quantity\"!\n\rDebugKillUnit\x12\x10\n\x03tag\x18\
+    \x01\x20\x03(\x04R\x03tag\"\x8f\x01\n\x10DebugTestProcess\x129\n\x04test\
+    \x18\x01\x20\x01(\x0e2%.SC2APIProtocol.DebugTestProcess.TestR\x04test\
+    \x12\x19\n\x08delay_ms\x18\x02\x20\x01(\x05R\x07delayMs\"%\n\x04Test\x12\
+    \x08\n\x04hang\x10\x01\x12\t\n\x05crash\x10\x02\x12\x08\n\x04exit\x10\
+    \x03\"%\n\rDebugSetScore\x12\x14\n\x05score\x18\x01\x20\x01(\x02R\x05sco\
+    re\"\x85\x01\n\x0cDebugEndGame\x12E\n\nend_result\x18\x01\x20\x01(\x0e2&\
+    .SC2APIProtocol.DebugEndGame.EndResultR\tendResult\".\n\tEndResult\x12\r\
+    \n\tSurrender\x10\x01\x12\x12\n\x0eDeclareVictory\x10\x02\"\xc0\x01\n\
+    \x11DebugSetUnitValue\x12J\n\nunit_value\x18\x01\x20\x01(\x0e2+.SC2APIPr\
+    otocol.DebugSetUnitValue.UnitValueR\tunitValue\x12\x14\n\x05value\x18\
+    \x02\x20\x01(\x02R\x05value\x12\x19\n\x08unit_tag\x18\x03\x20\x01(\x04R\
+    \x07unitTag\".\n\tUnitValue\x12\n\n\x06Energy\x10\x01\x12\x08\n\x04Life\
+    \x10\x02\x12\x0b\n\x07Shields\x10\x03*\xb2\x01\n\x0eDebugGameState\x12\
+    \x0c\n\x08show_map\x10\x01\x12\x11\n\rcontrol_enemy\x10\x02\x12\x08\n\
+    \x04food\x10\x03\x12\x08\n\x04free\x10\x04\x12\x11\n\rall_resources\x10\
+    \x05\x12\x07\n\x03god\x10\x06\x12\x0c\n\x08minerals\x10\x07\x12\x07\n\
+    \x03gas\x10\x08\x12\x0c\n\x08cooldown\x10\t\x12\r\n\ttech_tree\x10\n\x12\
+    \x0b\n\x07upgrade\x10\x0b\x12\x0e\n\nfast_build\x10\x0c\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

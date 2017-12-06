@@ -391,7 +391,7 @@ pub struct Action {
     /// Populated if Feature Layer or Render interface is enabled
     pub action_ui: Option<ActionUI>,
     /// Chat messages as a player typing into the chat channel
-    pub chat: Vec<ActionChat>,
+    pub action_chat: Option<ActionChat>,
 }
 
 #[derive(Clone, PartialEq, Eq, Debug, Hash, ToProtobuf, FromProtobuf)]
@@ -490,7 +490,7 @@ pub struct PlayerResult {
 #[derive(Debug, FromProtobuf)]
 pub struct ChatReceived {
     #[Get]
-    pub player_id: i32,
+    pub player_id: u32,
     pub message: String,
 }
 

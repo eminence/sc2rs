@@ -1668,6 +1668,7 @@ pub struct UnitTypeData {
     build_time: ::std::option::Option<f32>,
     has_vespene: ::std::option::Option<bool>,
     has_minerals: ::std::option::Option<bool>,
+    sight_range: ::std::option::Option<f32>,
     tech_alias: ::std::vec::Vec<u32>,
     unit_alias: ::std::option::Option<u32>,
     tech_requirement: ::std::option::Option<u32>,
@@ -2067,6 +2068,33 @@ impl UnitTypeData {
         &mut self.has_minerals
     }
 
+    // optional float sight_range = 25;
+
+    pub fn clear_sight_range(&mut self) {
+        self.sight_range = ::std::option::Option::None;
+    }
+
+    pub fn has_sight_range(&self) -> bool {
+        self.sight_range.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_sight_range(&mut self, v: f32) {
+        self.sight_range = ::std::option::Option::Some(v);
+    }
+
+    pub fn get_sight_range(&self) -> f32 {
+        self.sight_range.unwrap_or(0.)
+    }
+
+    fn get_sight_range_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.sight_range
+    }
+
+    fn mut_sight_range_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.sight_range
+    }
+
     // repeated uint32 tech_alias = 21;
 
     pub fn clear_tech_alias(&mut self) {
@@ -2403,6 +2431,13 @@ impl ::protobuf::Message for UnitTypeData {
                     let tmp = is.read_bool()?;
                     self.has_minerals = ::std::option::Option::Some(tmp);
                 },
+                25 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_float()?;
+                    self.sight_range = ::std::option::Option::Some(tmp);
+                },
                 21 => {
                     ::protobuf::rt::read_repeated_uint32_into(wire_type, is, &mut self.tech_alias)?;
                 },
@@ -2498,6 +2533,9 @@ impl ::protobuf::Message for UnitTypeData {
         if let Some(v) = self.has_minerals {
             my_size += 3;
         }
+        if let Some(v) = self.sight_range {
+            my_size += 6;
+        }
         for value in &self.tech_alias {
             my_size += ::protobuf::rt::value_size(21, *value, ::protobuf::wire_format::WireTypeVarint);
         };
@@ -2567,6 +2605,9 @@ impl ::protobuf::Message for UnitTypeData {
         }
         if let Some(v) = self.has_minerals {
             os.write_bool(20, v)?;
+        }
+        if let Some(v) = self.sight_range {
+            os.write_float(25, v)?;
         }
         for v in &self.tech_alias {
             os.write_uint32(21, *v)?;
@@ -2703,6 +2744,11 @@ impl ::protobuf::MessageStatic for UnitTypeData {
                     UnitTypeData::get_has_minerals_for_reflect,
                     UnitTypeData::mut_has_minerals_for_reflect,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
+                    "sight_range",
+                    UnitTypeData::get_sight_range_for_reflect,
+                    UnitTypeData::mut_sight_range_for_reflect,
+                ));
                 fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "tech_alias",
                     UnitTypeData::get_tech_alias_for_reflect,
@@ -2768,6 +2814,7 @@ impl ::protobuf::Clear for UnitTypeData {
         self.clear_build_time();
         self.clear_has_vespene();
         self.clear_has_minerals();
+        self.clear_sight_range();
         self.clear_tech_alias();
         self.clear_unit_alias();
         self.clear_tech_requirement();
@@ -3888,7 +3935,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     onusR\x0bdamageBonus\x12\x18\n\x07attacks\x18\x04\x20\x01(\rR\x07attacks\
     \x12\x14\n\x05range\x18\x05\x20\x01(\x02R\x05range\x12\x14\n\x05speed\
     \x18\x06\x20\x01(\x02R\x05speed\"*\n\nTargetType\x12\n\n\x06Ground\x10\
-    \x01\x12\x07\n\x03Air\x10\x02\x12\x07\n\x03Any\x10\x03\"\xf2\x05\n\x0cUn\
+    \x01\x12\x07\n\x03Air\x10\x02\x12\x07\n\x03Any\x10\x03\"\x93\x06\n\x0cUn\
     itTypeData\x12\x17\n\x07unit_id\x18\x01\x20\x01(\rR\x06unitId\x12\x12\n\
     \x04name\x18\x02\x20\x01(\tR\x04name\x12\x1c\n\tavailable\x18\x03\x20\
     \x01(\x08R\tavailable\x12\x1d\n\ncargo_size\x18\x04\x20\x01(\rR\tcargoSi\
@@ -3899,28 +3946,29 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     yId\x12(\n\x04race\x18\x10\x20\x01(\x0e2\x14.SC2APIProtocol.RaceR\x04rac\
     e\x12\x1d\n\nbuild_time\x18\x11\x20\x01(\x02R\tbuildTime\x12\x1f\n\x0bha\
     s_vespene\x18\x13\x20\x01(\x08R\nhasVespene\x12!\n\x0chas_minerals\x18\
-    \x14\x20\x01(\x08R\x0bhasMinerals\x12\x1d\n\ntech_alias\x18\x15\x20\x03(\
-    \rR\ttechAlias\x12\x1d\n\nunit_alias\x18\x16\x20\x01(\rR\tunitAlias\x12)\
-    \n\x10tech_requirement\x18\x17\x20\x01(\rR\x0ftechRequirement\x12)\n\x10\
-    require_attached\x18\x18\x20\x01(\x08R\x0frequireAttached\x129\n\nattrib\
-    utes\x18\x08\x20\x03(\x0e2\x19.SC2APIProtocol.AttributeR\nattributes\x12\
-    %\n\x0emovement_speed\x18\t\x20\x01(\x02R\rmovementSpeed\x12\x14\n\x05ar\
-    mor\x18\n\x20\x01(\x02R\x05armor\x120\n\x07weapons\x18\x0b\x20\x03(\x0b2\
-    \x16.SC2APIProtocol.WeaponR\x07weapons\"\xca\x01\n\x0bUpgradeData\x12\
-    \x1d\n\nupgrade_id\x18\x01\x20\x01(\rR\tupgradeId\x12\x12\n\x04name\x18\
-    \x02\x20\x01(\tR\x04name\x12!\n\x0cmineral_cost\x18\x03\x20\x01(\rR\x0bm\
-    ineralCost\x12!\n\x0cvespene_cost\x18\x04\x20\x01(\rR\x0bvespeneCost\x12\
-    #\n\rresearch_time\x18\x05\x20\x01(\x02R\x0cresearchTime\x12\x1d\n\nabil\
-    ity_id\x18\x06\x20\x01(\rR\tabilityId\"7\n\x08BuffData\x12\x17\n\x07buff\
-    _id\x18\x01\x20\x01(\rR\x06buffId\x12\x12\n\x04name\x18\x02\x20\x01(\tR\
-    \x04name\"z\n\nEffectData\x12\x1b\n\teffect_id\x18\x01\x20\x01(\rR\x08ef\
-    fectId\x12\x12\n\x04name\x18\x02\x20\x01(\tR\x04name\x12#\n\rfriendly_na\
-    me\x18\x03\x20\x01(\tR\x0cfriendlyName\x12\x16\n\x06radius\x18\x04\x20\
-    \x01(\x02R\x06radius*\x9e\x01\n\tAttribute\x12\t\n\x05Light\x10\x01\x12\
-    \x0b\n\x07Armored\x10\x02\x12\x0e\n\nBiological\x10\x03\x12\x0e\n\nMecha\
-    nical\x10\x04\x12\x0b\n\x07Robotic\x10\x05\x12\x0b\n\x07Psionic\x10\x06\
-    \x12\x0b\n\x07Massive\x10\x07\x12\r\n\tStructure\x10\x08\x12\t\n\x05Hove\
-    r\x10\t\x12\n\n\x06Heroic\x10\n\x12\x0c\n\x08Summoned\x10\x0b\
+    \x14\x20\x01(\x08R\x0bhasMinerals\x12\x1f\n\x0bsight_range\x18\x19\x20\
+    \x01(\x02R\nsightRange\x12\x1d\n\ntech_alias\x18\x15\x20\x03(\rR\ttechAl\
+    ias\x12\x1d\n\nunit_alias\x18\x16\x20\x01(\rR\tunitAlias\x12)\n\x10tech_\
+    requirement\x18\x17\x20\x01(\rR\x0ftechRequirement\x12)\n\x10require_att\
+    ached\x18\x18\x20\x01(\x08R\x0frequireAttached\x129\n\nattributes\x18\
+    \x08\x20\x03(\x0e2\x19.SC2APIProtocol.AttributeR\nattributes\x12%\n\x0em\
+    ovement_speed\x18\t\x20\x01(\x02R\rmovementSpeed\x12\x14\n\x05armor\x18\
+    \n\x20\x01(\x02R\x05armor\x120\n\x07weapons\x18\x0b\x20\x03(\x0b2\x16.SC\
+    2APIProtocol.WeaponR\x07weapons\"\xca\x01\n\x0bUpgradeData\x12\x1d\n\nup\
+    grade_id\x18\x01\x20\x01(\rR\tupgradeId\x12\x12\n\x04name\x18\x02\x20\
+    \x01(\tR\x04name\x12!\n\x0cmineral_cost\x18\x03\x20\x01(\rR\x0bmineralCo\
+    st\x12!\n\x0cvespene_cost\x18\x04\x20\x01(\rR\x0bvespeneCost\x12#\n\rres\
+    earch_time\x18\x05\x20\x01(\x02R\x0cresearchTime\x12\x1d\n\nability_id\
+    \x18\x06\x20\x01(\rR\tabilityId\"7\n\x08BuffData\x12\x17\n\x07buff_id\
+    \x18\x01\x20\x01(\rR\x06buffId\x12\x12\n\x04name\x18\x02\x20\x01(\tR\x04\
+    name\"z\n\nEffectData\x12\x1b\n\teffect_id\x18\x01\x20\x01(\rR\x08effect\
+    Id\x12\x12\n\x04name\x18\x02\x20\x01(\tR\x04name\x12#\n\rfriendly_name\
+    \x18\x03\x20\x01(\tR\x0cfriendlyName\x12\x16\n\x06radius\x18\x04\x20\x01\
+    (\x02R\x06radius*\x9e\x01\n\tAttribute\x12\t\n\x05Light\x10\x01\x12\x0b\
+    \n\x07Armored\x10\x02\x12\x0e\n\nBiological\x10\x03\x12\x0e\n\nMechanica\
+    l\x10\x04\x12\x0b\n\x07Robotic\x10\x05\x12\x0b\n\x07Psionic\x10\x06\x12\
+    \x0b\n\x07Massive\x10\x07\x12\r\n\tStructure\x10\x08\x12\t\n\x05Hover\
+    \x10\t\x12\n\n\x06Heroic\x10\n\x12\x0c\n\x08Summoned\x10\x0b\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

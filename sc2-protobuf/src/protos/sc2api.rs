@@ -46,6 +46,7 @@ pub enum Request_oneof_request {
     game_info(RequestGameInfo),
     observation(RequestObservation),
     action(RequestAction),
+    obs_action(RequestObserverAction),
     step(RequestStep),
     data(RequestData),
     query(super::query::RequestQuery),
@@ -611,6 +612,55 @@ impl Request {
         }
     }
 
+    // optional .SC2APIProtocol.RequestObserverAction obs_action = 21;
+
+    pub fn clear_obs_action(&mut self) {
+        self.request = ::std::option::Option::None;
+    }
+
+    pub fn has_obs_action(&self) -> bool {
+        match self.request {
+            ::std::option::Option::Some(Request_oneof_request::obs_action(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_obs_action(&mut self, v: RequestObserverAction) {
+        self.request = ::std::option::Option::Some(Request_oneof_request::obs_action(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_obs_action(&mut self) -> &mut RequestObserverAction {
+        if let ::std::option::Option::Some(Request_oneof_request::obs_action(_)) = self.request {
+        } else {
+            self.request = ::std::option::Option::Some(Request_oneof_request::obs_action(RequestObserverAction::new()));
+        }
+        match self.request {
+            ::std::option::Option::Some(Request_oneof_request::obs_action(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_obs_action(&mut self) -> RequestObserverAction {
+        if self.has_obs_action() {
+            match self.request.take() {
+                ::std::option::Option::Some(Request_oneof_request::obs_action(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            RequestObserverAction::new()
+        }
+    }
+
+    pub fn get_obs_action(&self) -> &RequestObserverAction {
+        match self.request {
+            ::std::option::Option::Some(Request_oneof_request::obs_action(ref v)) => v,
+            _ => RequestObserverAction::default_instance(),
+        }
+    }
+
     // optional .SC2APIProtocol.RequestStep step = 12;
 
     pub fn clear_step(&mut self) {
@@ -1110,6 +1160,11 @@ impl ::protobuf::Message for Request {
                 return false;
             }
         }
+        if let Some(Request_oneof_request::obs_action(ref v)) = self.request {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
         if let Some(Request_oneof_request::step(ref v)) = self.request {
             if !v.is_initialized() {
                 return false;
@@ -1228,6 +1283,12 @@ impl ::protobuf::Message for Request {
                     }
                     self.request = ::std::option::Option::Some(Request_oneof_request::action(is.read_message()?));
                 },
+                21 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.request = ::std::option::Option::Some(Request_oneof_request::obs_action(is.read_message()?));
+                },
                 12 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
@@ -1340,6 +1401,10 @@ impl ::protobuf::Message for Request {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
+                &Request_oneof_request::obs_action(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
                 &Request_oneof_request::step(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
@@ -1438,6 +1503,11 @@ impl ::protobuf::Message for Request {
                 },
                 &Request_oneof_request::action(ref v) => {
                     os.write_tag(11, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &Request_oneof_request::obs_action(ref v) => {
+                    os.write_tag(21, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -1587,6 +1657,11 @@ impl ::protobuf::MessageStatic for Request {
                     Request::has_action,
                     Request::get_action,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, RequestObserverAction>(
+                    "obs_action",
+                    Request::has_obs_action,
+                    Request::get_obs_action,
+                ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, RequestStep>(
                     "step",
                     Request::has_step,
@@ -1655,6 +1730,7 @@ impl ::protobuf::Clear for Request {
         self.clear_game_info();
         self.clear_observation();
         self.clear_action();
+        self.clear_obs_action();
         self.clear_step();
         self.clear_data();
         self.clear_query();
@@ -1708,6 +1784,7 @@ pub enum Response_oneof_response {
     game_info(ResponseGameInfo),
     observation(ResponseObservation),
     action(ResponseAction),
+    obs_action(ResponseObserverAction),
     step(ResponseStep),
     data(ResponseData),
     query(super::query::ResponseQuery),
@@ -2273,6 +2350,55 @@ impl Response {
         }
     }
 
+    // optional .SC2APIProtocol.ResponseObserverAction obs_action = 21;
+
+    pub fn clear_obs_action(&mut self) {
+        self.response = ::std::option::Option::None;
+    }
+
+    pub fn has_obs_action(&self) -> bool {
+        match self.response {
+            ::std::option::Option::Some(Response_oneof_response::obs_action(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_obs_action(&mut self, v: ResponseObserverAction) {
+        self.response = ::std::option::Option::Some(Response_oneof_response::obs_action(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_obs_action(&mut self) -> &mut ResponseObserverAction {
+        if let ::std::option::Option::Some(Response_oneof_response::obs_action(_)) = self.response {
+        } else {
+            self.response = ::std::option::Option::Some(Response_oneof_response::obs_action(ResponseObserverAction::new()));
+        }
+        match self.response {
+            ::std::option::Option::Some(Response_oneof_response::obs_action(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_obs_action(&mut self) -> ResponseObserverAction {
+        if self.has_obs_action() {
+            match self.response.take() {
+                ::std::option::Option::Some(Response_oneof_response::obs_action(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ResponseObserverAction::new()
+        }
+    }
+
+    pub fn get_obs_action(&self) -> &ResponseObserverAction {
+        match self.response {
+            ::std::option::Option::Some(Response_oneof_response::obs_action(ref v)) => v,
+            _ => ResponseObserverAction::default_instance(),
+        }
+    }
+
     // optional .SC2APIProtocol.ResponseStep step = 12;
 
     pub fn clear_step(&mut self) {
@@ -2832,6 +2958,11 @@ impl ::protobuf::Message for Response {
                 return false;
             }
         }
+        if let Some(Response_oneof_response::obs_action(ref v)) = self.response {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
         if let Some(Response_oneof_response::step(ref v)) = self.response {
             if !v.is_initialized() {
                 return false;
@@ -2949,6 +3080,12 @@ impl ::protobuf::Message for Response {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
                     self.response = ::std::option::Option::Some(Response_oneof_response::action(is.read_message()?));
+                },
+                21 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.response = ::std::option::Option::Some(Response_oneof_response::obs_action(is.read_message()?));
                 },
                 12 => {
                     if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
@@ -3078,6 +3215,10 @@ impl ::protobuf::Message for Response {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
                 },
+                &Response_oneof_response::obs_action(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 2 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
                 &Response_oneof_response::step(ref v) => {
                     let len = v.compute_size();
                     my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
@@ -3182,6 +3323,11 @@ impl ::protobuf::Message for Response {
                 },
                 &Response_oneof_response::action(ref v) => {
                     os.write_tag(11, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &Response_oneof_response::obs_action(ref v) => {
+                    os.write_tag(21, ::protobuf::wire_format::WireTypeLengthDelimited)?;
                     os.write_raw_varint32(v.get_cached_size())?;
                     v.write_to_with_cached_sizes(os)?;
                 },
@@ -3331,6 +3477,11 @@ impl ::protobuf::MessageStatic for Response {
                     Response::has_action,
                     Response::get_action,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, ResponseObserverAction>(
+                    "obs_action",
+                    Response::has_obs_action,
+                    Response::get_obs_action,
+                ));
                 fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, ResponseStep>(
                     "step",
                     Response::has_step,
@@ -3409,6 +3560,7 @@ impl ::protobuf::Clear for Response {
         self.clear_game_info();
         self.clear_observation();
         self.clear_action();
+        self.clear_obs_action();
         self.clear_step();
         self.clear_data();
         self.clear_query();
@@ -5919,6 +6071,7 @@ pub struct RequestStartReplay {
     observed_player_id: ::std::option::Option<i32>,
     options: ::protobuf::SingularPtrField<InterfaceOptions>,
     disable_fog: ::std::option::Option<bool>,
+    realtime: ::std::option::Option<bool>,
     // message oneof groups
     replay: ::std::option::Option<RequestStartReplay_oneof_replay>,
     // special fields
@@ -6186,6 +6339,33 @@ impl RequestStartReplay {
     fn mut_disable_fog_for_reflect(&mut self) -> &mut ::std::option::Option<bool> {
         &mut self.disable_fog
     }
+
+    // optional bool realtime = 7;
+
+    pub fn clear_realtime(&mut self) {
+        self.realtime = ::std::option::Option::None;
+    }
+
+    pub fn has_realtime(&self) -> bool {
+        self.realtime.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_realtime(&mut self, v: bool) {
+        self.realtime = ::std::option::Option::Some(v);
+    }
+
+    pub fn get_realtime(&self) -> bool {
+        self.realtime.unwrap_or(false)
+    }
+
+    fn get_realtime_for_reflect(&self) -> &::std::option::Option<bool> {
+        &self.realtime
+    }
+
+    fn mut_realtime_for_reflect(&mut self) -> &mut ::std::option::Option<bool> {
+        &mut self.realtime
+    }
 }
 
 impl ::protobuf::Message for RequestStartReplay {
@@ -6234,6 +6414,13 @@ impl ::protobuf::Message for RequestStartReplay {
                     let tmp = is.read_bool()?;
                     self.disable_fog = ::std::option::Option::Some(tmp);
                 },
+                7 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_bool()?;
+                    self.realtime = ::std::option::Option::Some(tmp);
+                },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
                 },
@@ -6257,6 +6444,9 @@ impl ::protobuf::Message for RequestStartReplay {
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         }
         if let Some(v) = self.disable_fog {
+            my_size += 2;
+        }
+        if let Some(v) = self.realtime {
             my_size += 2;
         }
         if let ::std::option::Option::Some(ref v) = self.replay {
@@ -6288,6 +6478,9 @@ impl ::protobuf::Message for RequestStartReplay {
         }
         if let Some(v) = self.disable_fog {
             os.write_bool(4, v)?;
+        }
+        if let Some(v) = self.realtime {
+            os.write_bool(7, v)?;
         }
         if let ::std::option::Option::Some(ref v) = self.replay {
             match v {
@@ -6373,6 +6566,11 @@ impl ::protobuf::MessageStatic for RequestStartReplay {
                     RequestStartReplay::get_disable_fog_for_reflect,
                     RequestStartReplay::mut_disable_fog_for_reflect,
                 ));
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeBool>(
+                    "realtime",
+                    RequestStartReplay::get_realtime_for_reflect,
+                    RequestStartReplay::mut_realtime_for_reflect,
+                ));
                 ::protobuf::reflect::MessageDescriptor::new::<RequestStartReplay>(
                     "RequestStartReplay",
                     fields,
@@ -6391,6 +6589,7 @@ impl ::protobuf::Clear for RequestStartReplay {
         self.clear_observed_player_id();
         self.clear_options();
         self.clear_disable_fog();
+        self.clear_realtime();
         self.unknown_fields.clear();
     }
 }
@@ -8906,7 +9105,7 @@ impl ::protobuf::reflect::ProtobufValue for ResponseObservation {
 #[derive(PartialEq,Clone,Default)]
 pub struct ChatReceived {
     // message fields
-    player_id: ::std::option::Option<i32>,
+    player_id: ::std::option::Option<u32>,
     message: ::protobuf::SingularField<::std::string::String>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
@@ -8931,7 +9130,7 @@ impl ChatReceived {
         }
     }
 
-    // optional int32 player_id = 1;
+    // optional uint32 player_id = 1;
 
     pub fn clear_player_id(&mut self) {
         self.player_id = ::std::option::Option::None;
@@ -8942,19 +9141,19 @@ impl ChatReceived {
     }
 
     // Param is passed by value, moved
-    pub fn set_player_id(&mut self, v: i32) {
+    pub fn set_player_id(&mut self, v: u32) {
         self.player_id = ::std::option::Option::Some(v);
     }
 
-    pub fn get_player_id(&self) -> i32 {
+    pub fn get_player_id(&self) -> u32 {
         self.player_id.unwrap_or(0)
     }
 
-    fn get_player_id_for_reflect(&self) -> &::std::option::Option<i32> {
+    fn get_player_id_for_reflect(&self) -> &::std::option::Option<u32> {
         &self.player_id
     }
 
-    fn mut_player_id_for_reflect(&mut self) -> &mut ::std::option::Option<i32> {
+    fn mut_player_id_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
         &mut self.player_id
     }
 
@@ -9016,7 +9215,7 @@ impl ::protobuf::Message for ChatReceived {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     }
-                    let tmp = is.read_int32()?;
+                    let tmp = is.read_uint32()?;
                     self.player_id = ::std::option::Option::Some(tmp);
                 },
                 2 => {
@@ -9047,7 +9246,7 @@ impl ::protobuf::Message for ChatReceived {
 
     fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.player_id {
-            os.write_int32(1, v)?;
+            os.write_uint32(1, v)?;
         }
         if let Some(ref v) = self.message.as_ref() {
             os.write_string(2, &v)?;
@@ -9096,7 +9295,7 @@ impl ::protobuf::MessageStatic for ChatReceived {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
                     "player_id",
                     ChatReceived::get_player_id_for_reflect,
                     ChatReceived::mut_player_id_for_reflect,
@@ -9489,6 +9688,314 @@ impl ::std::fmt::Debug for ResponseAction {
 }
 
 impl ::protobuf::reflect::ProtobufValue for ResponseAction {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
+pub struct RequestObserverAction {
+    // message fields
+    actions: ::protobuf::RepeatedField<ObserverAction>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+// see codegen.rs for the explanation why impl Sync explicitly
+unsafe impl ::std::marker::Sync for RequestObserverAction {}
+
+impl RequestObserverAction {
+    pub fn new() -> RequestObserverAction {
+        ::std::default::Default::default()
+    }
+
+    pub fn default_instance() -> &'static RequestObserverAction {
+        static mut instance: ::protobuf::lazy::Lazy<RequestObserverAction> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const RequestObserverAction,
+        };
+        unsafe {
+            instance.get(RequestObserverAction::new)
+        }
+    }
+
+    // repeated .SC2APIProtocol.ObserverAction actions = 1;
+
+    pub fn clear_actions(&mut self) {
+        self.actions.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_actions(&mut self, v: ::protobuf::RepeatedField<ObserverAction>) {
+        self.actions = v;
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_actions(&mut self) -> &mut ::protobuf::RepeatedField<ObserverAction> {
+        &mut self.actions
+    }
+
+    // Take field
+    pub fn take_actions(&mut self) -> ::protobuf::RepeatedField<ObserverAction> {
+        ::std::mem::replace(&mut self.actions, ::protobuf::RepeatedField::new())
+    }
+
+    pub fn get_actions(&self) -> &[ObserverAction] {
+        &self.actions
+    }
+
+    fn get_actions_for_reflect(&self) -> &::protobuf::RepeatedField<ObserverAction> {
+        &self.actions
+    }
+
+    fn mut_actions_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<ObserverAction> {
+        &mut self.actions
+    }
+}
+
+impl ::protobuf::Message for RequestObserverAction {
+    fn is_initialized(&self) -> bool {
+        for v in &self.actions {
+            if !v.is_initialized() {
+                return false;
+            }
+        };
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.actions)?;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        for value in &self.actions {
+            let len = value.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+        };
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        for v in &self.actions {
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
+        };
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
+    }
+}
+
+impl ::protobuf::MessageStatic for RequestObserverAction {
+    fn new() -> RequestObserverAction {
+        RequestObserverAction::new()
+    }
+
+    fn descriptor_static(_: ::std::option::Option<RequestObserverAction>) -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ObserverAction>>(
+                    "actions",
+                    RequestObserverAction::get_actions_for_reflect,
+                    RequestObserverAction::mut_actions_for_reflect,
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<RequestObserverAction>(
+                    "RequestObserverAction",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+}
+
+impl ::protobuf::Clear for RequestObserverAction {
+    fn clear(&mut self) {
+        self.clear_actions();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for RequestObserverAction {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for RequestObserverAction {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
+pub struct ResponseObserverAction {
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+// see codegen.rs for the explanation why impl Sync explicitly
+unsafe impl ::std::marker::Sync for ResponseObserverAction {}
+
+impl ResponseObserverAction {
+    pub fn new() -> ResponseObserverAction {
+        ::std::default::Default::default()
+    }
+
+    pub fn default_instance() -> &'static ResponseObserverAction {
+        static mut instance: ::protobuf::lazy::Lazy<ResponseObserverAction> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ResponseObserverAction,
+        };
+        unsafe {
+            instance.get(ResponseObserverAction::new)
+        }
+    }
+}
+
+impl ::protobuf::Message for ResponseObserverAction {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
+    }
+}
+
+impl ::protobuf::MessageStatic for ResponseObserverAction {
+    fn new() -> ResponseObserverAction {
+        ResponseObserverAction::new()
+    }
+
+    fn descriptor_static(_: ::std::option::Option<ResponseObserverAction>) -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let fields = ::std::vec::Vec::new();
+                ::protobuf::reflect::MessageDescriptor::new::<ResponseObserverAction>(
+                    "ResponseObserverAction",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+}
+
+impl ::protobuf::Clear for ResponseObserverAction {
+    fn clear(&mut self) {
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for ResponseObserverAction {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ResponseObserverAction {
     fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
         ::protobuf::reflect::ProtobufValueRef::Message(self)
     }
@@ -16511,7 +17018,7 @@ pub struct Action {
     action_feature_layer: ::protobuf::SingularPtrField<super::spatial::ActionSpatial>,
     action_render: ::protobuf::SingularPtrField<super::spatial::ActionSpatial>,
     action_ui: ::protobuf::SingularPtrField<super::ui::ActionUI>,
-    chat: ::protobuf::RepeatedField<ActionChat>,
+    action_chat: ::protobuf::SingularPtrField<ActionChat>,
     // special fields
     unknown_fields: ::protobuf::UnknownFields,
     cached_size: ::protobuf::CachedSize,
@@ -16699,37 +17206,45 @@ impl Action {
         &mut self.action_ui
     }
 
-    // repeated .SC2APIProtocol.ActionChat chat = 5;
+    // optional .SC2APIProtocol.ActionChat action_chat = 6;
 
-    pub fn clear_chat(&mut self) {
-        self.chat.clear();
+    pub fn clear_action_chat(&mut self) {
+        self.action_chat.clear();
+    }
+
+    pub fn has_action_chat(&self) -> bool {
+        self.action_chat.is_some()
     }
 
     // Param is passed by value, moved
-    pub fn set_chat(&mut self, v: ::protobuf::RepeatedField<ActionChat>) {
-        self.chat = v;
+    pub fn set_action_chat(&mut self, v: ActionChat) {
+        self.action_chat = ::protobuf::SingularPtrField::some(v);
     }
 
     // Mutable pointer to the field.
-    pub fn mut_chat(&mut self) -> &mut ::protobuf::RepeatedField<ActionChat> {
-        &mut self.chat
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_action_chat(&mut self) -> &mut ActionChat {
+        if self.action_chat.is_none() {
+            self.action_chat.set_default();
+        }
+        self.action_chat.as_mut().unwrap()
     }
 
     // Take field
-    pub fn take_chat(&mut self) -> ::protobuf::RepeatedField<ActionChat> {
-        ::std::mem::replace(&mut self.chat, ::protobuf::RepeatedField::new())
+    pub fn take_action_chat(&mut self) -> ActionChat {
+        self.action_chat.take().unwrap_or_else(|| ActionChat::new())
     }
 
-    pub fn get_chat(&self) -> &[ActionChat] {
-        &self.chat
+    pub fn get_action_chat(&self) -> &ActionChat {
+        self.action_chat.as_ref().unwrap_or_else(|| ActionChat::default_instance())
     }
 
-    fn get_chat_for_reflect(&self) -> &::protobuf::RepeatedField<ActionChat> {
-        &self.chat
+    fn get_action_chat_for_reflect(&self) -> &::protobuf::SingularPtrField<ActionChat> {
+        &self.action_chat
     }
 
-    fn mut_chat_for_reflect(&mut self) -> &mut ::protobuf::RepeatedField<ActionChat> {
-        &mut self.chat
+    fn mut_action_chat_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<ActionChat> {
+        &mut self.action_chat
     }
 }
 
@@ -16755,7 +17270,7 @@ impl ::protobuf::Message for Action {
                 return false;
             }
         };
-        for v in &self.chat {
+        for v in &self.action_chat {
             if !v.is_initialized() {
                 return false;
             }
@@ -16779,8 +17294,8 @@ impl ::protobuf::Message for Action {
                 4 => {
                     ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.action_ui)?;
                 },
-                5 => {
-                    ::protobuf::rt::read_repeated_message_into(wire_type, is, &mut self.chat)?;
+                6 => {
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.action_chat)?;
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -16810,10 +17325,10 @@ impl ::protobuf::Message for Action {
             let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
         }
-        for value in &self.chat {
-            let len = value.compute_size();
+        if let Some(ref v) = self.action_chat.as_ref() {
+            let len = v.compute_size();
             my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
-        };
+        }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
         my_size
@@ -16840,11 +17355,11 @@ impl ::protobuf::Message for Action {
             os.write_raw_varint32(v.get_cached_size())?;
             v.write_to_with_cached_sizes(os)?;
         }
-        for v in &self.chat {
-            os.write_tag(5, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+        if let Some(ref v) = self.action_chat.as_ref() {
+            os.write_tag(6, ::protobuf::wire_format::WireTypeLengthDelimited)?;
             os.write_raw_varint32(v.get_cached_size())?;
             v.write_to_with_cached_sizes(os)?;
-        };
+        }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
     }
@@ -16909,10 +17424,10 @@ impl ::protobuf::MessageStatic for Action {
                     Action::get_action_ui_for_reflect,
                     Action::mut_action_ui_for_reflect,
                 ));
-                fields.push(::protobuf::reflect::accessor::make_repeated_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ActionChat>>(
-                    "chat",
-                    Action::get_chat_for_reflect,
-                    Action::mut_chat_for_reflect,
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<ActionChat>>(
+                    "action_chat",
+                    Action::get_action_chat_for_reflect,
+                    Action::mut_action_chat_for_reflect,
                 ));
                 ::protobuf::reflect::MessageDescriptor::new::<Action>(
                     "Action",
@@ -16930,7 +17445,7 @@ impl ::protobuf::Clear for Action {
         self.clear_action_feature_layer();
         self.clear_action_render();
         self.clear_action_ui();
-        self.clear_chat();
+        self.clear_action_chat();
         self.unknown_fields.clear();
     }
 }
@@ -17497,6 +18012,1208 @@ impl ::protobuf::reflect::ProtobufValue for ActionError {
 }
 
 #[derive(PartialEq,Clone,Default)]
+pub struct ObserverAction {
+    // message oneof groups
+    action: ::std::option::Option<ObserverAction_oneof_action>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+// see codegen.rs for the explanation why impl Sync explicitly
+unsafe impl ::std::marker::Sync for ObserverAction {}
+
+#[derive(Clone,PartialEq)]
+pub enum ObserverAction_oneof_action {
+    player_perspective(ActionObserverPlayerPerspective),
+    camera_move(ActionObserverCameraMove),
+    camera_follow_player(ActionObserverCameraFollowPlayer),
+    camera_follow_units(ActionObserverCameraFollowUnits),
+}
+
+impl ObserverAction {
+    pub fn new() -> ObserverAction {
+        ::std::default::Default::default()
+    }
+
+    pub fn default_instance() -> &'static ObserverAction {
+        static mut instance: ::protobuf::lazy::Lazy<ObserverAction> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ObserverAction,
+        };
+        unsafe {
+            instance.get(ObserverAction::new)
+        }
+    }
+
+    // optional .SC2APIProtocol.ActionObserverPlayerPerspective player_perspective = 1;
+
+    pub fn clear_player_perspective(&mut self) {
+        self.action = ::std::option::Option::None;
+    }
+
+    pub fn has_player_perspective(&self) -> bool {
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::player_perspective(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_player_perspective(&mut self, v: ActionObserverPlayerPerspective) {
+        self.action = ::std::option::Option::Some(ObserverAction_oneof_action::player_perspective(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_player_perspective(&mut self) -> &mut ActionObserverPlayerPerspective {
+        if let ::std::option::Option::Some(ObserverAction_oneof_action::player_perspective(_)) = self.action {
+        } else {
+            self.action = ::std::option::Option::Some(ObserverAction_oneof_action::player_perspective(ActionObserverPlayerPerspective::new()));
+        }
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::player_perspective(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_player_perspective(&mut self) -> ActionObserverPlayerPerspective {
+        if self.has_player_perspective() {
+            match self.action.take() {
+                ::std::option::Option::Some(ObserverAction_oneof_action::player_perspective(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ActionObserverPlayerPerspective::new()
+        }
+    }
+
+    pub fn get_player_perspective(&self) -> &ActionObserverPlayerPerspective {
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::player_perspective(ref v)) => v,
+            _ => ActionObserverPlayerPerspective::default_instance(),
+        }
+    }
+
+    // optional .SC2APIProtocol.ActionObserverCameraMove camera_move = 2;
+
+    pub fn clear_camera_move(&mut self) {
+        self.action = ::std::option::Option::None;
+    }
+
+    pub fn has_camera_move(&self) -> bool {
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_move(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_camera_move(&mut self, v: ActionObserverCameraMove) {
+        self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_move(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_camera_move(&mut self) -> &mut ActionObserverCameraMove {
+        if let ::std::option::Option::Some(ObserverAction_oneof_action::camera_move(_)) = self.action {
+        } else {
+            self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_move(ActionObserverCameraMove::new()));
+        }
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_move(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_camera_move(&mut self) -> ActionObserverCameraMove {
+        if self.has_camera_move() {
+            match self.action.take() {
+                ::std::option::Option::Some(ObserverAction_oneof_action::camera_move(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ActionObserverCameraMove::new()
+        }
+    }
+
+    pub fn get_camera_move(&self) -> &ActionObserverCameraMove {
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_move(ref v)) => v,
+            _ => ActionObserverCameraMove::default_instance(),
+        }
+    }
+
+    // optional .SC2APIProtocol.ActionObserverCameraFollowPlayer camera_follow_player = 3;
+
+    pub fn clear_camera_follow_player(&mut self) {
+        self.action = ::std::option::Option::None;
+    }
+
+    pub fn has_camera_follow_player(&self) -> bool {
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_player(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_camera_follow_player(&mut self, v: ActionObserverCameraFollowPlayer) {
+        self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_player(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_camera_follow_player(&mut self) -> &mut ActionObserverCameraFollowPlayer {
+        if let ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_player(_)) = self.action {
+        } else {
+            self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_player(ActionObserverCameraFollowPlayer::new()));
+        }
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_player(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_camera_follow_player(&mut self) -> ActionObserverCameraFollowPlayer {
+        if self.has_camera_follow_player() {
+            match self.action.take() {
+                ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_player(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ActionObserverCameraFollowPlayer::new()
+        }
+    }
+
+    pub fn get_camera_follow_player(&self) -> &ActionObserverCameraFollowPlayer {
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_player(ref v)) => v,
+            _ => ActionObserverCameraFollowPlayer::default_instance(),
+        }
+    }
+
+    // optional .SC2APIProtocol.ActionObserverCameraFollowUnits camera_follow_units = 4;
+
+    pub fn clear_camera_follow_units(&mut self) {
+        self.action = ::std::option::Option::None;
+    }
+
+    pub fn has_camera_follow_units(&self) -> bool {
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_units(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_camera_follow_units(&mut self, v: ActionObserverCameraFollowUnits) {
+        self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_units(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_camera_follow_units(&mut self) -> &mut ActionObserverCameraFollowUnits {
+        if let ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_units(_)) = self.action {
+        } else {
+            self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_units(ActionObserverCameraFollowUnits::new()));
+        }
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_units(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_camera_follow_units(&mut self) -> ActionObserverCameraFollowUnits {
+        if self.has_camera_follow_units() {
+            match self.action.take() {
+                ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_units(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ActionObserverCameraFollowUnits::new()
+        }
+    }
+
+    pub fn get_camera_follow_units(&self) -> &ActionObserverCameraFollowUnits {
+        match self.action {
+            ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_units(ref v)) => v,
+            _ => ActionObserverCameraFollowUnits::default_instance(),
+        }
+    }
+}
+
+impl ::protobuf::Message for ObserverAction {
+    fn is_initialized(&self) -> bool {
+        if let Some(ObserverAction_oneof_action::player_perspective(ref v)) = self.action {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(ObserverAction_oneof_action::camera_move(ref v)) = self.action {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(ObserverAction_oneof_action::camera_follow_player(ref v)) = self.action {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        if let Some(ObserverAction_oneof_action::camera_follow_units(ref v)) = self.action {
+            if !v.is_initialized() {
+                return false;
+            }
+        }
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.action = ::std::option::Option::Some(ObserverAction_oneof_action::player_perspective(is.read_message()?));
+                },
+                2 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_move(is.read_message()?));
+                },
+                3 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_player(is.read_message()?));
+                },
+                4 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeLengthDelimited {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    self.action = ::std::option::Option::Some(ObserverAction_oneof_action::camera_follow_units(is.read_message()?));
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if let ::std::option::Option::Some(ref v) = self.action {
+            match v {
+                &ObserverAction_oneof_action::player_perspective(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &ObserverAction_oneof_action::camera_move(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &ObserverAction_oneof_action::camera_follow_player(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+                &ObserverAction_oneof_action::camera_follow_units(ref v) => {
+                    let len = v.compute_size();
+                    my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+                },
+            };
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        if let ::std::option::Option::Some(ref v) = self.action {
+            match v {
+                &ObserverAction_oneof_action::player_perspective(ref v) => {
+                    os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &ObserverAction_oneof_action::camera_move(ref v) => {
+                    os.write_tag(2, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &ObserverAction_oneof_action::camera_follow_player(ref v) => {
+                    os.write_tag(3, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+                &ObserverAction_oneof_action::camera_follow_units(ref v) => {
+                    os.write_tag(4, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+                    os.write_raw_varint32(v.get_cached_size())?;
+                    v.write_to_with_cached_sizes(os)?;
+                },
+            };
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
+    }
+}
+
+impl ::protobuf::MessageStatic for ObserverAction {
+    fn new() -> ObserverAction {
+        ObserverAction::new()
+    }
+
+    fn descriptor_static(_: ::std::option::Option<ObserverAction>) -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, ActionObserverPlayerPerspective>(
+                    "player_perspective",
+                    ObserverAction::has_player_perspective,
+                    ObserverAction::get_player_perspective,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, ActionObserverCameraMove>(
+                    "camera_move",
+                    ObserverAction::has_camera_move,
+                    ObserverAction::get_camera_move,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, ActionObserverCameraFollowPlayer>(
+                    "camera_follow_player",
+                    ObserverAction::has_camera_follow_player,
+                    ObserverAction::get_camera_follow_player,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_singular_message_accessor::<_, ActionObserverCameraFollowUnits>(
+                    "camera_follow_units",
+                    ObserverAction::has_camera_follow_units,
+                    ObserverAction::get_camera_follow_units,
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<ObserverAction>(
+                    "ObserverAction",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+}
+
+impl ::protobuf::Clear for ObserverAction {
+    fn clear(&mut self) {
+        self.clear_player_perspective();
+        self.clear_camera_move();
+        self.clear_camera_follow_player();
+        self.clear_camera_follow_units();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for ObserverAction {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ObserverAction {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
+pub struct ActionObserverPlayerPerspective {
+    // message fields
+    player_id: ::std::option::Option<u32>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+// see codegen.rs for the explanation why impl Sync explicitly
+unsafe impl ::std::marker::Sync for ActionObserverPlayerPerspective {}
+
+impl ActionObserverPlayerPerspective {
+    pub fn new() -> ActionObserverPlayerPerspective {
+        ::std::default::Default::default()
+    }
+
+    pub fn default_instance() -> &'static ActionObserverPlayerPerspective {
+        static mut instance: ::protobuf::lazy::Lazy<ActionObserverPlayerPerspective> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ActionObserverPlayerPerspective,
+        };
+        unsafe {
+            instance.get(ActionObserverPlayerPerspective::new)
+        }
+    }
+
+    // optional uint32 player_id = 1;
+
+    pub fn clear_player_id(&mut self) {
+        self.player_id = ::std::option::Option::None;
+    }
+
+    pub fn has_player_id(&self) -> bool {
+        self.player_id.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_player_id(&mut self, v: u32) {
+        self.player_id = ::std::option::Option::Some(v);
+    }
+
+    pub fn get_player_id(&self) -> u32 {
+        self.player_id.unwrap_or(0)
+    }
+
+    fn get_player_id_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.player_id
+    }
+
+    fn mut_player_id_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.player_id
+    }
+}
+
+impl ::protobuf::Message for ActionObserverPlayerPerspective {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint32()?;
+                    self.player_id = ::std::option::Option::Some(tmp);
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if let Some(v) = self.player_id {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        if let Some(v) = self.player_id {
+            os.write_uint32(1, v)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
+    }
+}
+
+impl ::protobuf::MessageStatic for ActionObserverPlayerPerspective {
+    fn new() -> ActionObserverPlayerPerspective {
+        ActionObserverPlayerPerspective::new()
+    }
+
+    fn descriptor_static(_: ::std::option::Option<ActionObserverPlayerPerspective>) -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
+                    "player_id",
+                    ActionObserverPlayerPerspective::get_player_id_for_reflect,
+                    ActionObserverPlayerPerspective::mut_player_id_for_reflect,
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<ActionObserverPlayerPerspective>(
+                    "ActionObserverPlayerPerspective",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+}
+
+impl ::protobuf::Clear for ActionObserverPlayerPerspective {
+    fn clear(&mut self) {
+        self.clear_player_id();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for ActionObserverPlayerPerspective {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ActionObserverPlayerPerspective {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
+pub struct ActionObserverCameraMove {
+    // message fields
+    world_pos: ::protobuf::SingularPtrField<super::common::Point2D>,
+    distance: ::std::option::Option<f32>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+// see codegen.rs for the explanation why impl Sync explicitly
+unsafe impl ::std::marker::Sync for ActionObserverCameraMove {}
+
+impl ActionObserverCameraMove {
+    pub fn new() -> ActionObserverCameraMove {
+        ::std::default::Default::default()
+    }
+
+    pub fn default_instance() -> &'static ActionObserverCameraMove {
+        static mut instance: ::protobuf::lazy::Lazy<ActionObserverCameraMove> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ActionObserverCameraMove,
+        };
+        unsafe {
+            instance.get(ActionObserverCameraMove::new)
+        }
+    }
+
+    // optional .SC2APIProtocol.Point2D world_pos = 1;
+
+    pub fn clear_world_pos(&mut self) {
+        self.world_pos.clear();
+    }
+
+    pub fn has_world_pos(&self) -> bool {
+        self.world_pos.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_world_pos(&mut self, v: super::common::Point2D) {
+        self.world_pos = ::protobuf::SingularPtrField::some(v);
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_world_pos(&mut self) -> &mut super::common::Point2D {
+        if self.world_pos.is_none() {
+            self.world_pos.set_default();
+        }
+        self.world_pos.as_mut().unwrap()
+    }
+
+    // Take field
+    pub fn take_world_pos(&mut self) -> super::common::Point2D {
+        self.world_pos.take().unwrap_or_else(|| super::common::Point2D::new())
+    }
+
+    pub fn get_world_pos(&self) -> &super::common::Point2D {
+        self.world_pos.as_ref().unwrap_or_else(|| super::common::Point2D::default_instance())
+    }
+
+    fn get_world_pos_for_reflect(&self) -> &::protobuf::SingularPtrField<super::common::Point2D> {
+        &self.world_pos
+    }
+
+    fn mut_world_pos_for_reflect(&mut self) -> &mut ::protobuf::SingularPtrField<super::common::Point2D> {
+        &mut self.world_pos
+    }
+
+    // optional float distance = 2;
+
+    pub fn clear_distance(&mut self) {
+        self.distance = ::std::option::Option::None;
+    }
+
+    pub fn has_distance(&self) -> bool {
+        self.distance.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_distance(&mut self, v: f32) {
+        self.distance = ::std::option::Option::Some(v);
+    }
+
+    pub fn get_distance(&self) -> f32 {
+        self.distance.unwrap_or(0.)
+    }
+
+    fn get_distance_for_reflect(&self) -> &::std::option::Option<f32> {
+        &self.distance
+    }
+
+    fn mut_distance_for_reflect(&mut self) -> &mut ::std::option::Option<f32> {
+        &mut self.distance
+    }
+}
+
+impl ::protobuf::Message for ActionObserverCameraMove {
+    fn is_initialized(&self) -> bool {
+        for v in &self.world_pos {
+            if !v.is_initialized() {
+                return false;
+            }
+        };
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    ::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.world_pos)?;
+                },
+                2 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_float()?;
+                    self.distance = ::std::option::Option::Some(tmp);
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if let Some(ref v) = self.world_pos.as_ref() {
+            let len = v.compute_size();
+            my_size += 1 + ::protobuf::rt::compute_raw_varint32_size(len) + len;
+        }
+        if let Some(v) = self.distance {
+            my_size += 5;
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        if let Some(ref v) = self.world_pos.as_ref() {
+            os.write_tag(1, ::protobuf::wire_format::WireTypeLengthDelimited)?;
+            os.write_raw_varint32(v.get_cached_size())?;
+            v.write_to_with_cached_sizes(os)?;
+        }
+        if let Some(v) = self.distance {
+            os.write_float(2, v)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
+    }
+}
+
+impl ::protobuf::MessageStatic for ActionObserverCameraMove {
+    fn new() -> ActionObserverCameraMove {
+        ActionObserverCameraMove::new()
+    }
+
+    fn descriptor_static(_: ::std::option::Option<ActionObserverCameraMove>) -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_singular_ptr_field_accessor::<_, ::protobuf::types::ProtobufTypeMessage<super::common::Point2D>>(
+                    "world_pos",
+                    ActionObserverCameraMove::get_world_pos_for_reflect,
+                    ActionObserverCameraMove::mut_world_pos_for_reflect,
+                ));
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeFloat>(
+                    "distance",
+                    ActionObserverCameraMove::get_distance_for_reflect,
+                    ActionObserverCameraMove::mut_distance_for_reflect,
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<ActionObserverCameraMove>(
+                    "ActionObserverCameraMove",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+}
+
+impl ::protobuf::Clear for ActionObserverCameraMove {
+    fn clear(&mut self) {
+        self.clear_world_pos();
+        self.clear_distance();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for ActionObserverCameraMove {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ActionObserverCameraMove {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
+pub struct ActionObserverCameraFollowPlayer {
+    // message fields
+    player_id: ::std::option::Option<u32>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+// see codegen.rs for the explanation why impl Sync explicitly
+unsafe impl ::std::marker::Sync for ActionObserverCameraFollowPlayer {}
+
+impl ActionObserverCameraFollowPlayer {
+    pub fn new() -> ActionObserverCameraFollowPlayer {
+        ::std::default::Default::default()
+    }
+
+    pub fn default_instance() -> &'static ActionObserverCameraFollowPlayer {
+        static mut instance: ::protobuf::lazy::Lazy<ActionObserverCameraFollowPlayer> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ActionObserverCameraFollowPlayer,
+        };
+        unsafe {
+            instance.get(ActionObserverCameraFollowPlayer::new)
+        }
+    }
+
+    // optional uint32 player_id = 1;
+
+    pub fn clear_player_id(&mut self) {
+        self.player_id = ::std::option::Option::None;
+    }
+
+    pub fn has_player_id(&self) -> bool {
+        self.player_id.is_some()
+    }
+
+    // Param is passed by value, moved
+    pub fn set_player_id(&mut self, v: u32) {
+        self.player_id = ::std::option::Option::Some(v);
+    }
+
+    pub fn get_player_id(&self) -> u32 {
+        self.player_id.unwrap_or(0)
+    }
+
+    fn get_player_id_for_reflect(&self) -> &::std::option::Option<u32> {
+        &self.player_id
+    }
+
+    fn mut_player_id_for_reflect(&mut self) -> &mut ::std::option::Option<u32> {
+        &mut self.player_id
+    }
+}
+
+impl ::protobuf::Message for ActionObserverCameraFollowPlayer {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_uint32()?;
+                    self.player_id = ::std::option::Option::Some(tmp);
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if let Some(v) = self.player_id {
+            my_size += ::protobuf::rt::value_size(1, v, ::protobuf::wire_format::WireTypeVarint);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        if let Some(v) = self.player_id {
+            os.write_uint32(1, v)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
+    }
+}
+
+impl ::protobuf::MessageStatic for ActionObserverCameraFollowPlayer {
+    fn new() -> ActionObserverCameraFollowPlayer {
+        ActionObserverCameraFollowPlayer::new()
+    }
+
+    fn descriptor_static(_: ::std::option::Option<ActionObserverCameraFollowPlayer>) -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_option_accessor::<_, ::protobuf::types::ProtobufTypeUint32>(
+                    "player_id",
+                    ActionObserverCameraFollowPlayer::get_player_id_for_reflect,
+                    ActionObserverCameraFollowPlayer::mut_player_id_for_reflect,
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<ActionObserverCameraFollowPlayer>(
+                    "ActionObserverCameraFollowPlayer",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+}
+
+impl ::protobuf::Clear for ActionObserverCameraFollowPlayer {
+    fn clear(&mut self) {
+        self.clear_player_id();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for ActionObserverCameraFollowPlayer {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ActionObserverCameraFollowPlayer {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
+pub struct ActionObserverCameraFollowUnits {
+    // message fields
+    unit_tags: ::std::vec::Vec<u64>,
+    // special fields
+    unknown_fields: ::protobuf::UnknownFields,
+    cached_size: ::protobuf::CachedSize,
+}
+
+// see codegen.rs for the explanation why impl Sync explicitly
+unsafe impl ::std::marker::Sync for ActionObserverCameraFollowUnits {}
+
+impl ActionObserverCameraFollowUnits {
+    pub fn new() -> ActionObserverCameraFollowUnits {
+        ::std::default::Default::default()
+    }
+
+    pub fn default_instance() -> &'static ActionObserverCameraFollowUnits {
+        static mut instance: ::protobuf::lazy::Lazy<ActionObserverCameraFollowUnits> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ActionObserverCameraFollowUnits,
+        };
+        unsafe {
+            instance.get(ActionObserverCameraFollowUnits::new)
+        }
+    }
+
+    // repeated uint64 unit_tags = 1;
+
+    pub fn clear_unit_tags(&mut self) {
+        self.unit_tags.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_unit_tags(&mut self, v: ::std::vec::Vec<u64>) {
+        self.unit_tags = v;
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_unit_tags(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.unit_tags
+    }
+
+    // Take field
+    pub fn take_unit_tags(&mut self) -> ::std::vec::Vec<u64> {
+        ::std::mem::replace(&mut self.unit_tags, ::std::vec::Vec::new())
+    }
+
+    pub fn get_unit_tags(&self) -> &[u64] {
+        &self.unit_tags
+    }
+
+    fn get_unit_tags_for_reflect(&self) -> &::std::vec::Vec<u64> {
+        &self.unit_tags
+    }
+
+    fn mut_unit_tags_for_reflect(&mut self) -> &mut ::std::vec::Vec<u64> {
+        &mut self.unit_tags
+    }
+}
+
+impl ::protobuf::Message for ActionObserverCameraFollowUnits {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    ::protobuf::rt::read_repeated_uint64_into(wire_type, is, &mut self.unit_tags)?;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        for value in &self.unit_tags {
+            my_size += ::protobuf::rt::value_size(1, *value, ::protobuf::wire_format::WireTypeVarint);
+        };
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        for v in &self.unit_tags {
+            os.write_uint64(1, *v)?;
+        };
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        ::protobuf::MessageStatic::descriptor_static(None::<Self>)
+    }
+}
+
+impl ::protobuf::MessageStatic for ActionObserverCameraFollowUnits {
+    fn new() -> ActionObserverCameraFollowUnits {
+        ActionObserverCameraFollowUnits::new()
+    }
+
+    fn descriptor_static(_: ::std::option::Option<ActionObserverCameraFollowUnits>) -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_vec_accessor::<_, ::protobuf::types::ProtobufTypeUint64>(
+                    "unit_tags",
+                    ActionObserverCameraFollowUnits::get_unit_tags_for_reflect,
+                    ActionObserverCameraFollowUnits::mut_unit_tags_for_reflect,
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<ActionObserverCameraFollowUnits>(
+                    "ActionObserverCameraFollowUnits",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+}
+
+impl ::protobuf::Clear for ActionObserverCameraFollowUnits {
+    fn clear(&mut self) {
+        self.clear_unit_tags();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for ActionObserverCameraFollowUnits {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ActionObserverCameraFollowUnits {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct PlayerResult {
     // message fields
     player_id: ::std::option::Option<u32>,
@@ -18015,7 +19732,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     tprotocol/debug.proto\x1a\x1cs2clientprotocol/error.proto\x1a\x1cs2clien\
     tprotocol/query.proto\x1a\x1as2clientprotocol/raw.proto\x1a\x1cs2clientp\
     rotocol/score.proto\x1a\x1es2clientprotocol/spatial.proto\x1a\x19s2clien\
-    tprotocol/ui.proto\"\x86\n\n\x07Request\x12D\n\x0bcreate_game\x18\x01\
+    tprotocol/ui.proto\"\xce\n\n\x07Request\x12D\n\x0bcreate_game\x18\x01\
     \x20\x01(\x0b2!.SC2APIProtocol.RequestCreateGameH\0R\ncreateGame\x12>\n\
     \tjoin_game\x18\x02\x20\x01(\x0b2\x1f.SC2APIProtocol.RequestJoinGameH\0R\
     \x08joinGame\x12G\n\x0crestart_game\x18\x03\x20\x01(\x0b2\".SC2APIProtoc\
@@ -18029,189 +19746,194 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x12>\n\tgame_info\x18\t\x20\x01(\x0b2\x1f.SC2APIProtocol.RequestGameInf\
     oH\0R\x08gameInfo\x12F\n\x0bobservation\x18\n\x20\x01(\x0b2\".SC2APIProt\
     ocol.RequestObservationH\0R\x0bobservation\x127\n\x06action\x18\x0b\x20\
-    \x01(\x0b2\x1d.SC2APIProtocol.RequestActionH\0R\x06action\x121\n\x04step\
-    \x18\x0c\x20\x01(\x0b2\x1b.SC2APIProtocol.RequestStepH\0R\x04step\x121\n\
-    \x04data\x18\r\x20\x01(\x0b2\x1b.SC2APIProtocol.RequestDataH\0R\x04data\
-    \x124\n\x05query\x18\x0e\x20\x01(\x0b2\x1c.SC2APIProtocol.RequestQueryH\
-    \0R\x05query\x12D\n\x0bsave_replay\x18\x0f\x20\x01(\x0b2!.SC2APIProtocol\
-    .RequestSaveReplayH\0R\nsaveReplay\x12D\n\x0breplay_info\x18\x10\x20\x01\
-    (\x0b2!.SC2APIProtocol.RequestReplayInfoH\0R\nreplayInfo\x12M\n\x0eavail\
-    able_maps\x18\x11\x20\x01(\x0b2$.SC2APIProtocol.RequestAvailableMapsH\0R\
-    \ravailableMaps\x12;\n\x08save_map\x18\x12\x20\x01(\x0b2\x1e.SC2APIProto\
-    col.RequestSaveMapH\0R\x07saveMap\x121\n\x04ping\x18\x13\x20\x01(\x0b2\
-    \x1b.SC2APIProtocol.RequestPingH\0R\x04ping\x124\n\x05debug\x18\x14\x20\
-    \x01(\x0b2\x1c.SC2APIProtocol.RequestDebugH\0R\x05debugB\t\n\x07request\
-    \"\xe2\n\n\x08Response\x12E\n\x0bcreate_game\x18\x01\x20\x01(\x0b2\".SC2\
-    APIProtocol.ResponseCreateGameH\0R\ncreateGame\x12?\n\tjoin_game\x18\x02\
-    \x20\x01(\x0b2\x20.SC2APIProtocol.ResponseJoinGameH\0R\x08joinGame\x12H\
-    \n\x0crestart_game\x18\x03\x20\x01(\x0b2#.SC2APIProtocol.ResponseRestart\
-    GameH\0R\x0brestartGame\x12H\n\x0cstart_replay\x18\x04\x20\x01(\x0b2#.SC\
-    2APIProtocol.ResponseStartReplayH\0R\x0bstartReplay\x12B\n\nleave_game\
-    \x18\x05\x20\x01(\x0b2!.SC2APIProtocol.ResponseLeaveGameH\0R\tleaveGame\
-    \x12B\n\nquick_save\x18\x06\x20\x01(\x0b2!.SC2APIProtocol.ResponseQuickS\
-    aveH\0R\tquickSave\x12B\n\nquick_load\x18\x07\x20\x01(\x0b2!.SC2APIProto\
-    col.ResponseQuickLoadH\0R\tquickLoad\x122\n\x04quit\x18\x08\x20\x01(\x0b\
-    2\x1c.SC2APIProtocol.ResponseQuitH\0R\x04quit\x12?\n\tgame_info\x18\t\
-    \x20\x01(\x0b2\x20.SC2APIProtocol.ResponseGameInfoH\0R\x08gameInfo\x12G\
-    \n\x0bobservation\x18\n\x20\x01(\x0b2#.SC2APIProtocol.ResponseObservatio\
-    nH\0R\x0bobservation\x128\n\x06action\x18\x0b\x20\x01(\x0b2\x1e.SC2APIPr\
-    otocol.ResponseActionH\0R\x06action\x122\n\x04step\x18\x0c\x20\x01(\x0b2\
-    \x1c.SC2APIProtocol.ResponseStepH\0R\x04step\x122\n\x04data\x18\r\x20\
-    \x01(\x0b2\x1c.SC2APIProtocol.ResponseDataH\0R\x04data\x125\n\x05query\
-    \x18\x0e\x20\x01(\x0b2\x1d.SC2APIProtocol.ResponseQueryH\0R\x05query\x12\
-    E\n\x0bsave_replay\x18\x0f\x20\x01(\x0b2\".SC2APIProtocol.ResponseSaveRe\
-    playH\0R\nsaveReplay\x12E\n\x0breplay_info\x18\x10\x20\x01(\x0b2\".SC2AP\
-    IProtocol.ResponseReplayInfoH\0R\nreplayInfo\x12N\n\x0eavailable_maps\
-    \x18\x11\x20\x01(\x0b2%.SC2APIProtocol.ResponseAvailableMapsH\0R\ravaila\
-    bleMaps\x12<\n\x08save_map\x18\x12\x20\x01(\x0b2\x1f.SC2APIProtocol.Resp\
-    onseSaveMapH\0R\x07saveMap\x122\n\x04ping\x18\x13\x20\x01(\x0b2\x1c.SC2A\
-    PIProtocol.ResponsePingH\0R\x04ping\x125\n\x05debug\x18\x14\x20\x01(\x0b\
-    2\x1d.SC2APIProtocol.ResponseDebugH\0R\x05debug\x12\x14\n\x05error\x18b\
-    \x20\x03(\tR\x05error\x12.\n\x06status\x18c\x20\x01(\x0e2\x16.SC2APIProt\
-    ocol.StatusR\x06statusB\n\n\x08response\"\xa1\x02\n\x11RequestCreateGame\
-    \x127\n\tlocal_map\x18\x01\x20\x01(\x0b2\x18.SC2APIProtocol.LocalMapH\0R\
-    \x08localMap\x12.\n\x12battlenet_map_name\x18\x02\x20\x01(\tH\0R\x10batt\
-    lenetMapName\x12>\n\x0cplayer_setup\x18\x03\x20\x03(\x0b2\x1b.SC2APIProt\
-    ocol.PlayerSetupR\x0bplayerSetup\x12\x1f\n\x0bdisable_fog\x18\x04\x20\
-    \x01(\x08R\ndisableFog\x12\x1f\n\x0brandom_seed\x18\x05\x20\x01(\rR\nran\
-    domSeed\x12\x1a\n\x08realtime\x18\x06\x20\x01(\x08R\x08realtimeB\x05\n\
-    \x03Map\"@\n\x08LocalMap\x12\x19\n\x08map_path\x18\x01\x20\x01(\tR\x07ma\
-    pPath\x12\x19\n\x08map_data\x18\x07\x20\x01(\x0cR\x07mapData\"\xb1\x02\n\
-    \x12ResponseCreateGame\x12>\n\x05error\x18\x01\x20\x01(\x0e2(.SC2APIProt\
-    ocol.ResponseCreateGame.ErrorR\x05error\x12#\n\rerror_details\x18\x02\
-    \x20\x01(\tR\x0cerrorDetails\"\xb5\x01\n\x05Error\x12\x0e\n\nMissingMap\
-    \x10\x01\x12\x12\n\x0eInvalidMapPath\x10\x02\x12\x12\n\x0eInvalidMapData\
-    \x10\x03\x12\x12\n\x0eInvalidMapName\x10\x04\x12\x14\n\x10InvalidMapHand\
-    le\x10\x05\x12\x16\n\x12MissingPlayerSetup\x10\x06\x12\x16\n\x12InvalidP\
-    layerSetup\x10\x07\x12\x1a\n\x16MultiplayerUnsupported\x10\x08\"\xd3\x02\
-    \n\x0fRequestJoinGame\x12*\n\x04race\x18\x01\x20\x01(\x0e2\x14.SC2APIPro\
-    tocol.RaceH\0R\x04race\x12.\n\x12observed_player_id\x18\x02\x20\x01(\rH\
-    \0R\x10observedPlayerId\x12:\n\x07options\x18\x03\x20\x01(\x0b2\x20.SC2A\
-    PIProtocol.InterfaceOptionsR\x07options\x12:\n\x0cserver_ports\x18\x04\
-    \x20\x01(\x0b2\x17.SC2APIProtocol.PortSetR\x0bserverPorts\x12:\n\x0cclie\
-    nt_ports\x18\x05\x20\x03(\x0b2\x17.SC2APIProtocol.PortSetR\x0bclientPort\
-    s\x12\x1f\n\x0bshared_port\x18\x06\x20\x01(\x05R\nsharedPortB\x0f\n\rpar\
-    ticipation\"C\n\x07PortSet\x12\x1b\n\tgame_port\x18\x01\x20\x01(\x05R\
-    \x08gamePort\x12\x1b\n\tbase_port\x18\x02\x20\x01(\x05R\x08basePort\"\
-    \xa1\x03\n\x10ResponseJoinGame\x12\x1b\n\tplayer_id\x18\x01\x20\x01(\rR\
-    \x08playerId\x12<\n\x05error\x18\x02\x20\x01(\x0e2&.SC2APIProtocol.Respo\
-    nseJoinGame.ErrorR\x05error\x12#\n\rerror_details\x18\x03\x20\x01(\tR\
-    \x0cerrorDetails\"\x8c\x02\n\x05Error\x12\x18\n\x14MissingParticipation\
-    \x10\x01\x12\x1b\n\x17InvalidObservedPlayerId\x10\x02\x12\x12\n\x0eMissi\
-    ngOptions\x10\x03\x12\x10\n\x0cMissingPorts\x10\x04\x12\x0c\n\x08GameFul\
-    l\x10\x05\x12\x0f\n\x0bLaunchError\x10\x06\x12\x16\n\x12FeatureUnsupport\
-    ed\x10\x07\x12\x12\n\x0eNoSpaceForUser\x10\x08\x12\x13\n\x0fMapDoesNotEx\
-    ist\x10\t\x12\x11\n\rCannotOpenMap\x10\n\x12\x11\n\rChecksumError\x10\
-    \x0b\x12\x10\n\x0cNetworkError\x10\x0c\x12\x0e\n\nOtherError\x10\r\"\x14\
-    \n\x12RequestRestartGame\"\x95\x01\n\x13ResponseRestartGame\x12?\n\x05er\
-    ror\x18\x01\x20\x01(\x0e2).SC2APIProtocol.ResponseRestartGame.ErrorR\x05\
-    error\x12#\n\rerror_details\x18\x02\x20\x01(\tR\x0cerrorDetails\"\x18\n\
-    \x05Error\x12\x0f\n\x0bLaunchError\x10\x01\"\x8a\x02\n\x12RequestStartRe\
-    play\x12!\n\x0breplay_path\x18\x01\x20\x01(\tH\0R\nreplayPath\x12!\n\x0b\
-    replay_data\x18\x05\x20\x01(\x0cH\0R\nreplayData\x12\x19\n\x08map_data\
-    \x18\x06\x20\x01(\x0cR\x07mapData\x12,\n\x12observed_player_id\x18\x02\
-    \x20\x01(\x05R\x10observedPlayerId\x12:\n\x07options\x18\x03\x20\x01(\
-    \x0b2\x20.SC2APIProtocol.InterfaceOptionsR\x07options\x12\x1f\n\x0bdisab\
-    le_fog\x18\x04\x20\x01(\x08R\ndisableFogB\x08\n\x06replay\"\x9c\x02\n\
-    \x13ResponseStartReplay\x12?\n\x05error\x18\x01\x20\x01(\x0e2).SC2APIPro\
-    tocol.ResponseStartReplay.ErrorR\x05error\x12#\n\rerror_details\x18\x02\
-    \x20\x01(\tR\x0cerrorDetails\"\x9e\x01\n\x05Error\x12\x11\n\rMissingRepl\
-    ay\x10\x01\x12\x15\n\x11InvalidReplayPath\x10\x02\x12\x15\n\x11InvalidRe\
-    playData\x10\x03\x12\x12\n\x0eInvalidMapData\x10\x04\x12\x1b\n\x17Invali\
-    dObservedPlayerId\x10\x05\x12\x12\n\x0eMissingOptions\x10\x06\x12\x0f\n\
-    \x0bLaunchError\x10\x07\"\x12\n\x10RequestLeaveGame\"\x13\n\x11ResponseL\
-    eaveGame\"\x12\n\x10RequestQuickSave\"\x13\n\x11ResponseQuickSave\"\x12\
-    \n\x10RequestQuickLoad\"\x13\n\x11ResponseQuickLoad\"\r\n\x0bRequestQuit\
-    \"\x0e\n\x0cResponseQuit\"\x11\n\x0fRequestGameInfo\"\xa0\x02\n\x10Respo\
-    nseGameInfo\x12\x19\n\x08map_name\x18\x01\x20\x01(\tR\x07mapName\x12\x1b\
-    \n\tmod_names\x18\x06\x20\x03(\tR\x08modNames\x12$\n\x0elocal_map_path\
-    \x18\x02\x20\x01(\tR\x0clocalMapPath\x12;\n\x0bplayer_info\x18\x03\x20\
-    \x03(\x0b2\x1a.SC2APIProtocol.PlayerInfoR\nplayerInfo\x125\n\tstart_raw\
-    \x18\x04\x20\x01(\x0b2\x18.SC2APIProtocol.StartRawR\x08startRaw\x12:\n\
-    \x07options\x18\x05\x20\x01(\x0b2\x20.SC2APIProtocol.InterfaceOptionsR\
-    \x07options\"5\n\x12RequestObservation\x12\x1f\n\x0bdisable_fog\x18\x01\
-    \x20\x01(\x08R\ndisableFog\"\xbd\x02\n\x13ResponseObservation\x120\n\x07\
-    actions\x18\x01\x20\x03(\x0b2\x16.SC2APIProtocol.ActionR\x07actions\x12@\
-    \n\raction_errors\x18\x02\x20\x03(\x0b2\x1b.SC2APIProtocol.ActionErrorR\
-    \x0cactionErrors\x12=\n\x0bobservation\x18\x03\x20\x01(\x0b2\x1b.SC2APIP\
-    rotocol.ObservationR\x0bobservation\x12A\n\rplayer_result\x18\x04\x20\
-    \x03(\x0b2\x1c.SC2APIProtocol.PlayerResultR\x0cplayerResult\x120\n\x04ch\
-    at\x18\x05\x20\x03(\x0b2\x1c.SC2APIProtocol.ChatReceivedR\x04chat\"E\n\
-    \x0cChatReceived\x12\x1b\n\tplayer_id\x18\x01\x20\x01(\x05R\x08playerId\
-    \x12\x18\n\x07message\x18\x02\x20\x01(\tR\x07message\"A\n\rRequestAction\
-    \x120\n\x07actions\x18\x01\x20\x03(\x0b2\x16.SC2APIProtocol.ActionR\x07a\
-    ctions\"F\n\x0eResponseAction\x124\n\x06result\x18\x01\x20\x03(\x0e2\x1c\
-    .SC2APIProtocol.ActionResultR\x06result\"#\n\x0bRequestStep\x12\x14\n\
-    \x05count\x18\x01\x20\x01(\rR\x05count\"\x0e\n\x0cResponseStep\"\xa3\x01\
-    \n\x0bRequestData\x12\x1d\n\nability_id\x18\x01\x20\x01(\x08R\tabilityId\
-    \x12\x20\n\x0cunit_type_id\x18\x02\x20\x01(\x08R\nunitTypeId\x12\x1d\n\n\
-    upgrade_id\x18\x03\x20\x01(\x08R\tupgradeId\x12\x17\n\x07buff_id\x18\x04\
-    \x20\x01(\x08R\x06buffId\x12\x1b\n\teffect_id\x18\x05\x20\x01(\x08R\x08e\
-    ffectId\"\x9c\x02\n\x0cResponseData\x129\n\tabilities\x18\x01\x20\x03(\
-    \x0b2\x1b.SC2APIProtocol.AbilityDataR\tabilities\x122\n\x05units\x18\x02\
-    \x20\x03(\x0b2\x1c.SC2APIProtocol.UnitTypeDataR\x05units\x127\n\x08upgra\
-    des\x18\x03\x20\x03(\x0b2\x1b.SC2APIProtocol.UpgradeDataR\x08upgrades\
-    \x12.\n\x05buffs\x18\x04\x20\x03(\x0b2\x18.SC2APIProtocol.BuffDataR\x05b\
-    uffs\x124\n\x07effects\x18\x05\x20\x03(\x0b2\x1a.SC2APIProtocol.EffectDa\
-    taR\x07effects\"\x13\n\x11RequestSaveReplay\"(\n\x12ResponseSaveReplay\
-    \x12\x12\n\x04data\x18\x01\x20\x01(\x0cR\x04data\"\x88\x01\n\x11RequestR\
-    eplayInfo\x12!\n\x0breplay_path\x18\x01\x20\x01(\tH\0R\nreplayPath\x12!\
-    \n\x0breplay_data\x18\x02\x20\x01(\x0cH\0R\nreplayData\x12#\n\rdownload_\
-    data\x18\x03\x20\x01(\x08R\x0cdownloadDataB\x08\n\x06replay\"\xcf\x01\n\
-    \x0fPlayerInfoExtra\x12;\n\x0bplayer_info\x18\x01\x20\x01(\x0b2\x1a.SC2A\
-    PIProtocol.PlayerInfoR\nplayerInfo\x12A\n\rplayer_result\x18\x02\x20\x01\
-    (\x0b2\x1c.SC2APIProtocol.PlayerResultR\x0cplayerResult\x12\x1d\n\nplaye\
-    r_mmr\x18\x03\x20\x01(\x05R\tplayerMmr\x12\x1d\n\nplayer_apm\x18\x04\x20\
-    \x01(\x05R\tplayerApm\"\xd3\x04\n\x12ResponseReplayInfo\x12\x19\n\x08map\
-    _name\x18\x01\x20\x01(\tR\x07mapName\x12$\n\x0elocal_map_path\x18\x02\
-    \x20\x01(\tR\x0clocalMapPath\x12@\n\x0bplayer_info\x18\x03\x20\x03(\x0b2\
-    \x1f.SC2APIProtocol.PlayerInfoExtraR\nplayerInfo\x12.\n\x13game_duration\
-    _loops\x18\x04\x20\x01(\rR\x11gameDurationLoops\x122\n\x15game_duration_\
-    seconds\x18\x05\x20\x01(\x02R\x13gameDurationSeconds\x12!\n\x0cgame_vers\
-    ion\x18\x06\x20\x01(\tR\x0bgameVersion\x12!\n\x0cdata_version\x18\x0b\
-    \x20\x01(\tR\x0bdataVersion\x12\x1d\n\ndata_build\x18\x07\x20\x01(\rR\td\
-    ataBuild\x12\x1d\n\nbase_build\x18\x08\x20\x01(\rR\tbaseBuild\x12>\n\x05\
-    error\x18\t\x20\x01(\x0e2(.SC2APIProtocol.ResponseReplayInfo.ErrorR\x05e\
-    rror\x12#\n\rerror_details\x18\n\x20\x01(\tR\x0cerrorDetails\"m\n\x05Err\
-    or\x12\x11\n\rMissingReplay\x10\x01\x12\x15\n\x11InvalidReplayPath\x10\
-    \x02\x12\x15\n\x11InvalidReplayData\x10\x03\x12\x10\n\x0cParsingError\
-    \x10\x04\x12\x11\n\rDownloadError\x10\x05\"\x16\n\x14RequestAvailableMap\
-    s\"o\n\x15ResponseAvailableMaps\x12&\n\x0flocal_map_paths\x18\x01\x20\
-    \x03(\tR\rlocalMapPaths\x12.\n\x13battlenet_map_names\x18\x02\x20\x03(\t\
-    R\x11battlenetMapNames\"F\n\x0eRequestSaveMap\x12\x19\n\x08map_path\x18\
-    \x01\x20\x01(\tR\x07mapPath\x12\x19\n\x08map_data\x18\x02\x20\x01(\x0cR\
-    \x07mapData\"k\n\x0fResponseSaveMap\x12;\n\x05error\x18\x01\x20\x01(\x0e\
-    2%.SC2APIProtocol.ResponseSaveMap.ErrorR\x05error\"\x1b\n\x05Error\x12\
-    \x12\n\x0eInvalidMapData\x10\x01\"\r\n\x0bRequestPing\"\x92\x01\n\x0cRes\
-    ponsePing\x12!\n\x0cgame_version\x18\x01\x20\x01(\tR\x0bgameVersion\x12!\
-    \n\x0cdata_version\x18\x02\x20\x01(\tR\x0bdataVersion\x12\x1d\n\ndata_bu\
-    ild\x18\x03\x20\x01(\rR\tdataBuild\x12\x1d\n\nbase_build\x18\x04\x20\x01\
-    (\rR\tbaseBuild\"B\n\x0cRequestDebug\x122\n\x05debug\x18\x01\x20\x03(\
-    \x0b2\x1c.SC2APIProtocol.DebugCommandR\x05debug\"\x0f\n\rResponseDebug\"\
-    \xa3\x01\n\x0bPlayerSetup\x12.\n\x04type\x18\x01\x20\x01(\x0e2\x1a.SC2AP\
-    IProtocol.PlayerTypeR\x04type\x12(\n\x04race\x18\x02\x20\x01(\x0e2\x14.S\
-    C2APIProtocol.RaceR\x04race\x12:\n\ndifficulty\x18\x03\x20\x01(\x0e2\x1a\
-    .SC2APIProtocol.DifficultyR\ndifficulty\"\xab\x01\n\x12SpatialCameraSetu\
-    p\x12\x14\n\x05width\x18\x01\x20\x01(\x02R\x05width\x127\n\nresolution\
-    \x18\x02\x20\x01(\x0b2\x17.SC2APIProtocol.Size2DIR\nresolution\x12F\n\
-    \x12minimap_resolution\x18\x03\x20\x01(\x0b2\x17.SC2APIProtocol.Size2DIR\
-    \x11minimapResolution\"\xbf\x01\n\x10InterfaceOptions\x12\x10\n\x03raw\
-    \x18\x01\x20\x01(\x08R\x03raw\x12\x14\n\x05score\x18\x02\x20\x01(\x08R\
-    \x05score\x12G\n\rfeature_layer\x18\x03\x20\x01(\x0b2\".SC2APIProtocol.S\
-    patialCameraSetupR\x0cfeatureLayer\x12:\n\x06render\x18\x04\x20\x01(\x0b\
-    2\".SC2APIProtocol.SpatialCameraSetupR\x06render\"\x89\x02\n\nPlayerInfo\
-    \x12\x1b\n\tplayer_id\x18\x01\x20\x01(\rR\x08playerId\x12.\n\x04type\x18\
-    \x02\x20\x01(\x0e2\x1a.SC2APIProtocol.PlayerTypeR\x04type\x12;\n\x0erace\
-    _requested\x18\x03\x20\x01(\x0e2\x14.SC2APIProtocol.RaceR\rraceRequested\
-    \x125\n\x0brace_actual\x18\x04\x20\x01(\x0e2\x14.SC2APIProtocol.RaceR\nr\
-    aceActual\x12:\n\ndifficulty\x18\x05\x20\x01(\x0e2\x1a.SC2APIProtocol.Di\
-    fficultyR\ndifficulty\"\xed\x02\n\x0cPlayerCommon\x12\x1b\n\tplayer_id\
-    \x18\x01\x20\x01(\rR\x08playerId\x12\x1a\n\x08minerals\x18\x02\x20\x01(\
-    \rR\x08minerals\x12\x18\n\x07vespene\x18\x03\x20\x01(\rR\x07vespene\x12\
-    \x19\n\x08food_cap\x18\x04\x20\x01(\rR\x07foodCap\x12\x1b\n\tfood_used\
-    \x18\x05\x20\x01(\rR\x08foodUsed\x12\x1b\n\tfood_army\x18\x06\x20\x01(\r\
-    R\x08foodArmy\x12!\n\x0cfood_workers\x18\x07\x20\x01(\rR\x0bfoodWorkers\
-    \x12*\n\x11idle_worker_count\x18\x08\x20\x01(\rR\x0fidleWorkerCount\x12\
+    \x01(\x0b2\x1d.SC2APIProtocol.RequestActionH\0R\x06action\x12F\n\nobs_ac\
+    tion\x18\x15\x20\x01(\x0b2%.SC2APIProtocol.RequestObserverActionH\0R\tob\
+    sAction\x121\n\x04step\x18\x0c\x20\x01(\x0b2\x1b.SC2APIProtocol.RequestS\
+    tepH\0R\x04step\x121\n\x04data\x18\r\x20\x01(\x0b2\x1b.SC2APIProtocol.Re\
+    questDataH\0R\x04data\x124\n\x05query\x18\x0e\x20\x01(\x0b2\x1c.SC2APIPr\
+    otocol.RequestQueryH\0R\x05query\x12D\n\x0bsave_replay\x18\x0f\x20\x01(\
+    \x0b2!.SC2APIProtocol.RequestSaveReplayH\0R\nsaveReplay\x12D\n\x0breplay\
+    _info\x18\x10\x20\x01(\x0b2!.SC2APIProtocol.RequestReplayInfoH\0R\nrepla\
+    yInfo\x12M\n\x0eavailable_maps\x18\x11\x20\x01(\x0b2$.SC2APIProtocol.Req\
+    uestAvailableMapsH\0R\ravailableMaps\x12;\n\x08save_map\x18\x12\x20\x01(\
+    \x0b2\x1e.SC2APIProtocol.RequestSaveMapH\0R\x07saveMap\x121\n\x04ping\
+    \x18\x13\x20\x01(\x0b2\x1b.SC2APIProtocol.RequestPingH\0R\x04ping\x124\n\
+    \x05debug\x18\x14\x20\x01(\x0b2\x1c.SC2APIProtocol.RequestDebugH\0R\x05d\
+    ebugB\t\n\x07request\"\xab\x0b\n\x08Response\x12E\n\x0bcreate_game\x18\
+    \x01\x20\x01(\x0b2\".SC2APIProtocol.ResponseCreateGameH\0R\ncreateGame\
+    \x12?\n\tjoin_game\x18\x02\x20\x01(\x0b2\x20.SC2APIProtocol.ResponseJoin\
+    GameH\0R\x08joinGame\x12H\n\x0crestart_game\x18\x03\x20\x01(\x0b2#.SC2AP\
+    IProtocol.ResponseRestartGameH\0R\x0brestartGame\x12H\n\x0cstart_replay\
+    \x18\x04\x20\x01(\x0b2#.SC2APIProtocol.ResponseStartReplayH\0R\x0bstartR\
+    eplay\x12B\n\nleave_game\x18\x05\x20\x01(\x0b2!.SC2APIProtocol.ResponseL\
+    eaveGameH\0R\tleaveGame\x12B\n\nquick_save\x18\x06\x20\x01(\x0b2!.SC2API\
+    Protocol.ResponseQuickSaveH\0R\tquickSave\x12B\n\nquick_load\x18\x07\x20\
+    \x01(\x0b2!.SC2APIProtocol.ResponseQuickLoadH\0R\tquickLoad\x122\n\x04qu\
+    it\x18\x08\x20\x01(\x0b2\x1c.SC2APIProtocol.ResponseQuitH\0R\x04quit\x12\
+    ?\n\tgame_info\x18\t\x20\x01(\x0b2\x20.SC2APIProtocol.ResponseGameInfoH\
+    \0R\x08gameInfo\x12G\n\x0bobservation\x18\n\x20\x01(\x0b2#.SC2APIProtoco\
+    l.ResponseObservationH\0R\x0bobservation\x128\n\x06action\x18\x0b\x20\
+    \x01(\x0b2\x1e.SC2APIProtocol.ResponseActionH\0R\x06action\x12G\n\nobs_a\
+    ction\x18\x15\x20\x01(\x0b2&.SC2APIProtocol.ResponseObserverActionH\0R\t\
+    obsAction\x122\n\x04step\x18\x0c\x20\x01(\x0b2\x1c.SC2APIProtocol.Respon\
+    seStepH\0R\x04step\x122\n\x04data\x18\r\x20\x01(\x0b2\x1c.SC2APIProtocol\
+    .ResponseDataH\0R\x04data\x125\n\x05query\x18\x0e\x20\x01(\x0b2\x1d.SC2A\
+    PIProtocol.ResponseQueryH\0R\x05query\x12E\n\x0bsave_replay\x18\x0f\x20\
+    \x01(\x0b2\".SC2APIProtocol.ResponseSaveReplayH\0R\nsaveReplay\x12E\n\
+    \x0breplay_info\x18\x10\x20\x01(\x0b2\".SC2APIProtocol.ResponseReplayInf\
+    oH\0R\nreplayInfo\x12N\n\x0eavailable_maps\x18\x11\x20\x01(\x0b2%.SC2API\
+    Protocol.ResponseAvailableMapsH\0R\ravailableMaps\x12<\n\x08save_map\x18\
+    \x12\x20\x01(\x0b2\x1f.SC2APIProtocol.ResponseSaveMapH\0R\x07saveMap\x12\
+    2\n\x04ping\x18\x13\x20\x01(\x0b2\x1c.SC2APIProtocol.ResponsePingH\0R\
+    \x04ping\x125\n\x05debug\x18\x14\x20\x01(\x0b2\x1d.SC2APIProtocol.Respon\
+    seDebugH\0R\x05debug\x12\x14\n\x05error\x18b\x20\x03(\tR\x05error\x12.\n\
+    \x06status\x18c\x20\x01(\x0e2\x16.SC2APIProtocol.StatusR\x06statusB\n\n\
+    \x08response\"\xa1\x02\n\x11RequestCreateGame\x127\n\tlocal_map\x18\x01\
+    \x20\x01(\x0b2\x18.SC2APIProtocol.LocalMapH\0R\x08localMap\x12.\n\x12bat\
+    tlenet_map_name\x18\x02\x20\x01(\tH\0R\x10battlenetMapName\x12>\n\x0cpla\
+    yer_setup\x18\x03\x20\x03(\x0b2\x1b.SC2APIProtocol.PlayerSetupR\x0bplaye\
+    rSetup\x12\x1f\n\x0bdisable_fog\x18\x04\x20\x01(\x08R\ndisableFog\x12\
+    \x1f\n\x0brandom_seed\x18\x05\x20\x01(\rR\nrandomSeed\x12\x1a\n\x08realt\
+    ime\x18\x06\x20\x01(\x08R\x08realtimeB\x05\n\x03Map\"@\n\x08LocalMap\x12\
+    \x19\n\x08map_path\x18\x01\x20\x01(\tR\x07mapPath\x12\x19\n\x08map_data\
+    \x18\x07\x20\x01(\x0cR\x07mapData\"\xb1\x02\n\x12ResponseCreateGame\x12>\
+    \n\x05error\x18\x01\x20\x01(\x0e2(.SC2APIProtocol.ResponseCreateGame.Err\
+    orR\x05error\x12#\n\rerror_details\x18\x02\x20\x01(\tR\x0cerrorDetails\"\
+    \xb5\x01\n\x05Error\x12\x0e\n\nMissingMap\x10\x01\x12\x12\n\x0eInvalidMa\
+    pPath\x10\x02\x12\x12\n\x0eInvalidMapData\x10\x03\x12\x12\n\x0eInvalidMa\
+    pName\x10\x04\x12\x14\n\x10InvalidMapHandle\x10\x05\x12\x16\n\x12Missing\
+    PlayerSetup\x10\x06\x12\x16\n\x12InvalidPlayerSetup\x10\x07\x12\x1a\n\
+    \x16MultiplayerUnsupported\x10\x08\"\xd3\x02\n\x0fRequestJoinGame\x12*\n\
+    \x04race\x18\x01\x20\x01(\x0e2\x14.SC2APIProtocol.RaceH\0R\x04race\x12.\
+    \n\x12observed_player_id\x18\x02\x20\x01(\rH\0R\x10observedPlayerId\x12:\
+    \n\x07options\x18\x03\x20\x01(\x0b2\x20.SC2APIProtocol.InterfaceOptionsR\
+    \x07options\x12:\n\x0cserver_ports\x18\x04\x20\x01(\x0b2\x17.SC2APIProto\
+    col.PortSetR\x0bserverPorts\x12:\n\x0cclient_ports\x18\x05\x20\x03(\x0b2\
+    \x17.SC2APIProtocol.PortSetR\x0bclientPorts\x12\x1f\n\x0bshared_port\x18\
+    \x06\x20\x01(\x05R\nsharedPortB\x0f\n\rparticipation\"C\n\x07PortSet\x12\
+    \x1b\n\tgame_port\x18\x01\x20\x01(\x05R\x08gamePort\x12\x1b\n\tbase_port\
+    \x18\x02\x20\x01(\x05R\x08basePort\"\xa1\x03\n\x10ResponseJoinGame\x12\
+    \x1b\n\tplayer_id\x18\x01\x20\x01(\rR\x08playerId\x12<\n\x05error\x18\
+    \x02\x20\x01(\x0e2&.SC2APIProtocol.ResponseJoinGame.ErrorR\x05error\x12#\
+    \n\rerror_details\x18\x03\x20\x01(\tR\x0cerrorDetails\"\x8c\x02\n\x05Err\
+    or\x12\x18\n\x14MissingParticipation\x10\x01\x12\x1b\n\x17InvalidObserve\
+    dPlayerId\x10\x02\x12\x12\n\x0eMissingOptions\x10\x03\x12\x10\n\x0cMissi\
+    ngPorts\x10\x04\x12\x0c\n\x08GameFull\x10\x05\x12\x0f\n\x0bLaunchError\
+    \x10\x06\x12\x16\n\x12FeatureUnsupported\x10\x07\x12\x12\n\x0eNoSpaceFor\
+    User\x10\x08\x12\x13\n\x0fMapDoesNotExist\x10\t\x12\x11\n\rCannotOpenMap\
+    \x10\n\x12\x11\n\rChecksumError\x10\x0b\x12\x10\n\x0cNetworkError\x10\
+    \x0c\x12\x0e\n\nOtherError\x10\r\"\x14\n\x12RequestRestartGame\"\x95\x01\
+    \n\x13ResponseRestartGame\x12?\n\x05error\x18\x01\x20\x01(\x0e2).SC2APIP\
+    rotocol.ResponseRestartGame.ErrorR\x05error\x12#\n\rerror_details\x18\
+    \x02\x20\x01(\tR\x0cerrorDetails\"\x18\n\x05Error\x12\x0f\n\x0bLaunchErr\
+    or\x10\x01\"\xa6\x02\n\x12RequestStartReplay\x12!\n\x0breplay_path\x18\
+    \x01\x20\x01(\tH\0R\nreplayPath\x12!\n\x0breplay_data\x18\x05\x20\x01(\
+    \x0cH\0R\nreplayData\x12\x19\n\x08map_data\x18\x06\x20\x01(\x0cR\x07mapD\
+    ata\x12,\n\x12observed_player_id\x18\x02\x20\x01(\x05R\x10observedPlayer\
+    Id\x12:\n\x07options\x18\x03\x20\x01(\x0b2\x20.SC2APIProtocol.InterfaceO\
+    ptionsR\x07options\x12\x1f\n\x0bdisable_fog\x18\x04\x20\x01(\x08R\ndisab\
+    leFog\x12\x1a\n\x08realtime\x18\x07\x20\x01(\x08R\x08realtimeB\x08\n\x06\
+    replay\"\x9c\x02\n\x13ResponseStartReplay\x12?\n\x05error\x18\x01\x20\
+    \x01(\x0e2).SC2APIProtocol.ResponseStartReplay.ErrorR\x05error\x12#\n\re\
+    rror_details\x18\x02\x20\x01(\tR\x0cerrorDetails\"\x9e\x01\n\x05Error\
+    \x12\x11\n\rMissingReplay\x10\x01\x12\x15\n\x11InvalidReplayPath\x10\x02\
+    \x12\x15\n\x11InvalidReplayData\x10\x03\x12\x12\n\x0eInvalidMapData\x10\
+    \x04\x12\x1b\n\x17InvalidObservedPlayerId\x10\x05\x12\x12\n\x0eMissingOp\
+    tions\x10\x06\x12\x0f\n\x0bLaunchError\x10\x07\"\x12\n\x10RequestLeaveGa\
+    me\"\x13\n\x11ResponseLeaveGame\"\x12\n\x10RequestQuickSave\"\x13\n\x11R\
+    esponseQuickSave\"\x12\n\x10RequestQuickLoad\"\x13\n\x11ResponseQuickLoa\
+    d\"\r\n\x0bRequestQuit\"\x0e\n\x0cResponseQuit\"\x11\n\x0fRequestGameInf\
+    o\"\xa0\x02\n\x10ResponseGameInfo\x12\x19\n\x08map_name\x18\x01\x20\x01(\
+    \tR\x07mapName\x12\x1b\n\tmod_names\x18\x06\x20\x03(\tR\x08modNames\x12$\
+    \n\x0elocal_map_path\x18\x02\x20\x01(\tR\x0clocalMapPath\x12;\n\x0bplaye\
+    r_info\x18\x03\x20\x03(\x0b2\x1a.SC2APIProtocol.PlayerInfoR\nplayerInfo\
+    \x125\n\tstart_raw\x18\x04\x20\x01(\x0b2\x18.SC2APIProtocol.StartRawR\
+    \x08startRaw\x12:\n\x07options\x18\x05\x20\x01(\x0b2\x20.SC2APIProtocol.\
+    InterfaceOptionsR\x07options\"5\n\x12RequestObservation\x12\x1f\n\x0bdis\
+    able_fog\x18\x01\x20\x01(\x08R\ndisableFog\"\xbd\x02\n\x13ResponseObserv\
+    ation\x120\n\x07actions\x18\x01\x20\x03(\x0b2\x16.SC2APIProtocol.ActionR\
+    \x07actions\x12@\n\raction_errors\x18\x02\x20\x03(\x0b2\x1b.SC2APIProtoc\
+    ol.ActionErrorR\x0cactionErrors\x12=\n\x0bobservation\x18\x03\x20\x01(\
+    \x0b2\x1b.SC2APIProtocol.ObservationR\x0bobservation\x12A\n\rplayer_resu\
+    lt\x18\x04\x20\x03(\x0b2\x1c.SC2APIProtocol.PlayerResultR\x0cplayerResul\
+    t\x120\n\x04chat\x18\x05\x20\x03(\x0b2\x1c.SC2APIProtocol.ChatReceivedR\
+    \x04chat\"E\n\x0cChatReceived\x12\x1b\n\tplayer_id\x18\x01\x20\x01(\rR\
+    \x08playerId\x12\x18\n\x07message\x18\x02\x20\x01(\tR\x07message\"A\n\rR\
+    equestAction\x120\n\x07actions\x18\x01\x20\x03(\x0b2\x16.SC2APIProtocol.\
+    ActionR\x07actions\"F\n\x0eResponseAction\x124\n\x06result\x18\x01\x20\
+    \x03(\x0e2\x1c.SC2APIProtocol.ActionResultR\x06result\"Q\n\x15RequestObs\
+    erverAction\x128\n\x07actions\x18\x01\x20\x03(\x0b2\x1e.SC2APIProtocol.O\
+    bserverActionR\x07actions\"\x18\n\x16ResponseObserverAction\"#\n\x0bRequ\
+    estStep\x12\x14\n\x05count\x18\x01\x20\x01(\rR\x05count\"\x0e\n\x0cRespo\
+    nseStep\"\xa3\x01\n\x0bRequestData\x12\x1d\n\nability_id\x18\x01\x20\x01\
+    (\x08R\tabilityId\x12\x20\n\x0cunit_type_id\x18\x02\x20\x01(\x08R\nunitT\
+    ypeId\x12\x1d\n\nupgrade_id\x18\x03\x20\x01(\x08R\tupgradeId\x12\x17\n\
+    \x07buff_id\x18\x04\x20\x01(\x08R\x06buffId\x12\x1b\n\teffect_id\x18\x05\
+    \x20\x01(\x08R\x08effectId\"\x9c\x02\n\x0cResponseData\x129\n\tabilities\
+    \x18\x01\x20\x03(\x0b2\x1b.SC2APIProtocol.AbilityDataR\tabilities\x122\n\
+    \x05units\x18\x02\x20\x03(\x0b2\x1c.SC2APIProtocol.UnitTypeDataR\x05unit\
+    s\x127\n\x08upgrades\x18\x03\x20\x03(\x0b2\x1b.SC2APIProtocol.UpgradeDat\
+    aR\x08upgrades\x12.\n\x05buffs\x18\x04\x20\x03(\x0b2\x18.SC2APIProtocol.\
+    BuffDataR\x05buffs\x124\n\x07effects\x18\x05\x20\x03(\x0b2\x1a.SC2APIPro\
+    tocol.EffectDataR\x07effects\"\x13\n\x11RequestSaveReplay\"(\n\x12Respon\
+    seSaveReplay\x12\x12\n\x04data\x18\x01\x20\x01(\x0cR\x04data\"\x88\x01\n\
+    \x11RequestReplayInfo\x12!\n\x0breplay_path\x18\x01\x20\x01(\tH\0R\nrepl\
+    ayPath\x12!\n\x0breplay_data\x18\x02\x20\x01(\x0cH\0R\nreplayData\x12#\n\
+    \rdownload_data\x18\x03\x20\x01(\x08R\x0cdownloadDataB\x08\n\x06replay\"\
+    \xcf\x01\n\x0fPlayerInfoExtra\x12;\n\x0bplayer_info\x18\x01\x20\x01(\x0b\
+    2\x1a.SC2APIProtocol.PlayerInfoR\nplayerInfo\x12A\n\rplayer_result\x18\
+    \x02\x20\x01(\x0b2\x1c.SC2APIProtocol.PlayerResultR\x0cplayerResult\x12\
+    \x1d\n\nplayer_mmr\x18\x03\x20\x01(\x05R\tplayerMmr\x12\x1d\n\nplayer_ap\
+    m\x18\x04\x20\x01(\x05R\tplayerApm\"\xd3\x04\n\x12ResponseReplayInfo\x12\
+    \x19\n\x08map_name\x18\x01\x20\x01(\tR\x07mapName\x12$\n\x0elocal_map_pa\
+    th\x18\x02\x20\x01(\tR\x0clocalMapPath\x12@\n\x0bplayer_info\x18\x03\x20\
+    \x03(\x0b2\x1f.SC2APIProtocol.PlayerInfoExtraR\nplayerInfo\x12.\n\x13gam\
+    e_duration_loops\x18\x04\x20\x01(\rR\x11gameDurationLoops\x122\n\x15game\
+    _duration_seconds\x18\x05\x20\x01(\x02R\x13gameDurationSeconds\x12!\n\
+    \x0cgame_version\x18\x06\x20\x01(\tR\x0bgameVersion\x12!\n\x0cdata_versi\
+    on\x18\x0b\x20\x01(\tR\x0bdataVersion\x12\x1d\n\ndata_build\x18\x07\x20\
+    \x01(\rR\tdataBuild\x12\x1d\n\nbase_build\x18\x08\x20\x01(\rR\tbaseBuild\
+    \x12>\n\x05error\x18\t\x20\x01(\x0e2(.SC2APIProtocol.ResponseReplayInfo.\
+    ErrorR\x05error\x12#\n\rerror_details\x18\n\x20\x01(\tR\x0cerrorDetails\
+    \"m\n\x05Error\x12\x11\n\rMissingReplay\x10\x01\x12\x15\n\x11InvalidRepl\
+    ayPath\x10\x02\x12\x15\n\x11InvalidReplayData\x10\x03\x12\x10\n\x0cParsi\
+    ngError\x10\x04\x12\x11\n\rDownloadError\x10\x05\"\x16\n\x14RequestAvail\
+    ableMaps\"o\n\x15ResponseAvailableMaps\x12&\n\x0flocal_map_paths\x18\x01\
+    \x20\x03(\tR\rlocalMapPaths\x12.\n\x13battlenet_map_names\x18\x02\x20\
+    \x03(\tR\x11battlenetMapNames\"F\n\x0eRequestSaveMap\x12\x19\n\x08map_pa\
+    th\x18\x01\x20\x01(\tR\x07mapPath\x12\x19\n\x08map_data\x18\x02\x20\x01(\
+    \x0cR\x07mapData\"k\n\x0fResponseSaveMap\x12;\n\x05error\x18\x01\x20\x01\
+    (\x0e2%.SC2APIProtocol.ResponseSaveMap.ErrorR\x05error\"\x1b\n\x05Error\
+    \x12\x12\n\x0eInvalidMapData\x10\x01\"\r\n\x0bRequestPing\"\x92\x01\n\
+    \x0cResponsePing\x12!\n\x0cgame_version\x18\x01\x20\x01(\tR\x0bgameVersi\
+    on\x12!\n\x0cdata_version\x18\x02\x20\x01(\tR\x0bdataVersion\x12\x1d\n\n\
+    data_build\x18\x03\x20\x01(\rR\tdataBuild\x12\x1d\n\nbase_build\x18\x04\
+    \x20\x01(\rR\tbaseBuild\"B\n\x0cRequestDebug\x122\n\x05debug\x18\x01\x20\
+    \x03(\x0b2\x1c.SC2APIProtocol.DebugCommandR\x05debug\"\x0f\n\rResponseDe\
+    bug\"\xa3\x01\n\x0bPlayerSetup\x12.\n\x04type\x18\x01\x20\x01(\x0e2\x1a.\
+    SC2APIProtocol.PlayerTypeR\x04type\x12(\n\x04race\x18\x02\x20\x01(\x0e2\
+    \x14.SC2APIProtocol.RaceR\x04race\x12:\n\ndifficulty\x18\x03\x20\x01(\
+    \x0e2\x1a.SC2APIProtocol.DifficultyR\ndifficulty\"\xab\x01\n\x12SpatialC\
+    ameraSetup\x12\x14\n\x05width\x18\x01\x20\x01(\x02R\x05width\x127\n\nres\
+    olution\x18\x02\x20\x01(\x0b2\x17.SC2APIProtocol.Size2DIR\nresolution\
+    \x12F\n\x12minimap_resolution\x18\x03\x20\x01(\x0b2\x17.SC2APIProtocol.S\
+    ize2DIR\x11minimapResolution\"\xbf\x01\n\x10InterfaceOptions\x12\x10\n\
+    \x03raw\x18\x01\x20\x01(\x08R\x03raw\x12\x14\n\x05score\x18\x02\x20\x01(\
+    \x08R\x05score\x12G\n\rfeature_layer\x18\x03\x20\x01(\x0b2\".SC2APIProto\
+    col.SpatialCameraSetupR\x0cfeatureLayer\x12:\n\x06render\x18\x04\x20\x01\
+    (\x0b2\".SC2APIProtocol.SpatialCameraSetupR\x06render\"\x89\x02\n\nPlaye\
+    rInfo\x12\x1b\n\tplayer_id\x18\x01\x20\x01(\rR\x08playerId\x12.\n\x04typ\
+    e\x18\x02\x20\x01(\x0e2\x1a.SC2APIProtocol.PlayerTypeR\x04type\x12;\n\
+    \x0erace_requested\x18\x03\x20\x01(\x0e2\x14.SC2APIProtocol.RaceR\rraceR\
+    equested\x125\n\x0brace_actual\x18\x04\x20\x01(\x0e2\x14.SC2APIProtocol.\
+    RaceR\nraceActual\x12:\n\ndifficulty\x18\x05\x20\x01(\x0e2\x1a.SC2APIPro\
+    tocol.DifficultyR\ndifficulty\"\xed\x02\n\x0cPlayerCommon\x12\x1b\n\tpla\
+    yer_id\x18\x01\x20\x01(\rR\x08playerId\x12\x1a\n\x08minerals\x18\x02\x20\
+    \x01(\rR\x08minerals\x12\x18\n\x07vespene\x18\x03\x20\x01(\rR\x07vespene\
+    \x12\x19\n\x08food_cap\x18\x04\x20\x01(\rR\x07foodCap\x12\x1b\n\tfood_us\
+    ed\x18\x05\x20\x01(\rR\x08foodUsed\x12\x1b\n\tfood_army\x18\x06\x20\x01(\
+    \rR\x08foodArmy\x12!\n\x0cfood_workers\x18\x07\x20\x01(\rR\x0bfoodWorker\
+    s\x12*\n\x11idle_worker_count\x18\x08\x20\x01(\rR\x0fidleWorkerCount\x12\
     \x1d\n\narmy_count\x18\t\x20\x01(\rR\tarmyCount\x12&\n\x0fwarp_gate_coun\
     t\x18\n\x20\x01(\rR\rwarpGateCount\x12\x1f\n\x0blarva_count\x18\x0b\x20\
     \x01(\rR\nlarvaCount\"\x97\x04\n\x0bObservation\x12\x1b\n\tgame_loop\x18\
@@ -18225,33 +19947,47 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     otocol.ObservationFeatureLayerR\x10featureLayerData\x12B\n\x0brender_dat\
     a\x18\x07\x20\x01(\x0b2!.SC2APIProtocol.ObservationRenderR\nrenderData\
     \x126\n\x07ui_data\x18\x08\x20\x01(\x0b2\x1d.SC2APIProtocol.ObservationU\
-    IR\x06uiData\"\xbe\x02\n\x06Action\x128\n\naction_raw\x18\x01\x20\x01(\
+    IR\x06uiData\"\xcb\x02\n\x06Action\x128\n\naction_raw\x18\x01\x20\x01(\
     \x0b2\x19.SC2APIProtocol.ActionRawR\tactionRaw\x12O\n\x14action_feature_\
     layer\x18\x02\x20\x01(\x0b2\x1d.SC2APIProtocol.ActionSpatialR\x12actionF\
     eatureLayer\x12B\n\raction_render\x18\x03\x20\x01(\x0b2\x1d.SC2APIProtoc\
     ol.ActionSpatialR\x0cactionRender\x125\n\taction_ui\x18\x04\x20\x01(\x0b\
-    2\x18.SC2APIProtocol.ActionUIR\x08actionUi\x12.\n\x04chat\x18\x05\x20\
-    \x03(\x0b2\x1a.SC2APIProtocol.ActionChatR\x04chat\"\x88\x01\n\nActionCha\
-    t\x12<\n\x07channel\x18\x01\x20\x01(\x0e2\".SC2APIProtocol.ActionChat.Ch\
-    annelR\x07channel\x12\x18\n\x07message\x18\x02\x20\x01(\tR\x07message\"\
-    \"\n\x07Channel\x12\r\n\tBroadcast\x10\x01\x12\x08\n\x04Team\x10\x02\"}\
-    \n\x0bActionError\x12\x19\n\x08unit_tag\x18\x01\x20\x01(\x04R\x07unitTag\
-    \x12\x1d\n\nability_id\x18\x02\x20\x01(\x04R\tabilityId\x124\n\x06result\
-    \x18\x03\x20\x01(\x0e2\x1c.SC2APIProtocol.ActionResultR\x06result\"[\n\
-    \x0cPlayerResult\x12\x1b\n\tplayer_id\x18\x01\x20\x01(\rR\x08playerId\
-    \x12.\n\x06result\x18\x02\x20\x01(\x0e2\x16.SC2APIProtocol.ResultR\x06re\
-    sult*c\n\x06Status\x12\x0c\n\x08launched\x10\x01\x12\r\n\tinit_game\x10\
-    \x02\x12\x0b\n\x07in_game\x10\x03\x12\r\n\tin_replay\x10\x04\x12\t\n\x05\
-    ended\x10\x05\x12\x08\n\x04quit\x10\x06\x12\x0b\n\x07unknown\x10c*\x96\
-    \x01\n\nDifficulty\x12\x0c\n\x08VeryEasy\x10\x01\x12\x08\n\x04Easy\x10\
-    \x02\x12\n\n\x06Medium\x10\x03\x12\x0e\n\nMediumHard\x10\x04\x12\x08\n\
-    \x04Hard\x10\x05\x12\n\n\x06Harder\x10\x06\x12\x0c\n\x08VeryHard\x10\x07\
-    \x12\x0f\n\x0bCheatVision\x10\x08\x12\x0e\n\nCheatMoney\x10\t\x12\x0f\n\
-    \x0bCheatInsane\x10\n*9\n\nPlayerType\x12\x0f\n\x0bParticipant\x10\x01\
-    \x12\x0c\n\x08Computer\x10\x02\x12\x0c\n\x08Observer\x10\x03*9\n\x05Aler\
-    t\x12\x19\n\x15NuclearLaunchDetected\x10\x01\x12\x15\n\x11NydusWormDetec\
-    ted\x10\x02*9\n\x06Result\x12\x0b\n\x07Victory\x10\x01\x12\n\n\x06Defeat\
-    \x10\x02\x12\x07\n\x03Tie\x10\x03\x12\r\n\tUndecided\x10\x04\
+    2\x18.SC2APIProtocol.ActionUIR\x08actionUi\x12;\n\x0baction_chat\x18\x06\
+    \x20\x01(\x0b2\x1a.SC2APIProtocol.ActionChatR\nactionChat\"\x88\x01\n\nA\
+    ctionChat\x12<\n\x07channel\x18\x01\x20\x01(\x0e2\".SC2APIProtocol.Actio\
+    nChat.ChannelR\x07channel\x12\x18\n\x07message\x18\x02\x20\x01(\tR\x07me\
+    ssage\"\"\n\x07Channel\x12\r\n\tBroadcast\x10\x01\x12\x08\n\x04Team\x10\
+    \x02\"}\n\x0bActionError\x12\x19\n\x08unit_tag\x18\x01\x20\x01(\x04R\x07\
+    unitTag\x12\x1d\n\nability_id\x18\x02\x20\x01(\x04R\tabilityId\x124\n\
+    \x06result\x18\x03\x20\x01(\x0e2\x1c.SC2APIProtocol.ActionResultR\x06res\
+    ult\"\x92\x03\n\x0eObserverAction\x12`\n\x12player_perspective\x18\x01\
+    \x20\x01(\x0b2/.SC2APIProtocol.ActionObserverPlayerPerspectiveH\0R\x11pl\
+    ayerPerspective\x12K\n\x0bcamera_move\x18\x02\x20\x01(\x0b2(.SC2APIProto\
+    col.ActionObserverCameraMoveH\0R\ncameraMove\x12d\n\x14camera_follow_pla\
+    yer\x18\x03\x20\x01(\x0b20.SC2APIProtocol.ActionObserverCameraFollowPlay\
+    erH\0R\x12cameraFollowPlayer\x12a\n\x13camera_follow_units\x18\x04\x20\
+    \x01(\x0b2/.SC2APIProtocol.ActionObserverCameraFollowUnitsH\0R\x11camera\
+    FollowUnitsB\x08\n\x06action\">\n\x1fActionObserverPlayerPerspective\x12\
+    \x1b\n\tplayer_id\x18\x01\x20\x01(\rR\x08playerId\"l\n\x18ActionObserver\
+    CameraMove\x124\n\tworld_pos\x18\x01\x20\x01(\x0b2\x17.SC2APIProtocol.Po\
+    int2DR\x08worldPos\x12\x1a\n\x08distance\x18\x02\x20\x01(\x02R\x08distan\
+    ce\"?\n\x20ActionObserverCameraFollowPlayer\x12\x1b\n\tplayer_id\x18\x01\
+    \x20\x01(\rR\x08playerId\">\n\x1fActionObserverCameraFollowUnits\x12\x1b\
+    \n\tunit_tags\x18\x01\x20\x03(\x04R\x08unitTags\"[\n\x0cPlayerResult\x12\
+    \x1b\n\tplayer_id\x18\x01\x20\x01(\rR\x08playerId\x12.\n\x06result\x18\
+    \x02\x20\x01(\x0e2\x16.SC2APIProtocol.ResultR\x06result*c\n\x06Status\
+    \x12\x0c\n\x08launched\x10\x01\x12\r\n\tinit_game\x10\x02\x12\x0b\n\x07i\
+    n_game\x10\x03\x12\r\n\tin_replay\x10\x04\x12\t\n\x05ended\x10\x05\x12\
+    \x08\n\x04quit\x10\x06\x12\x0b\n\x07unknown\x10c*\x96\x01\n\nDifficulty\
+    \x12\x0c\n\x08VeryEasy\x10\x01\x12\x08\n\x04Easy\x10\x02\x12\n\n\x06Medi\
+    um\x10\x03\x12\x0e\n\nMediumHard\x10\x04\x12\x08\n\x04Hard\x10\x05\x12\n\
+    \n\x06Harder\x10\x06\x12\x0c\n\x08VeryHard\x10\x07\x12\x0f\n\x0bCheatVis\
+    ion\x10\x08\x12\x0e\n\nCheatMoney\x10\t\x12\x0f\n\x0bCheatInsane\x10\n*9\
+    \n\nPlayerType\x12\x0f\n\x0bParticipant\x10\x01\x12\x0c\n\x08Computer\
+    \x10\x02\x12\x0c\n\x08Observer\x10\x03*9\n\x05Alert\x12\x19\n\x15Nuclear\
+    LaunchDetected\x10\x01\x12\x15\n\x11NydusWormDetected\x10\x02*9\n\x06Res\
+    ult\x12\x0b\n\x07Victory\x10\x01\x12\n\n\x06Defeat\x10\x02\x12\x07\n\x03\
+    Tie\x10\x03\x12\r\n\tUndecided\x10\x04\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

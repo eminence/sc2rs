@@ -14,7 +14,6 @@ pub enum DebugCommand {
     Score(DebugSetScore),
     EndGame(DebugEndGame),
     UnitValue(DebugSetUnitValue),
-    Chat(DebugChat),
 }
 
 #[derive(Debug, ToProtobuf)]
@@ -45,6 +44,8 @@ pub struct DebugText {
     pub text: String,
     pub virtual_pos: Point,
     pub world_pos: Point,
+    /// Pixel height of the text. Defaults to 8px.
+    pub size: Option<u32>,
 }
 
 #[derive(Debug, ToProtobuf)]
@@ -138,9 +139,4 @@ pub struct DebugSetUnitValue {
     pub unit_value: DebugSetUnitValue_UnitValue,
     pub value: f32,
     pub unit_tag: u64,
-}
-
-#[derive(Debug, ToProtobuf)]
-pub struct DebugChat {
-    pub message: String,
 }

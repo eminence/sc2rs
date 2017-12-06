@@ -149,6 +149,9 @@ pub struct UnitTypeData {
     pub has_vespene: bool,
     #[Get]
     pub has_minerals: bool,
+    /// Range unit reveals vision
+    #[Get]
+    pub sight_range: f32,
     /// Other units that satisfy the same tech requirement
     pub tech_alias: Vec<u32>,
     /// The morphed variant of this unit
