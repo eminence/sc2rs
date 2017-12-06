@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Andrew Chin <achin@eminence32.net>"]
 
 [dependencies]
-protobuf = "*"
+protobuf = "1.4.3"
 sc2_protobuf = {path = "sc2-protobuf"}
 sc2-pb-derive = {path = "sc2-pb-derive"}
 ws-sync = {path = "z:\\devel\\ws-sync"}
@@ -16,7 +16,7 @@ serde = "1.0"
 serde_derive = "1.0"
 
 [build-dependencies]
-protoc-rust = "1.4"
+protoc-rust = "1.4.3"
 
 [workspace]
 

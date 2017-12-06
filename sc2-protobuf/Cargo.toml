@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["Andrew Chin <achin@eminence32.net>"]
 
 [dependencies]
-protobuf = "*"
+protobuf = "1.4.3"

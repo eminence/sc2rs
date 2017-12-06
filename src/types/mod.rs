@@ -505,7 +505,7 @@ pub struct ResponseObservation {
 
 impl ObservationRaw {
     pub fn get_my_units<'a>(&'a self) -> impl Iterator<Item = &'a Unit> {
-        self.units.iter().filter(|u| u.alliance == Alliance::Selff)
+        self.units.iter().filter(|u| u.alliance == Alliance::value_Self)
     }
     pub fn get_my_idle_units<'a>(&'a self) -> impl Iterator<Item = &'a Unit> {
         self.get_my_units().filter(|u| u.is_idle())

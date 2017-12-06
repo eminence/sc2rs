@@ -35,9 +35,7 @@ fn main() {
         s
     };
 
-    let new_s = s.replace("Alliance::Self", "Alliance::Selff");
-    let new_s = new_s.replace("Self = 1,", "Selff = 1,");
     let mut raw = File::create("sc2-protobuf/src/protos/raw.rs").unwrap();
-    raw.write_all(new_s.as_bytes()).unwrap();
+    raw.write_all(s.as_bytes()).unwrap();
 
 }

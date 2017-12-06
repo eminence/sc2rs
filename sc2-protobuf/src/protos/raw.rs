@@ -2507,7 +2507,7 @@ impl Unit {
     }
 
     pub fn get_alliance(&self) -> Alliance {
-        self.alliance.unwrap_or(Alliance::Selff)
+        self.alliance.unwrap_or(Alliance::value_Self)
     }
 
     fn get_alliance_for_reflect(&self) -> &::std::option::Option<Alliance> {
@@ -6158,7 +6158,7 @@ impl ::protobuf::reflect::ProtobufValue for DisplayType {
 
 #[derive(Clone,PartialEq,Eq,Debug,Hash)]
 pub enum Alliance {
-    Selff = 1,
+    value_Self = 1,
     Ally = 2,
     Neutral = 3,
     Enemy = 4,
@@ -6171,7 +6171,7 @@ impl ::protobuf::ProtobufEnum for Alliance {
 
     fn from_i32(value: i32) -> ::std::option::Option<Alliance> {
         match value {
-            1 => ::std::option::Option::Some(Alliance::Selff),
+            1 => ::std::option::Option::Some(Alliance::value_Self),
             2 => ::std::option::Option::Some(Alliance::Ally),
             3 => ::std::option::Option::Some(Alliance::Neutral),
             4 => ::std::option::Option::Some(Alliance::Enemy),
@@ -6181,7 +6181,7 @@ impl ::protobuf::ProtobufEnum for Alliance {
 
     fn values() -> &'static [Self] {
         static values: &'static [Alliance] = &[
-            Alliance::Selff,
+            Alliance::value_Self,
             Alliance::Ally,
             Alliance::Neutral,
             Alliance::Enemy,
