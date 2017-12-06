@@ -41,3 +41,18 @@ lazy_static! { // sad face that rust can't figure out the type of d in the below
     pub static ref UNIT_DATA: HashMap<UnitIDs, types::UnitTypeData> = {load_data("src/gen/units.json", |d: &types::UnitTypeData| d.unit_id)};
     pub static ref ABILITY_DATA: HashMap<AbilityIDs, types::AbilityData> = {load_data("src/gen/abilities.json", |d: &types::AbilityData| d.ability_id)};
 }
+
+
+impl UnitIDs {
+    pub fn is_worker(&self) -> bool {
+        super::utils::is_worker(*self as u32)
+    }
+
+    pub fn is_mineral_field(&self) -> bool {
+        super::utils::is_mineral_field(*self as u32)
+    }
+    pub fn is_command_base(&self) -> bool {
+        super::utils::is_command_base(*self as u32)
+    }
+
+}

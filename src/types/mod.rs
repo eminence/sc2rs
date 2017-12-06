@@ -105,9 +105,6 @@ where
 }
 
 impl Unit {
-    pub fn is_worker(&self) -> bool {
-        super::utils::is_worker(UnitIDs::from_u32(self.unit_type).unwrap())
-    }
     pub fn is_idle(&self) -> bool {
         self.orders.len() == 0
     }
@@ -118,6 +115,7 @@ impl Unit {
     pub fn is_visible(&self) -> bool {
         self.display_type == DisplayType::Visible
     }
+
 }
 
 
