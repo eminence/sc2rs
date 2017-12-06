@@ -25,7 +25,8 @@ where
     V: serde::de::DeserializeOwned,
     F: Fn(&V) -> u32 + Sized,
 {
-    let file = File::open(p).unwrap();
+    let root = Path::new(file!()).parent().unwrap();
+    let file = File::open(root.join(p)).unwrap();
     let data: Vec<V> = serde_json::from_reader(file).unwrap();
 
     let mut m = HashMap::new();
@@ -38,8 +39,8 @@ where
 
 
 lazy_static! { // sad face that rust can't figure out the type of d in the below closures
-    pub static ref UNIT_DATA: HashMap<UnitIDs, types::UnitTypeData> = {load_data("src/gen/units.json", |d: &types::UnitTypeData| d.unit_id)};
-    pub static ref ABILITY_DATA: HashMap<AbilityIDs, types::AbilityData> = {load_data("src/gen/abilities.json", |d: &types::AbilityData| d.ability_id)};
+    pub static ref UNIT_DATA: HashMap<UnitIDs, types::UnitTypeData> = {load_data("units.json", |d: &types::UnitTypeData| d.unit_id)};
+    pub static ref ABILITY_DATA: HashMap<AbilityIDs, types::AbilityData> = {load_data("abilities.json", |d: &types::AbilityData| d.ability_id)};
 }
 
 
