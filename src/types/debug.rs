@@ -69,6 +69,7 @@ pub struct DebugSphere {
 }
 
 #[derive(Debug, ToProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum DebugGameState {
     show_map = 1,
     control_enemy = 2,
@@ -99,6 +100,7 @@ pub struct DebugKillUnit {
 }
 
 #[derive(Debug, ToProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum DebugTestProcess_Test {
     hang = 1,
     crash = 2,
@@ -117,6 +119,7 @@ pub struct DebugSetScore {
 }
 
 #[derive(Debug, ToProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum DebugEndGame_EndResult {
     Surrender = 1,
     DeclareVictory = 2,
@@ -128,6 +131,7 @@ pub struct DebugEndGame {
 }
 
 #[derive(Debug, ToProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum DebugSetUnitValue_UnitValue {
     Energy = 1,
     Life = 2,

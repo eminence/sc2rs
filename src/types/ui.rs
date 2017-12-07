@@ -16,6 +16,7 @@ pub enum ActionUI {
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum ActionControlGroup_ControlGroupAction {
     /// Equivalent to number hotkey. Replaces current selection with control group.
     Recall = 1,
@@ -54,6 +55,7 @@ pub struct ActionSelectWarpGates {
 pub struct ActionSelectLarva {}
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum ActionSelectIdleWorker_Type {
     /// Equivalent to click with no modifiers. Replaces selection with single idle worker.
     Set = 1,
@@ -72,6 +74,7 @@ pub struct ActionSelectIdleWorker {
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
+#[allow(non_camel_case_types)]
 enum ActionMultiPanel_Type {
     /// Click on icon
     SingleSelect = 1,

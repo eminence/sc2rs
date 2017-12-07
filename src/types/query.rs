@@ -23,6 +23,7 @@ pub struct ResponseQuery {
 
 #[derive(Debug, ToProtobuf)]
 #[AttachedTo(RequestQueryPathing)]
+#[allow(non_camel_case_types)]
 pub enum RequestQueryPathing_start {
     StartPos(Point2D),
     #[Set]

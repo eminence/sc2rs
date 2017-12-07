@@ -81,6 +81,7 @@ pub enum DisplayType {
 
 #[derive(Clone, PartialEq, Eq, Debug, Hash, FromProtobuf)]
 pub enum Alliance {
+    #[allow(non_camel_case_types)]
     value_Self = 1,
     Ally = 2,
     Neutral = 3,

@@ -81,6 +81,7 @@ pub struct ActionSpatialCameraMove {
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
+#[allow(non_camel_case_types)]
 pub enum ActionSpatialUnitSelectionPoint_Type {
     Select = 1,
     Toggle = 2,
