@@ -481,6 +481,7 @@ pub struct Observation {
     pub score: Option<Score>,
     pub raw_data: Option<ObservationRaw>,
     //TODO feature_layer_data
+    pub feature_layer_data: Option<ObservationFeatureLayer>,
     //TODO render_data
     //TODO ui_data
 }
