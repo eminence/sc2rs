@@ -32,7 +32,7 @@ pub fn construct_field_accessor<T: AsRef<str>>(t: T, prefix: &str) -> quote::Ide
 pub fn get_type_ident(ty: &syn::Ty) -> quote::Ident {
     if let &syn::Ty::Path(_,
                           syn::Path {
-                              ref global,
+                              global: _,
                               ref segments,
                           }) = ty
         {
@@ -64,7 +64,7 @@ pub fn get_printable_ty(ty: &syn::Ty) -> String {
 pub fn is_option(ty: &syn::Ty) -> bool {
     if let &syn::Ty::Path(_,
                           syn::Path {
-                              ref global,
+                              global: _,
                               ref segments,
                           }) = ty
         {
@@ -79,7 +79,7 @@ pub fn is_option(ty: &syn::Ty) -> bool {
 /// a protobuf type somewhere.  This works by hard-coding the fact the protobuffer type
 /// live in a module named "protos"
 pub fn is_protobuf_type(ty: &syn::Ty) -> bool {
-    if let &syn::Ty::Path(_, syn::Path { ref global, ref segments }) = ty {
+    if let &syn::Ty::Path(_, syn::Path { global: ref _global, ref segments }) = ty {
         segments.iter().any(|segment| {
             segment.ident.as_ref() == "protos" || match &segment.parameters {
                 &syn::PathParameters::AngleBracketed(ref data) => {

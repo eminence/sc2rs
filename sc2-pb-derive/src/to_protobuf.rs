@@ -30,7 +30,7 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
             let field_name = field.ident.as_ref().unwrap_or_else(
                 || panic!("Can't extract ident"),
             );
-            let field_ty_ident = utils::get_type_ident(&field.ty);
+            let _field_ty_ident = utils::get_type_ident(&field.ty);
 
             // name of the setter function in the protobuf struct.  Derived exclusively from the
             // name of the field in our struct
@@ -145,7 +145,7 @@ pub fn to_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                 let var_ident = &variant.ident;
                 let field_setter = utils::construct_field_accessor(&variant.ident, "set");
 
-                if let &Some(ref discrim) = &variant.discriminant {
+                if let &Some(ref _discrim) = &variant.discriminant {
                     if enum_type == EnumType::HasFields { panic!("Unable to support an enum that has both discriminants and fields") }
                     enum_type = EnumType::HasDiscrim;
 

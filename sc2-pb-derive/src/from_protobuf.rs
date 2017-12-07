@@ -166,7 +166,7 @@ pub fn from_protobuf_impl(ast: &syn::DeriveInput) -> quote::Tokens {
                     utils::construct_field_accessor(&variant.ident, "take")
                 };
 
-                if let &Some(ref discrim) = &variant.discriminant {
+                if let &Some(ref _discrim) = &variant.discriminant {
                     if enum_type == EnumType::HasFields { panic!("Unable to support an enum that has both discriminants and fields") }
                     enum_type = EnumType::HasDiscrim;
                     let pb_name = quote::Ident::new(utils::get_attr(&variant.attrs, "name").unwrap_or(variant.ident.as_ref().to_owned()));
