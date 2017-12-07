@@ -24,14 +24,14 @@ pub struct DebugDraw {
     pub spheres: Vec<DebugSphere>,
 }
 
-#[derive(Debug, ToProtobuf)]
+#[derive(Debug, Copy, Clone, ToProtobuf)]
 pub struct Line {
     pub p0: Point,
     pub p1: Point,
 }
 
 /// An RGB color, each field in the range [0, 255]
-#[derive(Debug, ToProtobuf)]
+#[derive(Debug, Copy, Clone, ToProtobuf)]
 pub struct Color {
     pub r: u32,
     pub g: u32,

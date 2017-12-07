@@ -87,6 +87,9 @@ impl Point {
         let dz = (self.z - other.z).powi(2);
         f32::sqrt(dx + dy + dz)
     }
+    pub fn to_2d(&self) -> Point2D {
+        Point2D{ x: self.x, y: self.y }
+    }
 }
 
 #[derive(Debug, Copy, Clone, ToProtobuf, FromProtobuf)]
