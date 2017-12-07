@@ -1,4 +1,3 @@
-
 use sc2_protobuf::protos;
 use failure;
 use super::{ToProtobuf, FromProtobuf};
@@ -7,47 +6,48 @@ use super::common::*;
 
 #[derive(Debug, FromProtobuf)]
 pub struct ObservationFeatureLayer {
-    renders: Option<FeatureLayers>,
-    minimap_renders: Option<FeatureLayersMinimap>,
+    pub renders: Option<FeatureLayers>,
+    pub minimap_renders: Option<FeatureLayersMinimap>,
 }
+
 #[derive(Debug, FromProtobuf)]
 pub struct FeatureLayers {
-    height_map: ImageData,
-    visibility_map: ImageData,
-    creep: ImageData,
-    power: ImageData,
-    player_id: ImageData,
-    unit_type: ImageData,
-    selected: ImageData,
-    unit_hit_points: ImageData,
-    unit_hit_points_ratio: ImageData,
-    unit_energy: ImageData,
-    unit_energy_ratio: ImageData,
-    unit_shields: ImageData,
-    unit_shields_ratio: ImageData,
-    player_relative: ImageData,
-    unit_density_aa: ImageData,
-    unit_density: ImageData,
-    effects: ImageData,
+    pub height_map: ImageData,
+    pub visibility_map: ImageData,
+    pub creep: ImageData,
+    pub power: ImageData,
+    pub player_id: ImageData,
+    pub unit_type: ImageData,
+    pub selected: ImageData,
+    pub unit_hit_points: ImageData,
+    pub unit_hit_points_ratio: ImageData,
+    pub unit_energy: ImageData,
+    pub unit_energy_ratio: ImageData,
+    pub unit_shields: ImageData,
+    pub unit_shields_ratio: ImageData,
+    pub player_relative: ImageData,
+    pub unit_density_aa: ImageData,
+    pub unit_density: ImageData,
+    pub effects: ImageData,
 }
 
 
 #[derive(Debug, FromProtobuf)]
 pub struct FeatureLayersMinimap {
-    height_map: ImageData,
-    visibility_map: ImageData,
-    creep: ImageData,
-    camera: ImageData,
-    player_id: ImageData,
-    player_relative: ImageData,
-    selected: ImageData,
-    unit_type: Option<ImageData>,
+    pub height_map: ImageData,
+    pub visibility_map: ImageData,
+    pub creep: ImageData,
+    pub camera: ImageData,
+    pub player_id: ImageData,
+    pub player_relative: ImageData,
+    pub selected: ImageData,
+    pub unit_type: Option<ImageData>,
 }
 
 #[derive(Debug, FromProtobuf)]
 pub struct ObservationRender {
-    map: ImageData,
-    minimap: ImageData,
+    pub map: ImageData,
+    pub minimap: ImageData,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -68,16 +68,16 @@ pub enum ActionSpatialUnitCommandEnum {
 #[derive(Debug, FromProtobuf, ToProtobuf)]
 pub struct ActionSpatialUnitCommand {
     #[Get]
-    ability_id: i32,
+    pub ability_id: i32,
     #[OneOf]
-    target: ActionSpatialUnitCommandEnum,
+    pub target: ActionSpatialUnitCommandEnum,
     #[Get]
-    queue_command: bool,
+    pub queue_command: bool,
 }
 
 #[derive(Debug, FromProtobuf, ToProtobuf)]
 pub struct ActionSpatialCameraMove {
-    center_minimap: PointI,
+    pub center_minimap: PointI,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -91,14 +91,14 @@ pub enum ActionSpatialUnitSelectionPoint_Type {
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionSpatialUnitSelectionPoint {
-    selection_screen_coord: PointI,
+    pub selection_screen_coord: PointI,
     #[Get]
-    field_type: ActionSpatialUnitSelectionPoint_Type,
+    pub field_type: ActionSpatialUnitSelectionPoint_Type,
 }
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct ActionSpatialUnitSelectionRect {
-    selection_screen_coord: Vec<RectangleI>,
+    pub selection_screen_coord: Vec<RectangleI>,
     #[Get]
-    selection_add: bool,
+    pub selection_add: bool,
 }
