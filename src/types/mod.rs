@@ -4,7 +4,7 @@ use super::failure;
 use super::protobuf::repeated::RepeatedField;
 
 use super::sc2_protobuf::protos;
-use super::UnitIDs;
+use super::{UnitIDs, AbilityIDs};
 
 mod common;
 pub use self::common::*;
@@ -127,6 +127,9 @@ impl Unit {
 impl UnitTypeData {
     pub fn is_structure(&self) -> bool {
         self.attributes.iter().any(|a| *a == Attribute::Structure)
+    }
+    pub fn ability_id(&self) -> AbilityIDs {
+        AbilityIDs::from_u32(self.ability_id).unwrap()
     }
 }
 
