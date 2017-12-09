@@ -124,6 +124,12 @@ impl Unit {
 
 }
 
+impl UnitTypeData {
+    pub fn is_structure(&self) -> bool {
+        self.attributes.iter().any(|a| *a == Attribute::Structure)
+    }
+}
+
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 //#[ProtoType = "LocalMap"]

@@ -19,11 +19,11 @@ use super::types;
 use super::types::FromU32;
 
 fn load_data<T, P, V, F>(p: P, get_id: F) -> HashMap<T, V>
-where
-    T: FromU32 + Hash + Eq,
-    P: AsRef<Path>,
-    V: serde::de::DeserializeOwned,
-    F: Fn(&V) -> u32 + Sized,
+    where
+        T: FromU32 + Hash + Eq,
+        P: AsRef<Path>,
+        V: serde::de::DeserializeOwned,
+        F: Fn(&V) -> u32 + Sized,
 {
     let root = Path::new(file!()).parent().unwrap();
     let file = File::open(root.join(p)).unwrap();
@@ -50,10 +50,12 @@ impl UnitIDs {
     }
 
     pub fn is_mineral_field(&self) -> bool {
-        super::utils::is_mineral_field(*self as u32)
+        UNIT_DATA[&self].has_minerals
+    }
+    pub fn is_vespene(&self) -> bool {
+        UNIT_DATA[&self].has_minerals
     }
     pub fn is_command_base(&self) -> bool {
         super::utils::is_command_base(*self as u32)
     }
-
 }

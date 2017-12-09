@@ -5,10 +5,6 @@ pub fn is_worker(unit_id: u32) -> bool {
     unit_id == UnitIDs::SCV as u32 || unit_id == UnitIDs::Drone as u32 || unit_id == UnitIDs::Probe as u32
 }
 
-pub fn is_mineral_field(id: u32) -> bool {
-    id == UnitIDs::MineralField as u32 || id == UnitIDs::MineralField750 as u32
-}
-
 pub fn is_command_base(id: u32) -> bool {
     id == UnitIDs::CommandCenter as u32 ||
         id == UnitIDs::PlanetaryFortress as u32 ||

@@ -35,6 +35,15 @@ pub struct PointI {
 }
 
 impl PointI {
+    pub fn to_f32(&self) -> Point2D {
+        Point2D {
+            x: self.x as f32,
+            y: self.y as f32,
+        }
+    }
+}
+
+impl PointI {
     pub fn distance_between(&self, other: &PointI) -> f32 {
         // sqrt of the sums of the differences squared
         let dx = ((self.x - other.x) as f32).powi(2);
@@ -67,6 +76,34 @@ impl Point2D {
         let dy = (self.y - other.y).powi(2);
         f32::sqrt(dx + dy)
     }
+    pub fn to_3d(&self, z: f32) -> Point {
+        Point {
+            x: self.x,
+            y: self.y,
+            z: z,
+        }
+    }
+    pub fn ceil(&self) -> Point2D {
+        Point2D {
+            x: self.x.ceil(),
+            y: self.y.ceil(),
+        }
+    }
+    pub fn floor(&self) -> Point2D {
+        Point2D {
+            x: self.x.floor(),
+            y: self.y.floor(),
+        }
+    }
+    /// Given an arbitrary point and a diameter, return a new point snapped to the
+    /// center
+    pub fn center(&self, diameter: u32) -> Point2D {
+        match diameter {
+            a if a % 2 == 1 => { Point2D { x: self.x.floor() + 0.5, y: self.y.floor() + 0.5 } }
+            a if a % 2 == 0 => { Point2D { x: self.x.round(), y: self.y.round() } }
+            a => panic!("Unable to square up point with diameter {}", a)
+        }
+    }
 }
 
 #[derive(Debug, Copy, Clone, ToProtobuf, FromProtobuf)]
@@ -88,7 +125,21 @@ impl Point {
         f32::sqrt(dx + dy + dz)
     }
     pub fn to_2d(&self) -> Point2D {
-        Point2D{ x: self.x, y: self.y }
+        Point2D { x: self.x, y: self.y }
+    }
+    pub fn ceil(&self) -> Point {
+        Point {
+            x: self.x.ceil(),
+            y: self.y.ceil(),
+            z: self.z.ceil(),
+        }
+    }
+    pub fn floor(&self) -> Point {
+        Point {
+            x: self.x.floor(),
+            y: self.y.floor(),
+            z: self.z.floor(),
+        }
     }
 }
 
