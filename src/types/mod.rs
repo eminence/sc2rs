@@ -323,15 +323,38 @@ pub struct RequestDebug {
 
 #[derive(Debug, ToProtobuf)]
 pub enum Request {
+    /// Send to host to initialize game
     CreateGame(RequestCreateGame),
+
+    /// Join an already created game
     JoinGame(RequestJoinGame),
+
+    /// Returns maps known to SC2.
+    ///
+    /// May be buggy on some platforms, where empty lists are returned
     AvailableMaps(RequestAvailableMaps),
+
+    /// Static data about the current game and map.
+    ///
+    /// Does not change per step
     GameInfo(RequestGameInfo),
+
+    /// Snapshot of the current game state
     Observation(RequestObservation),
+
+    /// Data about different gameplay elements.
+    ///
+    /// May be different for different games.
     Data(RequestData),
+
+    /// Advances the game simulation
     Step(RequestStep),
+
+    /// Executes an action for a participant
     Action(RequestAction),
     Debug(RequestDebug),
+
+    /// Additional methods for inspecting game state.
     Query(RequestQuery)
 }
 
@@ -485,8 +508,9 @@ pub struct Observation {
     /// Abilities available in the selection. Enabled if in this list, disabled otherwise
     pub abilities: Vec<AvailableAbility>,
     pub score: Option<Score>,
+    /// Populated if Raw interface is enabled
     pub raw_data: Option<ObservationRaw>,
-    //TODO feature_layer_data
+    /// Populated if Feature Layer interface is enabled
     pub feature_layer_data: Option<ObservationFeatureLayer>,
     //TODO render_data
     //TODO ui_data

@@ -14,6 +14,9 @@ pub struct StartRaw {
     pub map_size: Size2DI,
     pub pathing_grid: ImageData,
     pub terrain_height: ImageData,
+    /// Grid locations that allow building.
+    ///
+    /// Each pixel is either 0x00 or 0xff
     pub placement_grid: ImageData,
     pub playable_area: RectangleI,
     pub start_locations: Vec<Point2D>,
@@ -130,7 +133,9 @@ pub struct Unit {
     pub unit_type: u32,
     #[Get]
     pub owner: i32,
-
+    /// Unit position.
+    ///
+    /// Lower left corner of the map is x=0, y=0.
     pub pos: Point,
     #[Get]
     pub facing: f32,
