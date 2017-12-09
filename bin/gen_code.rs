@@ -8,6 +8,7 @@ use sc2::types;
 
 use std::fs::File;
 use std::io::Write;
+use std::path::Path;
 
 // This utility generates rust code used by the library:
 // * The protobuf code (see the sc2-protobuf sub-crate)
@@ -70,9 +71,11 @@ fn main() {
         upgrade_id: true
     }).unwrap();
 
+    let root = Path::new(file!()).parent().unwrap().parent().unwrap();
+
 
     {
-        let mut units_file = File::create("src/gen/units.rs").unwrap();
+        let mut units_file = File::create(root.join("src").join("gen").join("units.rs")).unwrap();
         writeln!(units_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Copy,Clone,Debug,Eq,PartialEq,Hash,FromU32)]\npub enum UnitIDs {{").unwrap();
 
         let mut units = Vec::new();
@@ -87,11 +90,11 @@ fn main() {
         }
         writeln!(units_file, "}}").unwrap();
 
-        let units_json = File::create("src/gen/units.json").unwrap();
+        let units_json = File::create(root.join("src").join("gen").join("units.json")).unwrap();
         serde_json::to_writer_pretty(units_json, &units).unwrap();
     }
     {
-        let mut rs_file = File::create("src/gen/abilities.rs").unwrap();
+        let mut rs_file = File::create(root.join("src").join("gen").join("abilities.rs")).unwrap();
         writeln!(rs_file, "// generated version controlled file //\nuse super::types::FromU32;\n#[allow(non_camel_case_types)]\n#[derive(Copy,Clone,Debug,Eq,PartialEq,Hash,FromU32)]\npub enum AbilityIDs {{").unwrap();
 
         let mut datas = Vec::new();
@@ -110,7 +113,7 @@ fn main() {
         }
         writeln!(rs_file, "}}").unwrap();
 
-        let json_file = File::create("src/gen/abilities.json").unwrap();
+        let json_file = File::create(root.join("src").join("gen").join("abilities.json")).unwrap();
         serde_json::to_writer_pretty(json_file, &datas).unwrap();
     }
 }

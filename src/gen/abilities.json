@@ -7169,7 +7169,7 @@
     "allow_minimap": false,
     "allow_autocast": false,
     "is_building": true,
-    "footprint_radius": 0.5,
+    "footprint_radius": 1.0,
     "is_instant_placement": true,
     "cast_range": 0.0
   },
@@ -7186,7 +7186,7 @@
     "allow_minimap": false,
     "allow_autocast": false,
     "is_building": true,
-    "footprint_radius": 0.5,
+    "footprint_radius": 1.0,
     "is_instant_placement": true,
     "cast_range": 0.0
   },
@@ -7730,7 +7730,7 @@
     "allow_minimap": false,
     "allow_autocast": false,
     "is_building": true,
-    "footprint_radius": 0.5,
+    "footprint_radius": 1.0,
     "is_instant_placement": true,
     "cast_range": 0.0
   },
@@ -7747,7 +7747,7 @@
     "allow_minimap": false,
     "allow_autocast": false,
     "is_building": true,
-    "footprint_radius": 0.5,
+    "footprint_radius": 1.0,
     "is_instant_placement": true,
     "cast_range": 0.0
   },
@@ -8291,7 +8291,7 @@
     "allow_minimap": false,
     "allow_autocast": false,
     "is_building": true,
-    "footprint_radius": 0.5,
+    "footprint_radius": 1.0,
     "is_instant_placement": true,
     "cast_range": 0.0
   },
@@ -8308,7 +8308,7 @@
     "allow_minimap": false,
     "allow_autocast": false,
     "is_building": true,
-    "footprint_radius": 0.5,
+    "footprint_radius": 1,
     "is_instant_placement": true,
     "cast_range": 0.0
   },
@@ -62606,7 +62606,7 @@
     "allow_minimap": false,
     "allow_autocast": false,
     "is_building": true,
-    "footprint_radius": 0.5,
+    "footprint_radius": 1.0,
     "is_instant_placement": true,
     "cast_range": 0.0
   },
@@ -62623,7 +62623,7 @@
     "allow_minimap": false,
     "allow_autocast": false,
     "is_building": true,
-    "footprint_radius": 0.5,
+    "footprint_radius": 1.0,
     "is_instant_placement": true,
     "cast_range": 0.0
   },
