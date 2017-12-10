@@ -6,6 +6,8 @@ use super::protobuf::repeated::RepeatedField;
 use super::sc2_protobuf::protos;
 use super::{UnitIDs, AbilityIDs};
 
+mod impls;
+
 mod common;
 pub use self::common::*;
 
@@ -49,6 +51,12 @@ pub trait FromProtobuf<T>: Sized {
 }
 
 trait ToProtoSimple {} // marker trait
+
+
+pub trait Unpack<T> {
+    fn unpack(self) -> Option<T>;
+}
+
 
 macro_rules! ProtoSelf {
     ($t:ty) => {
@@ -110,28 +118,6 @@ where
     }
 }
 
-impl Unit {
-    pub fn is_idle(&self) -> bool {
-        self.orders.len() == 0
-    }
-
-    pub fn unit_type(&self) -> UnitIDs {
-        UnitIDs::from_u32(self.unit_type).expect("Unknown unit type id")
-    }
-    pub fn is_visible(&self) -> bool {
-        self.display_type == DisplayType::Visible
-    }
-
-}
-
-impl UnitTypeData {
-    pub fn is_structure(&self) -> bool {
-        self.attributes.iter().any(|a| *a == Attribute::Structure)
-    }
-    pub fn ability_id(&self) -> AbilityIDs {
-        AbilityIDs::from_u32(self.ability_id).unwrap()
-    }
-}
 
 
 #[derive(Debug, ToProtobuf, FromProtobuf)]
@@ -419,6 +405,7 @@ pub struct ResponseAvailableMaps {
     pub battlenet_map_names: Vec<String>,
 }
 
+/// Note: Only set one of these fields!
 #[derive(Debug, ToProtobuf, FromProtobuf)]
 pub struct Action {
     /// Populated if Raw interface is enabled
@@ -544,22 +531,7 @@ pub struct ResponseObservation {
     pub chat: Vec<ChatReceived>,
 }
 
-impl ObservationRaw {
-    pub fn get_my_units<'a>(&'a self) -> impl Iterator<Item = &'a Unit> {
-        self.units.iter().filter(|u| u.alliance == Alliance::value_Self)
-    }
-    pub fn get_my_idle_units<'a>(&'a self) -> impl Iterator<Item = &'a Unit> {
-        self.get_my_units().filter(|u| u.is_idle())
-    }
 
-    pub fn find_by_tag<'a>(&'a self, tag: u64) -> Option<&'a Unit> {
-        self.units.iter().find(|u| u.tag == tag)
-    }
-
-    pub fn find_by_type<'a>(&'a self, ty: UnitIDs) -> impl Iterator<Item = &'a Unit> {
-        self.units.iter().filter(move |u| u.unit_type == ty as u32)
-    }
-}
 
 #[derive(Debug, Eq, PartialEq, FromProtobuf)]
 pub enum Status {

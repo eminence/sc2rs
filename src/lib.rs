@@ -51,52 +51,73 @@ use types::ToProtobuf;
 
 #[allow(non_snake_case)]
 pub mod GameState {
-
     /// For states that allow us to send Requests via websockets
     #[doc(hidden)]
     pub trait StateConnected {}
+
     pub trait AllowsGameInfo: StateConnected {}
+
     pub trait AllowsObservation: StateConnected {}
+
     pub trait AllowsStep: StateConnected {}
+
     pub trait AllowsGameData: StateConnected {}
+
     pub trait AllowsQuery: StateConnected {}
 
     /// The starting state
     pub struct Unlaunched;
 
     pub struct Launched;
+
     impl StateConnected for Launched {}
 
     pub struct Connected;
+
     impl StateConnected for Connected {}
 
     pub struct InitGame;
+
     impl StateConnected for InitGame {}
 
     pub struct InGame;
+
     impl StateConnected for InGame {}
+
     impl AllowsGameInfo for InGame {}
+
     impl AllowsObservation for InGame {}
+
     impl AllowsStep for InGame {}
+
     impl AllowsGameData for InGame {}
+
     impl AllowsQuery for InGame {}
 
     pub struct Ended;
+
     impl StateConnected for Ended {}
+
     impl AllowsGameInfo for Ended {}
+
     impl AllowsObservation for Ended {}
+
     impl AllowsGameData for Ended {}
+
     impl AllowsQuery for Ended {}
 
     pub struct InReplay;
+
     impl StateConnected for InReplay {}
+
     impl AllowsGameInfo for InReplay {}
+
     impl AllowsObservation for InReplay {}
+
     impl AllowsGameData for InReplay {}
+
     impl AllowsQuery for InReplay {}
-
 }
-
 
 
 pub struct Coordinator<State> {
@@ -105,8 +126,8 @@ pub struct Coordinator<State> {
 }
 
 impl<State> Coordinator<State>
-where
-    State: GameState::StateConnected,
+    where
+        State: GameState::StateConnected,
 {
     fn get_request(&mut self, req: types::Request) -> Result<types::Response, Error> {
         use types::FromProtobuf;
@@ -142,6 +163,24 @@ where
 
         if let types::ResponseEnum::AvailableMaps(r) = resp.response {
             return Ok(r);
+        } else {
+            return Err(format_err!("Unexpected response!"));
+        }
+    }
+    fn req_inner<I, T>(&mut self, req: I) -> Result<T, Error>
+        where types::ResponseEnum: types::Unpack<T>,
+              types::Request: From<I> {
+        use types::Unpack;
+
+        let req: types::Request = From::from(req);
+        let resp = self.get_request(req)?;
+
+        if resp.error.len() > 0 {
+            return Err(format_err!("Response contained errors: {:?}", resp.error));
+        }
+
+        if let Some(typ) = resp.response.unpack() {
+            return Ok(typ);
         } else {
             return Err(format_err!("Unexpected response!"));
         }
@@ -214,12 +253,10 @@ impl Coordinator<GameState::Launched> {
     }
 
 
-
     pub fn create_game(
         mut self,
         req: types::RequestCreateGame,
     ) -> Result<Coordinator<GameState::InitGame>, Error> {
-
         let resp = self.get_request(types::Request::CreateGame(req))?;
 
         if resp.status != Some(types::Status::InitGame) {
@@ -238,13 +275,9 @@ impl Coordinator<GameState::Launched> {
                 ws_socket: self.ws_socket,
                 _state: std::marker::PhantomData,
             });
-
         } else {
             return Err(format_err!("Unexpected response type"));
         }
-
-
-
     }
     pub fn join_game(
         self,
@@ -265,7 +298,6 @@ impl Coordinator<GameState::InitGame> {
         mut self,
         req: types::RequestJoinGame,
     ) -> Result<Coordinator<GameState::InGame>, Error> {
-
         let resp = self.get_request(types::Request::JoinGame(req))?;
 
         if resp.status != Some(types::Status::InGame) {
@@ -284,99 +316,76 @@ impl Coordinator<GameState::InitGame> {
                 Coordinator {
                     ws_socket: self.ws_socket,
                     _state: std::marker::PhantomData
-
                 }
-            )
-
+            );
         } else {
             return Err(format_err!("Unexpected response type"));
         }
-
-
     }
 }
 
-macro_rules! ImplSimpleReq {
-    ($func_name:ident, $resp_ty:ident, $req_ty:ident, $ty:ident) => {
-        pub fn $func_name(&mut self) -> Result< types:: $resp_ty, Error> {
-            ImplInner!($resp_ty, $req_ty, $ty);
-            _inner(self, types:: $req_ty {})
-        }
-    };
-}
 
-macro_rules! ImplReq {
-    ($func_name:ident, $resp_ty:ident, $req_ty:ident, $ty:ident) => {
-        pub fn $func_name(&mut self, req: types::$req_ty) -> Result< types:: $resp_ty, Error> {
-            ImplInner!($resp_ty, $req_ty, $ty);
-            _inner(self, req)
-        }
-    };
-}
+impl<State> Coordinator<State>
+    where
+        State: GameState::AllowsGameInfo,
+{
+    pub fn game_info<T>(&mut self) -> Result<types::ResponseGameInfo, Error>
+        where types::RequestGameInfo: From<T> {
+        self.req_inner(types::RequestGameInfo{})
+    }}
 
-macro_rules! ImplInner {
-    ($resp_ty:ident, $req_ty:ident, $ty:ident) => {
-        fn _inner<T: GameState::StateConnected>(this: &mut Coordinator<T>, req: types:: $req_ty) -> Result< types:: $resp_ty, Error> {
-            let req = types::Request::$ty(req);
-
-            let resp = this.get_request(req)?;
-            if resp.error.len() > 0 {
-                return Err(format_err!("Response contained errors: {:?}", resp.error));
-            }
-
-            if let types::ResponseEnum::$ty(r) = resp.response {
-                return Ok(r);
-            } else {
-                return Err(format_err!("Unexpected response!"));
-            }
-        }
-
-    };
+impl<State> Coordinator<State>
+    where
+        State: GameState::AllowsObservation,
+{
+    pub fn observation<T>(&mut self, t: T) -> Result<types::ResponseObservation, Error>
+        where types::RequestObservation: From<T> {
+        let req: types::RequestObservation = From::from(t);
+        self.req_inner(req)
+    }
 }
 
 impl<State> Coordinator<State>
-where
-    State: GameState::AllowsGameInfo,
+    where
+        State: GameState::AllowsStep,
 {
-    ImplSimpleReq!(game_info, ResponseGameInfo, RequestGameInfo, GameInfo);
-}
+    pub fn step<T>(&mut self, t: T) -> Result<types::ResponseStep, Error>
+        where types::RequestStep: From<T> {
+        let req: types::RequestStep = From::from(t);
+        self.req_inner(req)
+    }}
 
 impl<State> Coordinator<State>
-where
-    State: GameState::AllowsObservation,
+    where
+        State: GameState::AllowsGameData,
 {
-    ImplReq!(
-        observation,
-        ResponseObservation,
-        RequestObservation,
-        Observation
-    );
-}
-
-impl<State> Coordinator<State>
-where
-    State: GameState::AllowsStep,
-{
-    ImplReq!(step, ResponseStep, RequestStep, Step);
-}
-
-impl<State> Coordinator<State>
-where
-    State: GameState::AllowsGameData,
-{
-    ImplReq!(game_data, ResponseData, RequestData, Data);
-}
+    pub fn game_data<T>(&mut self, t: T) -> Result<types::ResponseData, Error>
+        where types::RequestData: From<T> {
+        let req: types::RequestData = From::from(t);
+        self.req_inner(req)
+    }}
 
 impl<State> Coordinator<State>
     where
         State: GameState::AllowsQuery,
 {
-    ImplReq!(query, ResponseQuery, RequestQuery, Query);
-}
+    pub fn query<T>(&mut self, t: T) -> Result<types::ResponseQuery, Error>
+        where types::RequestQuery: From<T> {
+        let req: types::RequestQuery = From::from(t);
+        self.req_inner(req)
+    }}
 
 impl Coordinator<GameState::InGame> {
-    ImplReq!(debug, ResponseDebug, RequestDebug, Debug);
-    ImplReq!(action, ResponseAction, RequestAction, Action);
+    pub fn debug<T>(&mut self, t: T) -> Result<types::ResponseDebug, Error>
+        where types::RequestDebug: From<T> {
+        let req: types::RequestDebug = From::from(t);
+        self.req_inner(req)
+    }
+    pub fn action<T>(&mut self, t: T) -> Result<types::ResponseAction, Error>
+        where types::RequestAction: From<T> {
+        let req: types::RequestAction = From::from(t);
+        self.req_inner(req)
+    }
     //TODO leave_game
     //TODO quick_save
     //TODO quick_lock
