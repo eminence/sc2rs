@@ -6,6 +6,12 @@ use super::common::*;
 
 #[derive(Debug, ToProtobuf)]
 pub enum DebugCommand {
+    /// Draw some text on the screen.
+    ///
+    /// Note that the text drawn is persistent between calls.  This means that you
+    /// don't have to continually call into DebugDraw every frame.  But it also means
+    /// if you want to draw multiple things, you have to include every draw command
+    /// in the `DebugDraw` structure.
     Draw(DebugDraw),
     GameState(DebugGameState),
     CreateUnit(DebugCreateUnit),
@@ -41,9 +47,12 @@ pub struct Color {
 #[derive(Debug, ToProtobuf)]
 pub struct DebugText {
     pub color: Color,
+    /// Text to display
     pub text: String,
-    pub virtual_pos: Point,
-    pub world_pos: Point,
+    /// Virtualized position in 2d (the screen is 0..1, 0..1 for any resolution)
+    pub virtual_pos: Option<Point>,
+    /// Position in the world
+    pub world_pos: Option<Point>,
     /// Pixel height of the text. Defaults to 8px.
     pub size: Option<u32>,
 }

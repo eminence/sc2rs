@@ -376,6 +376,9 @@ impl<State> Coordinator<State>
     }}
 
 impl Coordinator<GameState::InGame> {
+    /// Sends debug commands to the game.
+    ///
+    /// See the documentation for `DebugCommand` for more details
     pub fn debug<T>(&mut self, t: T) -> Result<types::ResponseDebug, Error>
         where types::RequestDebug: From<T> {
         let req: types::RequestDebug = From::from(t);
