@@ -26,12 +26,13 @@ fn load_data<T, P, V, F>(p: P, get_id: F) -> HashMap<T, V>
         F: Fn(&V) -> u32 + Sized,
 {
     let root = Path::new(file!()).parent().unwrap();
-    let file = File::open(root.join(p)).unwrap();
+    let file = File::open(root.join(&p)).unwrap();
     let data: Vec<V> = serde_json::from_reader(file).unwrap();
 
     let mut m = HashMap::new();
     for data in data.into_iter() {
-        let key = FromU32::from_u32(get_id(&data)).unwrap();
+        let id = get_id(&data);
+        let key = FromU32::from_u32(id).unwrap_or_else(|| panic!{"Failed to find ID {} in {}", id, p.as_ref().display()});
         m.insert(key, data);
     }
     m
