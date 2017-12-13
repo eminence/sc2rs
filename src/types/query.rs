@@ -6,6 +6,7 @@ use super::common::*;
 use super::error::*;
 
 #[derive(Debug, ToProtobuf)]
+/// Return type [ResponseQuery](struct.ResponseQuery.html).
 pub struct RequestQuery {
     pub pathing: Vec<RequestQueryPathing>,
     pub abilities: Vec<RequestQueryAvailableAbilities>,

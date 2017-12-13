@@ -1,4 +1,5 @@
 use super::*;
+use ::UNIT_DATA;
 use std::convert::From;
 
 impl Unit {
@@ -32,6 +33,14 @@ impl Unit {
         };
 
         ActionRaw::UnitCommand(unit_command)
+    }
+
+
+    /// The ability needed to build this unit
+    pub fn build_ability(&self) -> AbilityIDs {
+        let unit_type = self.unit_type();
+        unit_type.build_ability()
+
     }
 }
 

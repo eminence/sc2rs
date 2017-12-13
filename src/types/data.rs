@@ -157,6 +157,7 @@ pub struct UnitTypeData {
     /// The morphed variant of this unit
     #[Get]
     pub unit_alias: u32,
+    /// Structure required to build this unit (or any with the same `tech_alias`
     #[Get]
     pub tech_requirement: u32,
     #[Get]

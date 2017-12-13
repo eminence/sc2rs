@@ -58,4 +58,14 @@ impl UnitIDs {
     pub fn is_command_base(&self) -> bool {
         super::utils::is_command_base(*self as u32)
     }
+    /// Returns the ability needed to build a unit of this type
+    pub fn build_ability(&self) -> AbilityIDs {
+        let data = &UNIT_DATA[&self];
+        let abil = data.ability_id();
+        abil
+    }
+
+    pub fn type_data(&self) -> &'static types::UnitTypeData {
+        &UNIT_DATA[&self]
+    }
 }
