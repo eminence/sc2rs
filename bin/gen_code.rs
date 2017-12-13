@@ -99,16 +99,34 @@ fn main() {
 
         let mut datas = Vec::new();
 
+        // naming abilities is a little harder.
+        // in possible, use the "Friendly name", but these names are sometimes duplicated, or sometimes missing
+        // to prevent duplicates, keep track of all used names and if there is a duplicate, append the ability_id
+        let mut names : Vec<String> = Vec::new();
+
         for abils in data.abilities {
-            if abils.link_name.len() > 0 {
-                if abils.link_name.chars().next().unwrap().is_numeric() {
-                    writeln!(rs_file, "{} = {},", format!("A{}{}", abils.link_name.replace(' ', "_"), abils.ability_id), abils.ability_id).unwrap();
+            if let Some(ref friendly_name) = abils.friendly_name {
+                if names.contains(friendly_name) {
+                    // can't reuse this name, so append the ability id to make it unique
+
+                    if friendly_name.starts_with(|c: char| c.is_numeric()) {
+                        writeln!(rs_file, "{}_{} = {},", friendly_name.replace(' ', "_"), abils.ability_id, abils.ability_id).unwrap();
+                    } else {
+                        writeln!(rs_file, "Abil{}_{} = {},", friendly_name.replace(' ', "_"), abils.ability_id, abils.ability_id).unwrap();
+                    }
+
                 } else {
-                    writeln!(rs_file, "{} = {},", format!("{}{}", abils.link_name.replace(' ', "_"), abils.ability_id), abils.ability_id).unwrap();
+                    if friendly_name.starts_with(|c: char| c.is_numeric()) {
+                        writeln!(rs_file, "Abil{} = {},", friendly_name.replace(' ', "_"), abils.ability_id).unwrap();
+                    } else {
+                        writeln!(rs_file, "{} = {},", friendly_name.replace(' ', "_"), abils.ability_id).unwrap();
+
+                    }
+                    names.push(friendly_name.to_owned());
+
                 }
-            } else {
-                writeln!(rs_file, "{} = {},", format!("AbilityID{}", abils.ability_id), abils.ability_id).unwrap();
             }
+
             datas.push(abils.clone());
         }
         writeln!(rs_file, "}}").unwrap();
