@@ -3,6 +3,7 @@ use super::types::FromU32;
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash, FromU32)]
 pub enum AbilityIDs {
+    AbilityID_0 = 0,
     Smart = 1,
     Effect_Taunt = 2,
     Taunt_1 = 3,

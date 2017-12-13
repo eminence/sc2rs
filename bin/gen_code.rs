@@ -125,6 +125,9 @@ fn main() {
                     names.push(friendly_name.to_owned());
 
                 }
+            } else {
+                writeln!(rs_file, "AbilityID_{} = {},", abils.ability_id, abils.ability_id).unwrap();
+
             }
 
             datas.push(abils.clone());
