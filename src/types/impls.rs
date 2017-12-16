@@ -7,13 +7,13 @@ impl Unit {
         self.orders.len() == 0
     }
 
-    pub fn unit_type(&self) -> UnitIDs {
-        UnitIDs::from_u32(self.unit_type).expect("Unknown unit type id")
+    pub fn unit_type(&self) -> UnitID {
+        UnitID::from_u32(self.unit_type).expect("Unknown unit type id")
     }
     pub fn is_visible(&self) -> bool {
         self.display_type == DisplayType::Visible
     }
-    pub fn do_ability_on<T>(&self, ability: AbilityIDs, target: T, queue: bool) -> ActionRaw
+    pub fn do_ability_on<T>(&self, ability: AbilityID, target: T, queue: bool) -> ActionRaw
         where ActionRawUnitCommandTargetEnum: From<T> {
         let unit_command = ActionRawUnitCommand {
             ability_id: ability as i32,
@@ -24,7 +24,7 @@ impl Unit {
 
         ActionRaw::UnitCommand(unit_command)
     }
-    pub fn do_ability(&self, ability: AbilityIDs, queue: bool) -> ActionRaw {
+    pub fn do_ability(&self, ability: AbilityID, queue: bool) -> ActionRaw {
         let unit_command = ActionRawUnitCommand {
             ability_id: ability as i32,
             target: None,
@@ -37,7 +37,7 @@ impl Unit {
 
 
     /// The ability needed to build this unit
-    pub fn build_ability(&self) -> AbilityIDs {
+    pub fn build_ability(&self) -> AbilityID {
         let unit_type = self.unit_type();
         unit_type.build_ability()
 
@@ -48,8 +48,8 @@ impl UnitTypeData {
     pub fn is_structure(&self) -> bool {
         self.attributes.iter().any(|a| *a == Attribute::Structure)
     }
-    pub fn ability_id(&self) -> AbilityIDs {
-        AbilityIDs::from_u32(self.ability_id).unwrap()
+    pub fn ability_id(&self) -> AbilityID {
+        AbilityID::from_u32(self.ability_id).unwrap()
     }
 }
 
@@ -72,7 +72,7 @@ impl ObservationRaw {
         self.units.iter().find(|u| u.tag == tag)
     }
 
-    pub fn find_by_type<'a>(&'a self, ty: UnitIDs) -> impl Iterator<Item=&'a Unit> {
+    pub fn find_by_type<'a>(&'a self, ty: UnitID) -> impl Iterator<Item=&'a Unit> {
         self.units.iter().filter(move |u| u.unit_type == ty as u32)
     }
 }

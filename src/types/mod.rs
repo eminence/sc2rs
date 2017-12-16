@@ -4,7 +4,7 @@ use super::failure;
 use super::protobuf::repeated::RepeatedField;
 
 use super::sc2_protobuf::protos;
-use super::{UnitIDs, AbilityIDs};
+use super::{UnitID, AbilityID};
 
 mod impls;
 

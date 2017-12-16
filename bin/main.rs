@@ -11,7 +11,7 @@ use protobuf::Message;
 
 
 use sc2::types;
-use sc2::UnitIDs;
+use sc2::UnitID;
 
 use std::thread::sleep;
 use std::time::Duration;

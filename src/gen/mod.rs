@@ -40,12 +40,12 @@ fn load_data<T, P, V, F>(p: P, get_id: F) -> HashMap<T, V>
 
 
 lazy_static! { // sad face that rust can't figure out the type of d in the below closures
-    pub static ref UNIT_DATA: HashMap<UnitIDs, types::UnitTypeData> = {load_data("units.json", |d: &types::UnitTypeData| d.unit_id)};
-    pub static ref ABILITY_DATA: HashMap<AbilityIDs, types::AbilityData> = {load_data("abilities.json", |d: &types::AbilityData| d.ability_id)};
+    pub static ref UNIT_DATA: HashMap<UnitID, types::UnitTypeData> = {load_data("units.json", |d: &types::UnitTypeData| d.unit_id)};
+    pub static ref ABILITY_DATA: HashMap<AbilityID, types::AbilityData> = {load_data("abilities.json", |d: &types::AbilityData| d.ability_id)};
 }
 
 
-impl UnitIDs {
+impl UnitID {
     pub fn is_worker(&self) -> bool {
         super::utils::is_worker(*self as u32)
     }
@@ -60,7 +60,7 @@ impl UnitIDs {
         super::utils::is_command_base(*self as u32)
     }
     /// Returns the ability needed to build a unit of this type
-    pub fn build_ability(&self) -> AbilityIDs {
+    pub fn build_ability(&self) -> AbilityID {
         let data = &UNIT_DATA[&self];
         let abil = data.ability_id();
         abil

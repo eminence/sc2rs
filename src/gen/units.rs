@@ -2,7 +2,7 @@
 use super::types::FromU32;
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash, FromU32)]
-pub enum UnitIDs {
+pub enum UnitID {
     UnitID0 = 0,
     System_Snapshot_Dummy = 1,
     Ball = 2,
