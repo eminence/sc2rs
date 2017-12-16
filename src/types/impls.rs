@@ -274,6 +274,18 @@ impl From<RequestQuery> for Request {
     }
 }
 
+impl From<ActionRawUnitCommand> for ActionRaw {
+    fn from(a: ActionRawUnitCommand) -> Self {
+        ActionRaw::UnitCommand(a)
+    }
+}
+
+impl From<ActionRawUnitCommand> for Action {
+    fn from(a: ActionRawUnitCommand) -> Self {
+        Action::from(ActionRaw::UnitCommand(a))
+    }
+}
+
 
 impl Unpack<ResponseAction> for ResponseEnum {
     fn unpack(self) -> Option<ResponseAction> {
