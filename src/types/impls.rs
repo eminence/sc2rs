@@ -42,6 +42,24 @@ impl Unit {
         unit_type.build_ability()
 
     }
+
+    pub fn debug_highlight(&self) -> DebugDraw {
+        let abil_me = self.build_ability();
+
+
+        let sphere = DebugSphere {
+            color: Color::from_hex("#ff0000"),
+            p: self.pos,
+            r: self.radius,
+        };
+
+        DebugDraw {
+            text: Vec::new(),
+            lines: Vec::new(),
+            boxes: Vec::new(),
+            spheres: vec![sphere],
+        }
+    }
 }
 
 impl UnitTypeData {
