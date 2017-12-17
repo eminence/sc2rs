@@ -349,3 +349,14 @@ impl Unpack<ResponseQuery> for ResponseEnum {
         }
     }
 }
+
+impl ActionResult {
+    pub fn is_success(&self) -> bool {
+        *self == ActionResult::Success
+    }
+}
+impl ResponseAction {
+    pub fn is_success(&self) -> bool {
+        self.result.iter().all(|r| r.is_success())
+    }
+}
